@@ -205,3 +205,25 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# DS Store
+.DS_Store
+
+# Project-specific
+coefficients/
+essen:*/
+factor_eigenvalues_elbow_interactive_files/
+factor_network_full_files/
+midi/
+*.png
+shap*
+*.krn
+*.pdf
+*.csv
+*.txt
+!requirements.txt
+!usable_china.txt
+!usable_europa.txt
+*.json
+*.html
+*.tex
