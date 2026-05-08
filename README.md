@@ -21,7 +21,7 @@ Run everything from the repo root unless noted otherwise.
 **1. Clone and enter the repo**
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/dmwhyatt/Style-Classification-Analysis.git
 cd Style-Classification-Analysis
 ```
 
