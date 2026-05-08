@@ -1,0 +1,8 @@
+melody-features
+numpy
+pandas
+scikit-learn
+scipy
+seaborn
+matplotlib
+xgboost
