@@ -1,4 +1,4 @@
-# Style Classification Task
+# Style Classification Analysis
 
 This repository builds a series of classifiers that predict whether melodies from the Essen corpus originate from **China** or **Europe**, using numeric features from the Python package **`melody-features`** as predictors. It reproduces the manuscript’s confusion-matrix figures, runs exploratory factor analysis and a factor-based logistic model in **R**, and benchmarks logistic regression for each feature-extraction source (IDyOM, jSymbolic, etc.).
 
@@ -22,7 +22,7 @@ Run everything from the repo root unless noted otherwise.
 
 ```bash
 git clone <repository-url>
-cd DMRN-20-Essen-Classifier
+cd Style-Classification-Analysis
 ```
 
 **2. Python environment**
