@@ -108,15 +108,15 @@ cat(
 
 # intepreted using the network diagram below
 factor_names <- c(
-  "1. Timing",
-  "2. Timing Pulses",
+  "1. Long Pulses",
+  "2. Low Rhythmic Density",
   "3. Pitch Complexity",
   "4. Timing Variability",
   "5. Intervallic Complexity",
-  "6. Timing Summary",
+  "6. Higher Rhythmic Range",
   "7. Scale Conformity",
   "8. General Complexity",
-  "9. Absolute Pitch Content"
+  "9. Higher Absolute Pitch"
 )
 if (length(factor_names) < N_FACTORS) {
   factor_names <- c(factor_names, paste0("Factor ", seq(length(factor_names) + 1, N_FACTORS)))
@@ -127,6 +127,31 @@ if (length(factor_names) < N_FACTORS) {
 # Interactive loading graph to help interpret the factors
 cat("\nCreating interactive factor network (visNetwork)...\n")
 rownames(loadings_mat) <- colnames(x_scaled)
+
+TOP_LOADINGS_PER_FACTOR <- 10L
+top_loading_parts <- vector("list", N_FACTORS)
+for (i in seq_len(N_FACTORS)) {
+  v <- loadings_mat[, i]
+  v[is.na(v)] <- 0
+  ord <- order(abs(v), decreasing = TRUE)
+  k <- min(TOP_LOADINGS_PER_FACTOR, length(ord))
+  top_idx <- ord[seq_len(k)]
+  top_loading_parts[[i]] <- tibble(
+    factor = paste0("F", i),
+    factor_name = factor_names[i],
+    rank = seq_len(k),
+    feature = rownames(loadings_mat)[top_idx],
+    loading = v[top_idx],
+    abs_loading = abs(v[top_idx])
+  )
+}
+top_loadings_df <- bind_rows(top_loading_parts)
+write_csv(top_loadings_df, "factor_top_loadings.csv")
+cat(
+  "Wrote factor_top_loadings.csv (top ", TOP_LOADINGS_PER_FACTOR,
+  " |loading| per factor)\n",
+  sep = ""
+)
 
 create_network_diagram <- function(loadings, cutoff = 0.3, max_factors = NULL,
                                    custom_names = NULL) {
