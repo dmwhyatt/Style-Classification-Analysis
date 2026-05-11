@@ -136,14 +136,13 @@ cat(
 # intepreted using the network diagram below
 factor_names <- c(
   "1. Long Pulses",
-  "2. Low Rhythmic Density",
-  "3. Pitch Complexity",
-  "4. Timing Variability",
-  "5. Intervallic Complexity",
-  "6. Higher Rhythmic Range",
-  "7. Scale Conformity",
-  "8. General Complexity",
-  "9. Higher Absolute Pitch"
+  "2. Metric Strength",
+  "3. Timing Variability",
+  "4. Interval Complexity",
+  "5. General Complexity",
+  "6. Scale Conformity",
+  "7. Pitch Variability",
+  "8. Distinctiveness"
 )
 if (length(factor_names) < N_FACTORS) {
   factor_names <- c(factor_names, paste0("Factor ", seq(length(factor_names) + 1, N_FACTORS)))
