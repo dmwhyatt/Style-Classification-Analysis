@@ -6,7 +6,7 @@ library(visNetwork)
 
 set.seed(42)
 
-# Uses the same CSV as logistic.py; corpus features are excluded.
+# Uses the same CSV and numeric column policy as logistic.py (includes corpus + LTM).
 FEATURES_CSV <- "essen_china_europe_features.csv"
 TRAIN_FRAC <- 0.8
 
@@ -23,9 +23,36 @@ basename_no_ext <- function(x) {
 
 features <- read_csv(FEATURES_CSV, show_col_types = FALSE)
 
+pearce_txt <- "pearce_default_idyom_basenames.txt"
+if (!file.exists(pearce_txt)) {
+  py <- if (file.exists("venv/bin/python3")) "venv/bin/python3" else Sys.which("python3")
+  if (nzchar(py)) {
+    code <- "from pearce_exclusion import write_pearce_basename_sidecar; write_pearce_basename_sidecar()"
+    suppressWarnings(
+      system2(py, args = c("-c", code), stdout = TRUE, stderr = TRUE, wait = TRUE)
+    )
+  }
+}
+if (file.exists(pearce_txt)) {
+  pearce_bases <- readLines(pearce_txt, warn = FALSE)
+  pearce_bases <- pearce_bases[nzchar(pearce_bases)]
+  n_before <- nrow(features)
+  features <- features %>%
+    filter(!tolower(basename_no_ext(melody_id)) %in% pearce_bases)
+  n_drop <- n_before - nrow(features)
+  if (n_drop > 0) {
+    message("Excluded ", n_drop, " melody row(s) overlapping pearce_default_idyom.")
+  }
+} else {
+  warning(
+    "pearce_default_idyom_basenames.txt not found; run `python logistic.py` once from ",
+    "the project root to generate it. Proceeding without Pearce-IDyOM exclusion in R."
+  )
+}
+
 features_numeric <- features %>%
   select(where(is.numeric)) %>%
-  select(-melody_num, -starts_with("corpus."), -contains("_ltm_"))
+  select(-melody_num)
 features_numeric_clean <- features_numeric %>% drop_na()
 x_raw <- features_numeric_clean
 
@@ -86,7 +113,7 @@ saveWidget(
 cat("Saved factor_eigenvalues_elbow.pdf and factor_eigenvalues_elbow_interactive.html\n")
 
 # inspect the scree/elbow outputs above to choose factor count
-N_FACTORS <- 9
+N_FACTORS <- 8
 
 cat("Rows used:", nrow(x_scaled), "\n")
 cat("Numeric features used:", ncol(x_scaled), "\n")
@@ -124,9 +151,37 @@ if (length(factor_names) < N_FACTORS) {
   factor_names <- factor_names[seq_len(N_FACTORS)]
 }
 
+# Supplementary materials: top loadings per factor (|loading|) for interpretation
+TOP_LOADINGS_N <- 10
+rownames(loadings_mat) <- colnames(x_scaled)
+loading_top_list <- list()
+for (j in seq_len(N_FACTORS)) {
+  lj <- loadings_mat[, j, drop = TRUE]
+  ord <- order(abs(lj), decreasing = TRUE)
+  top_idx <- head(ord, TOP_LOADINGS_N)
+  for (r in seq_along(top_idx)) {
+    ii <- top_idx[r]
+    loading_top_list[[length(loading_top_list) + 1]] <- tibble(
+      factor_index = j,
+      factor_code = paste0("F", j),
+      factor_name = factor_names[j],
+      rank = r,
+      variable = rownames(loadings_mat)[ii],
+      loading = unname(lj[ii]),
+      abs_loading = abs(unname(lj[ii]))
+    )
+  }
+}
+loadings_top10_supplementary <- bind_rows(loading_top_list)
+write_csv(loadings_top10_supplementary, "factor_loadings_top10_supplementary.csv")
+cat(
+  "Wrote factor_loadings_top10_supplementary.csv (top ",
+  TOP_LOADINGS_N, " |loadings| per factor for supplementary interpretation)\n",
+  sep = ""
+)
+
 # Interactive loading graph to help interpret the factors
 cat("\nCreating interactive factor network (visNetwork)...\n")
-rownames(loadings_mat) <- colnames(x_scaled)
 
 TOP_LOADINGS_PER_FACTOR <- 10L
 top_loading_parts <- vector("list", N_FACTORS)

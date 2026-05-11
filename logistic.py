@@ -16,6 +16,12 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 from feature_selection import numeric_model_feature_columns, prepare_numeric_feature_matrix
+from pearce_exclusion import (
+    filter_features_df_pearce,
+    filter_paths_and_labels_pearce,
+    pearce_default_idyom_basename_set,
+    write_pearce_basename_sidecar,
+)
 
 
 def _append_taxonomy_summaries_to_coef_df(coef_df: pd.DataFrame) -> None:
@@ -151,8 +157,25 @@ for required in (USABLE_CHINA_TXT, USABLE_EUROPA_TXT):
 print(f"Loading {USABLE_CHINA_TXT} and {USABLE_EUROPA_TXT} …")
 usable_china = _read_usable_basenames_txt(USABLE_CHINA_TXT)
 usable_europa = _read_usable_basenames_txt(USABLE_EUROPA_TXT)
+
+pearce_basenames = pearce_default_idyom_basename_set()
+write_pearce_basename_sidecar()
+if pearce_basenames:
+    n_c = sum(1 for n in usable_china if n in pearce_basenames)
+    n_e = sum(1 for n in usable_europa if n in pearce_basenames)
+    if n_c or n_e:
+        print(
+            f"Excluding {len(pearce_basenames)} pearce_default_idyom basenames from selection "
+            f"({n_c} in China list, {n_e} in Europe list match)."
+        )
+    usable_china = {n for n in usable_china if n not in pearce_basenames}
+    usable_europa = {n for n in usable_europa if n not in pearce_basenames}
+
 selected_files, labels = _selected_paths_and_labels_from_usable_sets(
     usable_china, usable_europa, basename_to_path
+)
+selected_files, labels = filter_paths_and_labels_pearce(
+    selected_files, labels, pearce_basenames
 )
 
 print(f"Selected Essen files — China: {labels.count('China')}, Europe: {labels.count('Europe')}")
@@ -168,6 +191,14 @@ FEATURES_CSV = "essen_china_europe_features.csv"
 if os.path.isfile(FEATURES_CSV):
     print(f"Loading cached features from {FEATURES_CSV} ...")
     features_df = pd.read_csv(FEATURES_CSV)
+    n_before = len(features_df)
+    features_df = filter_features_df_pearce(features_df, pearce_basenames)
+    if len(features_df) < n_before:
+        print(
+            f"Dropped {n_before - len(features_df)} cached row(s) overlapping "
+            "pearce_default_idyom; rewriting CSV."
+        )
+        features_df.to_csv(FEATURES_CSV, index=False)
 else:
     print(f"Extracting features (total files: {len(selected_files)})...")
     features_df = get_all_features(selected_files, skip_idyom=False)
@@ -204,6 +235,7 @@ else:
         features_df = features_df.copy()
         features_df["continent"] = pd.Categorical(list(aligned), categories=["China", "Europe"])
 
+    features_df = filter_features_df_pearce(features_df, pearce_basenames)
     features_df.to_csv(FEATURES_CSV, index=False)
     print(f"Saved cached features to {FEATURES_CSV}")
 

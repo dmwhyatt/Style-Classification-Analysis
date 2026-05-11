@@ -1,7 +1,8 @@
 import os
 import numpy as np
 import pandas as pd
-from typing import List, Dict
+from typing import Dict, List
+
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.model_selection import StratifiedKFold, train_test_split
@@ -12,6 +13,7 @@ from xgboost import XGBClassifier
 import xgboost as xgb
 
 from feature_selection import numeric_model_feature_columns, prepare_numeric_feature_matrix
+from pearce_exclusion import filter_features_df_pearce, pearce_default_idyom_basename_set
 
 FEATURES_CSV = "essen_china_europe_features.csv"
 
@@ -22,6 +24,11 @@ if not os.path.isfile(FEATURES_CSV):
 
 print(f"Loading cached features from {FEATURES_CSV} ...")
 features_df = pd.read_csv(FEATURES_CSV)
+_pearce = pearce_default_idyom_basename_set()
+_n0 = len(features_df)
+features_df = filter_features_df_pearce(features_df, _pearce)
+if len(features_df) < _n0:
+    print(f"Excluded {_n0 - len(features_df)} row(s) overlapping pearce_default_idyom.")
 
 print(f"Dataset size: {len(features_df)}")
 print(features_df["continent"].value_counts())

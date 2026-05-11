@@ -2,7 +2,6 @@
 
 Aligns with factor_logistic.R:
   - numeric columns only
-  - exclude columns starting with corpus., columns containing _ltm_
   - exclude melody_num and id/metadata-like column names
   - replace inf, fillna(0), then drop zero-variance / non-finite std columns
 """
@@ -33,10 +32,6 @@ _METADATA_SUBSTRINGS = [
 
 def is_excluded_feature_column(name: str) -> bool:
     lower = name.lower()
-    if lower.startswith("corpus."):
-        return True
-    if "_ltm_" in lower:
-        return True
     return any(k in lower for k in _METADATA_SUBSTRINGS)
 
 

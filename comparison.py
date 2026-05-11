@@ -1,7 +1,8 @@
 """Per-source logistic benchmarks vs full feature set (same splits as logistic.py).
 
 If ``source_to_csv_columns_with_novel.json`` is absent, builds it by matching
-``melody_features`` decorator metadata to CSV column names, then trains models.
+``melody_features`` decorator metadata to CSV column names (strict matching +
+idyom deny rules; see ``_map_functions_to_csv_columns``), then trains models.
 """
 
 import inspect
@@ -21,8 +22,17 @@ from typing import Dict, List
 import melody_features.features as features_module
 
 from feature_selection import numeric_model_feature_columns, prepare_numeric_feature_matrix
+from pearce_exclusion import filter_features_df_pearce, pearce_default_idyom_basename_set
 
-SOURCES = ["idyom", "jsymbolic", "fantastic", "partitura", "simile", "midi_toolbox", "novel"]
+SOURCES = [
+    "idyom",
+    "jsymbolic",
+    "fantastic",
+    "partitura",
+    "simile",
+    "midi_toolbox",
+    "novel",
+]
 
 SOURCES_FOR_MAPPING = [
     "novel",
@@ -37,6 +47,19 @@ SOURCES_FOR_MAPPING = [
 COEFFICIENTS_DIR = "coefficients"
 FEATURES_CSV = "essen_china_europe_features.csv"
 SOURCE_MAPPING_JSON = "source_to_csv_columns_with_novel.json"
+
+# CSV columns that must not appear under "idyom" when the mapping is auto-built from
+# melody_features names (short decorator names like "ioi" used to match ioi_contour_*).
+IDYOM_AUTOGEN_DENY_EXACT = frozenset(
+    {
+        "tonality.proportion_inscale",
+    }
+)
+IDYOM_AUTOGEN_DENY_PREFIXES = ("inter_onset_interval.ioi_contour",)
+
+# Prefix extension ``func + "_" + ...`` only if the implementing name is long enough;
+# otherwise only exact ``feature_part == func`` matches (avoids "ioi" -> ioi_contour_*).
+_MIN_FUNC_NAME_LEN_FOR_PREFIX_MATCH = 6
 
 
 def _introspect_source_to_function_names() -> Dict[str, List[str]]:
@@ -61,25 +84,62 @@ def _introspect_source_to_function_names() -> Dict[str, List[str]]:
     return source_to_function_names
 
 
+def _feature_matches_function(func_name: str, feature_part: str) -> bool:
+    """Whether ``category.<feature_part>`` is plausibly produced by ``func_name``."""
+    if func_name == feature_part:
+        return True
+    if len(func_name) >= _MIN_FUNC_NAME_LEN_FOR_PREFIX_MATCH and feature_part.startswith(
+        func_name + "_"
+    ):
+        return True
+    return False
+
+
+def _best_matching_function_name(
+    function_names: List[str], feature_part: str
+) -> str | None:
+    """Prefer the longest implementing name so ``ioi`` does not steal ``ioi_contour_*``."""
+    best: str | None = None
+    best_len = -1
+    for fn in function_names:
+        if _feature_matches_function(fn, feature_part) and len(fn) > best_len:
+            best = fn
+            best_len = len(fn)
+    return best
+
+
 def _map_functions_to_csv_columns(
     source_to_function_names: Dict[str, List[str]],
     csv_columns: List[str],
 ) -> Dict[str, List[str]]:
-    """Map implementing function names to ``category.feature`` CSV columns"""
+    """Map implementing function names to ``category.feature`` CSV columns."""
     source_to_csv_columns: Dict[str, List[str]] = {s: [] for s in SOURCES_FOR_MAPPING}
     for source, function_names in source_to_function_names.items():
         for csv_col in csv_columns:
             feature_part = csv_col.split(".", 1)[1] if "." in csv_col else csv_col
-            for func_name in function_names:
-                if (
-                    func_name == feature_part
-                    or feature_part.startswith(func_name)
-                    or func_name in feature_part
-                ):
-                    if csv_col not in source_to_csv_columns[source]:
-                        source_to_csv_columns[source].append(csv_col)
-                    break
+            if _best_matching_function_name(function_names, feature_part) is not None:
+                source_to_csv_columns[source].append(csv_col)
     return source_to_csv_columns
+
+
+def _strip_idyom_autogen_false_positives(columns: List[str]) -> tuple[List[str], List[str]]:
+    """Remove columns that should never be tagged ``idyom`` by the automapper."""
+    kept: List[str] = []
+    dropped: List[str] = []
+    for c in columns:
+        if c in IDYOM_AUTOGEN_DENY_EXACT or any(
+            c.startswith(p) for p in IDYOM_AUTOGEN_DENY_PREFIXES
+        ):
+            dropped.append(c)
+        else:
+            kept.append(c)
+    return kept, dropped
+
+
+def _idyom_mapping_offenders(columns: List[str]) -> List[str]:
+    """Columns in a hand-maintained JSON that violate idyom automap hygiene rules."""
+    _, dropped = _strip_idyom_autogen_false_positives(columns)
+    return dropped
 
 
 def write_feature_source_mapping_csvs(source_to_features: Dict[str, List[str]]) -> None:
@@ -154,6 +214,12 @@ def load_or_build_source_mapping(
     if os.path.isfile(json_path):
         with open(json_path, encoding="utf-8") as f:
             mapping = json.load(f)
+        offenders = _idyom_mapping_offenders(mapping.get("idyom", []))
+        if offenders:
+            print(
+                "WARNING: idyom source lists columns flagged as automap false positives "
+                f"(see comparison.py IDYOM_AUTOGEN_DENY_*): {offenders}"
+            )
         return mapping, features_df
 
     print(
@@ -164,6 +230,14 @@ def load_or_build_source_mapping(
     )
     fn_map = _introspect_source_to_function_names()
     mapping = _map_functions_to_csv_columns(fn_map, csv_columns)
+    if "idyom" in mapping:
+        kept, dropped = _strip_idyom_autogen_false_positives(mapping["idyom"])
+        mapping["idyom"] = kept
+        if dropped:
+            print(
+                "idyom automap hygiene: removed columns that must not be tagged idyom "
+                f"when rebuilding JSON: {dropped}"
+            )
 
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(mapping, f, indent=2)
@@ -191,6 +265,11 @@ if not os.path.isfile(FEATURES_CSV):
 
 print(f"Loading cached features from {FEATURES_CSV} ...")
 SOURCE_FEATURES, features_df = load_or_build_source_mapping(FEATURES_CSV, SOURCE_MAPPING_JSON)
+_pearce = pearce_default_idyom_basename_set()
+_n0 = len(features_df)
+features_df = filter_features_df_pearce(features_df, _pearce)
+if len(features_df) < _n0:
+    print(f"Excluded {_n0 - len(features_df)} row(s) overlapping pearce_default_idyom.")
 
 print(f"Dataset size: {len(features_df)}")
 print(features_df["continent"].value_counts())
@@ -199,6 +278,7 @@ print(features_df["continent"].value_counts())
 all_feature_cols = numeric_model_feature_columns(features_df)
 X_all, all_feature_cols = prepare_numeric_feature_matrix(features_df, all_feature_cols)
 print(f"Numeric features used for modeling: {len(all_feature_cols)}")
+
 y = features_df["continent"].astype(str)
 
 le = LabelEncoder()
@@ -264,9 +344,20 @@ for source in SOURCES:
     print(f"{'='*80}")
     
     try:
-        source_feature_cols = SOURCE_FEATURES.get(source, [])
-        valid_features = [f for f in source_feature_cols if f in all_feature_cols]
-        
+        if source == "idyom":
+            # Decorator JSON mapping omits idyom.* STM/LTM information-content columns
+            base = [f for f in SOURCE_FEATURES.get("idyom", []) if f in all_feature_cols]
+            stm_ltm = [
+                c
+                for c in all_feature_cols
+                if c.lower().startswith("idyom.")
+                and ("_stm_" in c.lower() or "_ltm_" in c.lower())
+            ]
+            valid_features = sorted(set(base) | set(stm_ltm))
+        else:
+            source_feature_cols = SOURCE_FEATURES.get(source, [])
+            valid_features = [f for f in source_feature_cols if f in all_feature_cols]
+
         if not valid_features:
             print(f"No features found for source '{source}', skipping...")
             results.append({
