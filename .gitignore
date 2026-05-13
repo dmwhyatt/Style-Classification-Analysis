@@ -214,6 +214,7 @@ coefficients/
 essen:*/
 midi/
 *.png
+!docs/melody_examples/*.png
 shap*
 *.krn
 *.pdf
@@ -225,3 +226,7 @@ shap*
 *.json
 *.html
 *.tex
+!docs/index.html
+!docs/network_data.json
+factor_eigenvalues_elbow_interactive_files/
+factor_network_full_files/

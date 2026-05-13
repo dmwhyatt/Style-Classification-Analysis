@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Style Classification Factor Network</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #fff;
+            overflow: hidden;
+        }
+
+        #graph-container {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(10, 14, 39, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 300px;
+            max-width: 300px;
+            max-height: 85vh;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: max-height 0.2s ease, padding 0.2s ease;
+        }
+
+        .overlay-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .overlay-toggle-btn {
+            padding: 4px 12px;
+            font-size: 11px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.85);
+            cursor: pointer;
+            white-space: nowrap;
+            line-height: 1.2;
+            transform: translateY(-2px); /* subtle vertical alignment with title */
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .overlay-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #667eea;
+        }
+
+        .overlay-content {
+            margin-top: 5px;
+        }
+
+        .overlay.collapsed {
+            max-height: 52px;
+            padding-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .overlay.collapsed .overlay-content {
+            display: none;
+        }
+
+        h1 {
+            font-size: 20px;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .info {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 13px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .search-box::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .legend {
+            margin-top: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            font-size: 12px;
+            padding: 4px 6px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .legend-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .legend-item.active {
+            background: rgba(255, 255, 255, 0.14);
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18);
+        }
+
+        .info-toggle-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            background: rgba(10, 14, 39, 0.9);
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 17px;
+            font-style: italic;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+            transition: background 0.2s, border-color 0.2s, transform 0.1s, box-shadow 0.2s;
+        }
+
+        .info-toggle-btn:hover {
+            background: rgba(40, 48, 100, 0.98);
+            border-color: #667eea;
+            box-shadow: 0 0 16px rgba(102, 126, 234, 0.6);
+            transform: translateY(-1px);
+        }
+
+        .info-panel {
+            display: none;
+            position: absolute;
+            top: 36px;
+            right: 0;
+            padding: 12px 16px;
+            border-radius: 10px;
+            background: rgba(15, 20, 55, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 12px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+            width: min(420px, 70vw);
+        }
+
+        @media (max-width: 600px) {
+            .info-panel {
+                left: auto;
+                right: 0;
+                width: min(360px, 80vw);
+            }
+        }
+
+        .info-panel.visible {
+            display: block;
+        }
+
+        .info-container {
+            position: relative;
+        }
+
+        .info-panel a {
+            color: #9fb8ff;
+            text-decoration: underline;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            left: auto;
+            background: rgba(10, 14, 39, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+        }
+
+        .controls-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .controls-body {
+            margin-top: 8px;
+        }
+
+        .controls.collapsed .controls-body {
+            display: none;
+        }
+
+        .controls-toggle-btn {
+            padding: 3px 10px;
+            font-size: 11px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.85);
+            cursor: pointer;
+            white-space: nowrap;
+            line-height: 1.2;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .controls-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #667eea;
+        }
+
+        .control-label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 5px;
+        }
+
+        .control-sublabel {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.5);
+            margin: 8px 0 4px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .control-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-row .slider {
+            flex: 1;
+            margin: 0;
+        }
+
+        .control-value {
+            color: #667eea;
+            font-size: 12px;
+            font-weight: bold;
+            min-width: 36px;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .slider {
+            width: 200px;
+            margin: 10px 0;
+        }
+
+        .freeze-btn {
+            display: block;
+            width: 100%;
+            margin-top: 12px;
+            padding: 8px 14px;
+            background: rgba(102, 126, 234, 0.3);
+            border: 1px solid rgba(102, 126, 234, 0.6);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .freeze-btn:hover {
+            background: rgba(102, 126, 234, 0.5);
+            border-color: #667eea;
+        }
+
+        .tooltip {
+            position: fixed;
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 12px 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 13px;
+            pointer-events: none;
+            display: none;
+            z-index: 2000;
+            max-width: 500px;
+            min-width: 250px;
+            word-wrap: break-word;
+        }
+
+        .tooltip-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #667eea;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .melody-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 340px;
+            max-width: calc(100vw - 40px);
+            max-height: 85vh;
+            background: rgba(10, 14, 39, 0.92);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .melody-panel.visible {
+            display: flex;
+        }
+        .melody-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
+        }
+        .melody-panel-title {
+            font-size: 15px;
+            margin: 0;
+            color: #667eea;
+            font-weight: 600;
+        }
+        .melody-panel-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 22px;
+            line-height: 1;
+            cursor: pointer;
+            padding: 0 4px;
+        }
+        .melody-panel-close:hover {
+            color: #fff;
+        }
+        .melody-panel-content {
+            overflow-y: auto;
+            padding: 12px 16px 16px;
+        }
+        .melody-section {
+            margin-bottom: 18px;
+        }
+        .melody-section:last-child {
+            margin-bottom: 0;
+        }
+        .melody-section-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 8px;
+        }
+        .melody-section.high .melody-section-label { color: #5cb85c; }
+        .melody-section.low .melody-section-label { color: #d9534f; }
+        .melody-section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .melody-section-header .melody-section-label {
+            margin-bottom: 0;
+        }
+        .melody-section-nav {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .melody-section-counter {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.55);
+            min-width: 30px;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+        }
+        .melody-nav-btn {
+            width: 22px;
+            height: 22px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 14px;
+            line-height: 1;
+            cursor: pointer;
+            padding: 0;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
+        }
+        .melody-nav-btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #667eea;
+            color: #fff;
+        }
+        .melody-nav-btn:disabled {
+            opacity: 0.3;
+            cursor: default;
+        }
+        .melody-card {
+            display: none;
+        }
+        .melody-card.active {
+            display: block;
+        }
+        .melody-example-img {
+            width: 100%;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            margin-bottom: 6px;
+        }
+        .melody-example-audio {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+        }
+        .melody-example-audio audio {
+            flex: 1;
+            height: 32px;
+        }
+        .melody-example-value {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* this should hopefully make the site dynamically scale to mobile screens etc */
+        @media (max-width: 768px) {
+            body {
+                overflow: hidden;
+            }
+
+            .overlay {
+                top: 10px;
+                left: 10px;
+                width: min(340px, 82vw);
+                max-width: min(340px, 82vw);
+                padding: 14px;
+            }
+
+            h1 {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+
+            .info {
+                font-size: 11px;
+            }
+
+            .legend-item {
+                font-size: 11px;
+                margin: 6px 0;
+            }
+
+            .controls {
+                left: 10px;
+                right: 10px;
+                bottom: 10px;
+                width: calc(100vw - 20px);
+                padding: 12px;
+            }
+
+            .slider {
+                width: 100%;
+            }
+
+            .stats-wrapper {
+                top: 10px;
+                right: 10px;
+                gap: 6px;
+            }
+            .melody-panel {
+                width: min(340px, 90vw);
+                right: 10px;
+                top: 10px;
+            }
+        }
+
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 3000;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .stats-wrapper {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .stats {
+            background: rgba(10, 14, 39, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 12px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            gap: 20px;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .stat-value {
+            color: #667eea;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p style="margin-top: 20px; color: rgba(255, 255, 255, 0.8); font-size: 16px; text-align: center;">
+            Initializing 3D visualization...<br>
+            <span style="display:block; margin-top:10px; font-size:13px; color:rgba(255,255,255,0.7); text-align:center;">For best results, please use a laptop or computer.</span>
+        </p>
+    </div>
+
+    <div class="overlay" id="overlay">
+        <div class="overlay-header">
+            <h1>Factor Network</h1>
+            <button type="button" class="overlay-toggle-btn" id="overlay-toggle-btn">Hide</button>
+        </div>
+        <div class="overlay-content" id="overlay-content">
+            <div class="info">
+                Explore the 8-factor structure of melodic features used to classify Chinese vs. European folksongs from the Essen Folksong Collection. Click and drag to rotate, scroll to zoom, click nodes to highlight connections.
+            </div>
+            <input type="text" class="search-box" id="search" placeholder="Search nodes (e.g., 'timing', 'pitch')...">
+            <div class="legend">
+            <div class="legend-item" data-category="factor">
+                <div class="legend-color" style="background: #ff0000; color: #ff0000; box-shadow: 0 0 20px #ff0000;"></div>
+                <span><strong>Factors (<span id="legend-factor-count">8</span>)</strong></span>
+            </div>
+            <div style="font-size: 10px; margin: 8px 0 4px 0; color: rgba(255,255,255,0.5);">Variables by Category:</div>
+            <div class="legend-item" data-category="absolute_pitch">
+                <div class="legend-color" style="background: #00ff00; color: #00ff00;"></div>
+                <span style="font-size: 11px;">Absolute Pitch</span>
+            </div>
+            <div class="legend-item" data-category="complexity">
+                <div class="legend-color" style="background: #ff00ff; color: #ff00ff;"></div>
+                <span style="font-size: 11px;">Complexity</span>
+            </div>
+            <div class="legend-item" data-category="contour">
+                <div class="legend-color" style="background: #ffff00; color: #ffff00;"></div>
+                <span style="font-size: 11px;">Contour</span>
+            </div>
+            <div class="legend-item" data-category="corpus">
+                <div class="legend-color" style="background: #ff0080; color: #ff0080;"></div>
+                <span style="font-size: 11px;">Corpus</span>
+            </div>
+            <div class="legend-item" data-category="expectation">
+                <div class="legend-color" style="background: #8000ff; color: #8000ff;"></div>
+                <span style="font-size: 11px;">Expectation</span>
+            </div>
+            <div class="legend-item" data-category="lexical_diversity">
+                <div class="legend-color" style="background: #ff4040; color: #ff4040;"></div>
+                <span style="font-size: 11px;">Lexical Diversity</span>
+            </div>
+            <div class="legend-item" data-category="inter_onset_interval">
+                <div class="legend-color" style="background: #00ff80; color: #00ff80;"></div>
+                <span style="font-size: 11px;">Inter-Onset Interval</span>
+            </div>
+            <div class="legend-item" data-category="metre">
+                <div class="legend-color" style="background: #b34700; color: #b34700;"></div>
+                <span style="font-size: 11px;">Metre</span>
+            </div>
+            <div class="legend-item" data-category="pitch_class">
+                <div class="legend-color" style="background: #00ffff; color: #00ffff;"></div>
+                <span style="font-size: 11px;">Pitch Class</span>
+            </div>
+            <div class="legend-item" data-category="pitch_interval">
+                <div class="legend-color" style="background: #228b22; color: #228b22;"></div>
+                <span style="font-size: 11px;">Pitch Interval</span>
+            </div>
+            <div class="legend-item" data-category="timing">
+                <div class="legend-color" style="background: #ff7f00; color: #ff7f00;"></div>
+                <span style="font-size: 11px;">Timing</span>
+            </div>
+            <div class="legend-item" data-category="tonality">
+                <div class="legend-color" style="background: #0000ff; color: #0000ff;"></div>
+                <span style="font-size: 11px;">Tonality</span>
+            </div>
+            <div class="legend-item" data-category="idyom">
+                <div class="legend-color" style="background: #40e0d0; color: #40e0d0;"></div>
+                <span style="font-size: 11px;">IDyOM</span>
+            </div>
+            <div class="legend-item" data-category="other">
+                <div class="legend-color" style="background: #888888; color: #888888;"></div>
+                <span style="font-size: 11px;">Other</span>
+            </div>
+            <div style="font-size: 10px; margin: 8px 0 4px 0; color: rgba(255,255,255,0.5);">Loadings:</div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #5cb85c;"></div>
+                <span style="font-size: 11px;">Positive</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #d9534f;"></div>
+                <span style="font-size: 11px;">Negative</span>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="stats-wrapper">
+        <div class="info-container">
+            <button type="button" class="info-toggle-btn" id="info-btn"><em>i</em></button>
+            <div class="info-panel" id="info-panel">
+                <p><strong>About this visualization</strong><br>
+                This visualization represents a 3-dimensional projection of an Exploratory Factor Analysis (EFA) of melodic features
+                used to classify Chinese vs. European folksongs from the Essen Folksong Collection (Schaffrath, 1995).
+                <br><br>
+                Factor Analysis is a statistical method that seeks to identify underlying latent factors that explain the correlations between variables.
+                This allows us to reduce the dimensionality of the data while preserving the underlying structure, and to relate this underlying structure
+                to psychological or cognitive constructs through our interpretation of the factors.
+                <br><br>
+                Eight factors were retained (promax rotation, parallel analysis informed) and used as predictors in a logistic regression
+                that discriminates Chinese from European melodies. The eight factors are labelled
+                Long Pulses, Metric Strength, Timing Variability, Interval Complexity, General Complexity,
+                Scale Conformity, Pitch Variability, and Distinctiveness.
+                <br><br>
+                The 3D network diagram provides an interactive environment for exploring the relationships between the factors and the underlying features.
+                Edges show feature loadings with |loading| &gt; 0.3 (green = positive, red = negative). Drag nodes, search by name,
+                or filter by loading threshold to traverse the structure.
+                <br><br>
+                Rendered with the Three.js library and the 3D Force-Directed Graph library.
+                Features were extracted with <i>melody-features</i>, a Python package for analysing monophonic MIDI melodies (Whyatt and Harrison, 2025):
+                <a href="https://doi.org/10.5281/zenodo.16894207">doi.org/10.5281/zenodo.16894207</a>.
+                Source code for this analysis: <a href="https://github.com/dmwhyatt/Style-Classification-Analysis">github.com/dmwhyatt/Style-Classification-Analysis</a>.
+              </p>
+            </div>
+        </div>
+        <div class="stats">
+            <div class="stat-row">
+                <span class="stat-label">Factors:</span>
+                <span class="stat-value" id="stat-factors">8</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Variables:</span>
+                <span class="stat-value" id="stat-variables">-</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Connections:</span>
+                <span class="stat-value" id="stat-links">-</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls" id="controls">
+        <div class="controls-header">
+            <div class="control-label">Link Filters</div>
+            <button type="button" class="controls-toggle-btn" id="controls-toggle-btn">Hide</button>
+        </div>
+        <div class="controls-body">
+            <div class="control-sublabel">Loading threshold</div>
+            <div class="control-row">
+                <input type="range" class="slider" id="threshold" min="0.3" max="1" step="0.05" value="0.3">
+                <span id="threshold-value" class="control-value">0.30</span>
+            </div>
+            <div class="control-sublabel">Connections per factor</div>
+            <div class="control-row">
+                <input type="range" class="slider" id="link-count" min="10" max="10" step="1" value="10">
+                <span id="link-count-value" class="control-value">10</span>
+            </div>
+            <button type="button" class="freeze-btn" id="freeze-btn">Freeze ❄️</button>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <!-- Melody examples panel: shown when a variable node is clicked -->
+    <div class="melody-panel" id="melody-panel">
+        <div class="melody-panel-header">
+            <h2 class="melody-panel-title" id="melody-panel-title">Melody examples</h2>
+            <button type="button" class="melody-panel-close" id="melody-panel-close" aria-label="Close">&times;</button>
+        </div>
+        <div class="melody-panel-content" id="melody-panel-content"></div>
+    </div>
+
+    <div id="graph-container"></div>
+
+    <script src="https://unpkg.com/three@0.159.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/three-spritetext@1.8.2/dist/three-spritetext.min.js"></script>
+    <script src="https://unpkg.com/3d-force-graph@1.73.3/dist/3d-force-graph.min.js"></script>
+    <script src="network_data.js"></script>
+    <script>
+        const tooltip = document.getElementById('tooltip');
+        const searchBox = document.getElementById('search');
+        const thresholdSlider = document.getElementById('threshold');
+        const thresholdValue = document.getElementById('threshold-value');
+        const linkCountSlider = document.getElementById('link-count');
+        const linkCountValue = document.getElementById('link-count-value');
+        const overlay = document.getElementById('overlay');
+        const overlayToggleBtn = document.getElementById('overlay-toggle-btn');
+        const infoBtn = document.getElementById('info-btn');
+        const infoPanel = document.getElementById('info-panel');
+        const melodyPanel = document.getElementById('melody-panel');
+        const melodyPanelTitle = document.getElementById('melody-panel-title');
+        const melodyPanelContent = document.getElementById('melody-panel-content');
+        const melodyPanelClose = document.getElementById('melody-panel-close');
+        const controls = document.getElementById('controls');
+        const controlsToggleBtn = document.getElementById('controls-toggle-btn');
+        const legendItems = document.querySelectorAll('.legend-item[data-category]');
+        let graphData = null;
+        let melodyManifest = null;
+        let highlightNodes = new Set();
+        let highlightLinks = new Set();
+        let hoverNode = null;
+        let networkCenter = { x: 0, y: 0, z: 0 };
+        let activeLegendCategory = null;
+        // Lookup structures for fast neighbor and degree queries
+        const nodeById = new Map();     // id -> node
+        const linksByNode = new Map();  // id -> Set(links)
+        const degreeByNode = new Map(); // id -> number of incident links
+
+        // Helper function to get node ID (handles both string and object) - id for internal graph use
+        const getNodeId = (node) => typeof node === 'object' ? node.id : node;
+
+        // Extract category from variable id (e.g. absolute_pitch.first_pitch -> absolute_pitch)
+        const getCategory = (name) => {
+            if (name.startsWith('F')) return 'factor';
+            const match = name.match(/^([^.]+)\./);
+            return match ? match[1] : 'other';
+        };
+
+        // Simple debounce helper for expensive UI handlers
+        const debounce = (fn, delay) => {
+            let timeoutId;
+            return (...args) => {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => fn(...args), delay);
+            };
+        };
+
+        // Prettify variable names: convert "timing.average_note_duration" to "Average Note Duration" (prefix excluded; category shown separately)
+        const prettifyName = (name) => {
+            // Keep factor names as-is (they're already formatted like "1. Timing")
+            if (name.startsWith('F') || /^\d+\./.test(name)) return name;
+            
+            // Strip category prefix (e.g. "timing.") so it's not repeated below "Category: Timing"
+            const withoutPrefix = name.includes('.') ? name.slice(name.indexOf('.') + 1) : name;
+            
+            return withoutPrefix
+                .replace(/_/g, ' ')                    // Replace underscores with spaces
+                .split(' ')
+                .filter(word => word.length > 0)       // Remove empty strings
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                .join(' ');
+        };
+
+        // Load melody examples manifest from file (requires HTTP server, e.g. GitHub Pages)
+        const loadMelodyManifest = () => {
+            if (melodyManifest !== null) return Promise.resolve(melodyManifest);
+            return fetch('melody_examples/manifest.json')
+                .then(r => r.ok ? r.json() : null)
+                .then(data => { melodyManifest = data; return melodyManifest; })
+                .catch(() => null);
+        };
+
+        const stopAllMelodyAudio = () => {
+            melodyPanelContent.querySelectorAll('audio').forEach(a => { a.pause(); a.currentTime = 0; });
+        };
+
+        const formatMelodyValue = (v) => {
+            const n = Number(v);
+            return Number.isInteger(n) ? String(n) : n.toFixed(4).replace(/\.?0+$/, '');
+        };
+
+        const buildMelodyCarouselSection = (items, kind) => {
+            // kind: 'high' | 'low'. items: array of manifest entries.
+            const label = kind === 'high' ? 'High value' : 'Low value';
+            const showNav = items.length > 1;
+            let html = `<div class="melody-section ${kind}" data-section="${kind}">`;
+            html += '<div class="melody-section-header">';
+            html += `<div class="melody-section-label">${label}</div>`;
+            if (showNav) {
+                html += '<div class="melody-section-nav">';
+                html += `<button type="button" class="melody-nav-btn" data-section="${kind}" data-dir="prev" aria-label="Previous ${label}" disabled>&#8249;</button>`;
+                html += `<span class="melody-section-counter" data-section="${kind}">1 / ${items.length}</span>`;
+                html += `<button type="button" class="melody-nav-btn" data-section="${kind}" data-dir="next" aria-label="Next ${label}">&#8250;</button>`;
+                html += '</div>';
+            }
+            html += '</div>';
+            html += `<div class="melody-card-stack" data-section="${kind}">`;
+            items.forEach((ex, i) => {
+                html += `<div class="melody-card${i === 0 ? ' active' : ''}" data-idx="${i}">`;
+                if (ex.png) {
+                    html += `<img class="melody-example-img" src="${ex.png}" alt="Melody piano roll">`;
+                }
+                if (ex.value !== undefined) {
+                    html += `<div class="melody-example-value">Value: ${formatMelodyValue(ex.value)}</div>`;
+                }
+                if (ex.audio) {
+                    html += `<div class="melody-example-audio"><audio controls preload="none" src="${ex.audio}"></audio></div>`;
+                }
+                html += '</div>';
+            });
+            html += '</div></div>';
+            return html;
+        };
+
+        const wireMelodyCarouselNav = () => {
+            melodyPanelContent.querySelectorAll('.melody-nav-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const section = btn.dataset.section;
+                    const dir = btn.dataset.dir;
+                    const stack = melodyPanelContent.querySelector(`.melody-card-stack[data-section="${section}"]`);
+                    if (!stack) return;
+                    const cards = Array.from(stack.querySelectorAll('.melody-card'));
+                    const activeIdx = cards.findIndex(c => c.classList.contains('active'));
+                    if (activeIdx < 0) return;
+                    const nextIdx = dir === 'next'
+                        ? Math.min(cards.length - 1, activeIdx + 1)
+                        : Math.max(0, activeIdx - 1);
+                    if (nextIdx === activeIdx) return;
+                    // Pause any audio playing inside this section before switching
+                    stack.querySelectorAll('audio').forEach(a => { a.pause(); });
+                    cards[activeIdx].classList.remove('active');
+                    cards[nextIdx].classList.add('active');
+                    const counter = melodyPanelContent.querySelector(`.melody-section-counter[data-section="${section}"]`);
+                    if (counter) counter.textContent = `${nextIdx + 1} / ${cards.length}`;
+                    const prevBtn = melodyPanelContent.querySelector(`.melody-nav-btn[data-section="${section}"][data-dir="prev"]`);
+                    const nextBtn = melodyPanelContent.querySelector(`.melody-nav-btn[data-section="${section}"][data-dir="next"]`);
+                    if (prevBtn) prevBtn.disabled = (nextIdx === 0);
+                    if (nextBtn) nextBtn.disabled = (nextIdx === cards.length - 1);
+                });
+            });
+        };
+
+        const showMelodyExamples = (variableId, variableName) => {
+            if (!melodyManifest || !melodyManifest[variableId]) {
+                melodyPanel.classList.remove('visible');
+                return;
+            }
+            stopAllMelodyAudio();
+            const entry = melodyManifest[variableId];
+            const prettyName = prettifyName(variableName || entry.label || variableId);
+            melodyPanelTitle.textContent = prettyName;
+            let html = '';
+            ['high', 'low'].forEach(k => {
+                const items = entry[k];
+                if (!items || items.length === 0) return;
+                html += buildMelodyCarouselSection(items, k);
+            });
+            melodyPanelContent.innerHTML = html || '<p style="color: rgba(255,255,255,0.5); font-size: 13px;">No examples for this variable.</p>';
+            wireMelodyCarouselNav();
+            // Ensure only one audio plays at a time: when one starts, stop all others
+            melodyPanelContent.querySelectorAll('audio').forEach(audio => {
+                audio.addEventListener('play', () => {
+                    melodyPanelContent.querySelectorAll('audio').forEach(other => {
+                        if (other !== audio) { other.pause(); other.currentTime = 0; }
+                    });
+                });
+            });
+            melodyPanel.classList.add('visible');
+        };
+
+        const hideMelodyExamples = () => {
+            stopAllMelodyAudio();
+            melodyPanel.classList.remove('visible');
+        };
+
+        if (melodyPanelClose) melodyPanelClose.addEventListener('click', hideMelodyExamples);
+
+        // Rainbow color palette for categories
+        const categoryColors = {
+            'factor': '#ff0000',              // Red
+            'timing': '#ff7f00',              // Orange
+            'contour': '#ffff00',             // Yellow
+            'absolute_pitch': '#00ff00',      // Green
+            'pitch_class': '#00ffff',         // Cyan
+            'pitch_interval': '#228b22',      // Forest Green
+            'tonality': '#0000ff',            // Blue
+            'expectation': '#8000ff',         // Purple
+            'complexity': '#ff00ff',          // Magenta
+            'corpus': '#ff0080',              // Hot Pink
+            'lexical_diversity': '#ff4040',   // Red-Orange
+            'metre': '#b34700',               // Dark Orange
+            'inter_onset_interval': '#00ff80', // Spring Green
+            'idyom': '#40e0d0',               // Turquoise
+            'other': '#888888'                // Gray
+        };
+
+        // Info button toggle
+        if (infoBtn && infoPanel) {
+            infoBtn.addEventListener('click', () => {
+                infoPanel.classList.toggle('visible');
+            });
+        }
+
+        // Overlay minimize / expand toggle
+        if (overlay && overlayToggleBtn) {
+            overlayToggleBtn.addEventListener('click', () => {
+                const isCollapsed = overlay.classList.toggle('collapsed');
+                overlayToggleBtn.textContent = isCollapsed ? 'Show' : 'Hide';
+            });
+        }
+
+        // Controls (threshold box) hide/show toggle
+        if (controls && controlsToggleBtn) {
+            controlsToggleBtn.addEventListener('click', () => {
+                const isCollapsed = controls.classList.toggle('collapsed');
+                controlsToggleBtn.textContent = isCollapsed ? 'Show' : 'Hide';
+            });
+        }
+
+        function initGraph(data) {
+            graphData = data;
+            console.log('Initializing graph with', data.nodes.length, 'nodes and', data.links.length, 'links');
+            
+            // Rebuild lookup maps (nodeById, linksByNode, degreeByNode)
+            nodeById.clear();
+            linksByNode.clear();
+            degreeByNode.clear();
+            
+            // Add category to each node, register in lookup map, and set initial scattered positions
+            data.nodes.forEach(node => {
+                node.category = getCategory(node.id);
+                nodeById.set(node.id, node);
+                // Random scattered initial position (large radius)
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.random() * Math.PI;
+                const radius = 1000 + Math.random() * 500;
+                node.fx = radius * Math.sin(phi) * Math.cos(theta);
+                node.fy = radius * Math.sin(phi) * Math.sin(theta);
+                node.fz = radius * Math.cos(phi);
+            });
+
+            // Build fast link adjacency and degree maps
+            data.links.forEach(link => {
+                const sourceId = getNodeId(link.source);
+                const targetId = getNodeId(link.target);
+
+                if (!linksByNode.has(sourceId)) linksByNode.set(sourceId, new Set());
+                if (!linksByNode.has(targetId)) linksByNode.set(targetId, new Set());
+                linksByNode.get(sourceId).add(link);
+                linksByNode.get(targetId).add(link);
+
+                degreeByNode.set(sourceId, (degreeByNode.get(sourceId) || 0) + 1);
+                degreeByNode.set(targetId, (degreeByNode.get(targetId) || 0) + 1);
+            });
+
+            const applyHighlightVisuals = () => {
+                Graph.nodeColor(Graph.nodeColor())
+                    .linkColor(Graph.linkColor())
+                    .linkWidth(Graph.linkWidth())
+                    .linkOpacity(Graph.linkOpacity())
+                    .linkDirectionalParticles(Graph.linkDirectionalParticles());
+            };
+
+            const clearLegendSelection = () => {
+                activeLegendCategory = null;
+                legendItems.forEach(item => item.classList.remove('active'));
+            };
+
+            const highlightCategory = (category) => {
+                if (activeLegendCategory === category) {
+                    highlightNodes.clear();
+                    highlightLinks.clear();
+                    clearLegendSelection();
+                    applyHighlightVisuals();
+                    return;
+                }
+
+                activeLegendCategory = category;
+                legendItems.forEach(item => {
+                    const cat = item.getAttribute('data-category');
+                    item.classList.toggle('active', cat === category);
+                });
+
+                if (searchBox) searchBox.value = '';
+
+                highlightNodes.clear();
+                highlightLinks.clear();
+
+                data.nodes.forEach(node => {
+                    if (node.category === category) {
+                        highlightNodes.add(node);
+                        const nodeLinks = linksByNode.get(node.id);
+                        if (nodeLinks) {
+                            nodeLinks.forEach(link => {
+                                highlightLinks.add(link);
+                                const sourceId = getNodeId(link.source);
+                                const targetId = getNodeId(link.target);
+                                const neighborId = sourceId === node.id ? targetId : sourceId;
+                                const neighborNode = nodeById.get(neighborId);
+                                if (neighborNode) highlightNodes.add(neighborNode);
+                            });
+                        }
+                    }
+                });
+
+                applyHighlightVisuals();
+            };
+
+            const Graph = ForceGraph3D()
+                (document.getElementById('graph-container'))
+                .graphData(data)
+                .backgroundColor('#00000000')
+                .nodeLabel(() => '')
+                .nodeRelSize(4)
+                .nodeVal(node => node.category === 'factor' ? node.val * 2.5 : node.val)
+                .nodeColor(node => {
+                    if (highlightNodes.size === 0 || highlightNodes.has(node)) {
+                        return categoryColors[node.category] || '#4ecdc4';
+                    }
+                    return '#444444';
+                })
+                .nodeThreeObject(node => {
+                    if (node.category === 'factor') {
+                        // Create a glowing sphere for factors with gradient glow
+                        const group = new THREE.Group();
+                        const size = Math.cbrt(node.val * 2.5) * 4;
+                        
+                        // Inner bright core
+                        const geometry = new THREE.SphereGeometry(size, 32, 32);
+                        const material = new THREE.MeshBasicMaterial({ 
+                            color: categoryColors[node.category],
+                            transparent: true,
+                            opacity: 1
+                        });
+                        const sphere = new THREE.Mesh(geometry, material);
+                        group.add(sphere);
+                        
+                        // Multi-layer gradient glow effect (4 layers for relatively smooth falloff)
+                        const glowLayers = [
+                            { scale: 1.3, opacity: 0.5 },
+                            { scale: 1.6, opacity: 0.3 },
+                            { scale: 2.0, opacity: 0.15 },
+                            { scale: 2.5, opacity: 0.05 }
+                        ];
+                        
+                        glowLayers.forEach(layer => {
+                            const glowGeometry = new THREE.SphereGeometry(size * layer.scale, 24, 24);
+                            const glowMaterial = new THREE.MeshBasicMaterial({
+                                color: categoryColors[node.category],
+                                transparent: true,
+                                opacity: layer.opacity,
+                                side: THREE.BackSide,
+                                depthWrite: false
+                            });
+                            const glowSphere = new THREE.Mesh(glowGeometry, glowMaterial);
+                            group.add(glowSphere);
+                        });
+                        
+                        // Add text label for factors
+                        const sprite = new SpriteText(prettifyName(node.name));
+                        sprite.color = '#ffffff';
+                        sprite.textHeight = 8;
+                        sprite.position.set(0, size + 8, 0);
+                        group.add(sprite);
+                        
+                        return group;
+                    }
+                    return null; // Use default for non-factors
+                })
+                .nodeOpacity(1.0)
+                .nodeResolution(16)
+                .enableNodeDrag(false)  // Disable during animation
+                .d3VelocityDecay(0.3)   // Slower movement
+                .warmupTicks(0)         // Don't pre-calculate
+                .cooldownTicks(400)     // Run until stable, then stop (physics only on interaction)
+                .linkColor(link => {
+                    if (highlightLinks.size === 0 || highlightLinks.has(link)) {
+                        return link.sign === 'positive' ? '#5cb85c' : '#d9534f';
+                    }
+                    return 'rgba(100, 100, 100, 0.1)';
+                })
+                .linkWidth(link => {
+                    if (highlightLinks.size === 0 || highlightLinks.has(link)) {
+                        return link.value * 2;
+                    }
+                    return 0.5;
+                })
+                .linkOpacity(0)  // Start invisible for animation
+                .linkDirectionalParticles(link => highlightLinks.has(link) ? 2 : 0)
+                .linkDirectionalParticleWidth(2)
+                .linkDirectionalParticleSpeed(0.005)
+                .onNodeHover(node => {
+                    document.body.style.cursor = node ? 'pointer' : 'default';
+                    hoverNode = node;
+                    
+                    if (node) {
+                        // Show tooltip
+                        const nodeType = node.type === 'factor' ? 'Factor' : 'Variable';
+                        const category = node.category !== 'factor' ? node.category.replace(/_/g, ' ') : '';
+                        const connections = degreeByNode.get(node.id) || 0;
+                        
+                        const prettyName = prettifyName(node.name);
+                        const prettyCategory = category.replace(/_/g, ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                        
+                        tooltip.innerHTML = `
+                            <div class="tooltip-title">${nodeType}: ${prettyName}</div>
+                            ${category ? `<div style="color: ${categoryColors[node.category]}; text-transform: capitalize; margin: 5px 0;">Category: ${prettyCategory}</div>` : ''}
+                            <div>Connections: ${connections}</div>
+                        `;
+                        tooltip.style.display = 'block';
+                    } else {
+                        tooltip.style.display = 'none';
+                    }
+                })
+                .onNodeClick(node => {
+                    if (node) {
+                        clearLegendSelection();
+                        highlightNodes.clear();
+                        highlightLinks.clear();
+                        
+                        // Add the clicked node
+                        highlightNodes.add(node);
+                        
+                        // Add connected nodes and links using precomputed adjacency
+                        const nodeLinks = linksByNode.get(node.id);
+                        if (nodeLinks) {
+                            nodeLinks.forEach(link => {
+                                highlightLinks.add(link);
+                                const sourceId = getNodeId(link.source);
+                                const targetId = getNodeId(link.target);
+                                const neighborId = sourceId === node.id ? targetId : sourceId;
+                                const neighborNode = nodeById.get(neighborId);
+                                if (neighborNode) highlightNodes.add(neighborNode);
+                            });
+                        }
+                        
+                        Graph.nodeColor(Graph.nodeColor())
+                            .linkColor(Graph.linkColor())
+                            .linkWidth(Graph.linkWidth())
+                            .linkOpacity(Graph.linkOpacity())
+                            .linkDirectionalParticles(Graph.linkDirectionalParticles());
+
+                        // Show melody examples panel for any node with manifest entries
+                        // (now keyed by both variable id and factor id, e.g. "F1")
+                        loadMelodyManifest().then(manifest => {
+                            if (manifest && manifest[node.id]) {
+                                showMelodyExamples(node.id, node.name);
+                            } else {
+                                hideMelodyExamples();
+                            }
+                        });
+                    }
+                })
+                .onBackgroundClick(() => {
+                    highlightNodes.clear();
+                    highlightLinks.clear();
+                    clearLegendSelection();
+                    hideMelodyExamples();
+                    Graph.nodeColor(Graph.nodeColor())
+                        .linkColor(Graph.linkColor())
+                        .linkWidth(Graph.linkWidth())
+                        .linkOpacity(Graph.linkOpacity())
+                        .linkDirectionalParticles(Graph.linkDirectionalParticles());
+                })
+                .onNodeDrag(() => {
+                    // Re-enable physics when user drags a node (after network was stable)
+                    Graph.d3Force('charge').strength(-30);
+                    Graph.d3Force('link').strength(0.5);
+                })
+                .onEngineStop(() => {
+                    // After network is stable, stop physics to save CPU/GPU
+                    Graph.d3Force('charge').strength(0);
+                    Graph.d3Force('link').strength(0);
+                });
+
+            // Initial camera position
+            Graph.cameraPosition({ x: 0, y: 0, z: 800 });
+            
+            // Gentle physics forces for smooth convergence
+            Graph.d3Force('charge').strength(-30);
+            Graph.d3Force('link').distance(link => 80);
+
+            // Search functionality (debounced to avoid excessive work while typing)
+            const handleSearchInput = (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                if (!searchTerm) {
+                    highlightNodes.clear();
+                    highlightLinks.clear();
+                    clearLegendSelection();
+                } else {
+                    highlightNodes.clear();
+                    highlightLinks.clear();
+                    
+                    data.nodes.forEach(node => {
+                        const prettyName = prettifyName(node.name).toLowerCase();
+                        if (node.name.toLowerCase().includes(searchTerm) || prettyName.includes(searchTerm)) {
+                            highlightNodes.add(node);
+                            
+                            // Highlight connected links using precomputed adjacency
+                            const nodeLinks = linksByNode.get(node.id);
+                            if (nodeLinks) {
+                                nodeLinks.forEach(link => {
+                                    highlightLinks.add(link);
+                                    const sourceId = getNodeId(link.source);
+                                    const targetId = getNodeId(link.target);
+                                    const neighborId = sourceId === node.id ? targetId : sourceId;
+                                    const neighborNode = nodeById.get(neighborId);
+                                    if (neighborNode) highlightNodes.add(neighborNode);
+                                });
+                            }
+                        }
+                    });
+                }
+                
+                Graph.nodeColor(Graph.nodeColor())
+                    .linkColor(Graph.linkColor())
+                    .linkWidth(Graph.linkWidth())
+                    .linkOpacity(Graph.linkOpacity())
+                    .linkDirectionalParticles(Graph.linkDirectionalParticles());
+            };
+            searchBox.addEventListener('input', debounce(handleSearchInput, 150));
+
+            legendItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const category = item.getAttribute('data-category');
+                    if (!category) return;
+                    highlightCategory(category);
+                });
+            });
+
+            // Configure the per-factor link-count slider's range from the actual data:
+            // "max" is the largest number of links any single factor has (so at max,
+            // every factor shows all of its connections — i.e. the unfiltered baseline).
+            const linksPerFactor = new Map();
+            for (const link of graphData.links) {
+                const src = typeof link.source === 'object' ? link.source.id : link.source;
+                linksPerFactor.set(src, (linksPerFactor.get(src) || 0) + 1);
+            }
+            const maxPerFactor = linksPerFactor.size > 0
+                ? Math.max(...linksPerFactor.values())
+                : 10;
+            const minLinkCount = Math.min(10, maxPerFactor);
+            linkCountSlider.min = String(minLinkCount);
+            linkCountSlider.max = String(maxPerFactor);
+            linkCountSlider.value = String(maxPerFactor);
+            linkCountValue.textContent = String(maxPerFactor);
+
+            // Unified filter:
+            //   1) keep links that pass the loading threshold
+            //   2) for each factor (source), keep at most N strongest of its remaining links
+            //      where N is the "connections per factor" slider value.
+            // Factors with fewer than N links keep all of them — so e.g. at N=10 each factor
+            // shows its top 10 features (or all its features, whichever is smaller).
+            const applyLinkFilters = () => {
+                const threshold = parseFloat(thresholdSlider.value);
+                const perFactor = parseInt(linkCountSlider.value, 10);
+                thresholdValue.textContent = threshold.toFixed(2);
+                linkCountValue.textContent = String(perFactor);
+
+                const passedThreshold = graphData.links.filter(link => link.value >= threshold);
+                const grouped = new Map();
+                for (const link of passedThreshold) {
+                    const src = typeof link.source === 'object' ? link.source.id : link.source;
+                    if (!grouped.has(src)) grouped.set(src, []);
+                    grouped.get(src).push(link);
+                }
+                const finalLinks = [];
+                for (const links of grouped.values()) {
+                    if (links.length > perFactor) {
+                        links.sort((a, b) => b.value - a.value);
+                        finalLinks.push(...links.slice(0, perFactor));
+                    } else {
+                        finalLinks.push(...links);
+                    }
+                }
+                Graph.graphData({ nodes: graphData.nodes, links: finalLinks });
+                document.getElementById('stat-links').textContent = finalLinks.length;
+            };
+            const applyLinkFiltersDebounced = debounce(applyLinkFilters, 100);
+            thresholdSlider.addEventListener('input', applyLinkFiltersDebounced);
+            linkCountSlider.addEventListener('input', applyLinkFiltersDebounced);
+            // Expose so the intro animation can apply current filter state at hand-off
+            window.applyLinkFilters = applyLinkFilters;
+
+            // Mouse move for tooltip positioning
+            document.addEventListener('mousemove', (e) => {
+                if (tooltip.style.display === 'block') {
+                    tooltip.style.left = (e.clientX + 15) + 'px';
+                    tooltip.style.top = (e.clientY + 15) + 'px';
+                }
+            });
+
+            window.Graph = Graph;
+
+            // Responsive resizing of graph when window size changes
+            const resizeGraph = () => {
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+                if (typeof Graph.width === 'function' && typeof Graph.height === 'function') {
+                    Graph.width(width);
+                    Graph.height(height);
+                }
+                if (Graph.renderer && Graph.renderer()) {
+                    Graph.renderer().setSize(width, height);
+                }
+                if (Graph.camera && Graph.camera()) {
+                    const camera = Graph.camera();
+                    camera.aspect = width / height;
+                    camera.updateProjectionMatrix();
+                }
+            };
+            window.addEventListener('resize', resizeGraph);
+            resizeGraph();
+            
+            // Function to calculate network center of mass
+            const updateNetworkCenter = () => {
+                let sumX = 0, sumY = 0, sumZ = 0;
+                let count = 0;
+                data.nodes.forEach(node => {
+                    if (node.x !== undefined && node.y !== undefined && node.z !== undefined) {
+                        sumX += node.x;
+                        sumY += node.y;
+                        sumZ += node.z;
+                        count++;
+                    }
+                });
+                if (count > 0) {
+                    networkCenter = {
+                        x: sumX / count,
+                        y: sumY / count,
+                        z: sumZ / count
+                    };
+                }
+            };
+            
+            // Disable all forces initially
+            Graph.d3Force('charge').strength(0);
+            Graph.d3Force('link').strength(0);
+            
+            // Add gentle floating motion to scattered particles
+            let floatingInterval;
+            const startFloating = () => {
+                floatingInterval = setInterval(() => {
+                    data.nodes.forEach(node => {
+                        if (node.fx !== undefined) {
+                            // Very gentle drift
+                            const drift = 0.8;
+                            node.fx += (Math.random() - 0.5) * drift;
+                            node.fy += (Math.random() - 0.5) * drift;
+                            node.fz += (Math.random() - 0.5) * drift;
+                        }
+                    });
+                    Graph.numDimensions(3); // Trigger refresh
+                }, 150);
+            };
+            
+            // Animate intro sequence
+            setTimeout(() => {
+                // Phase 1: Float scattered briefly with no forces
+                startFloating();
+                
+                // Phase 2: Begin assembly
+                setTimeout(() => {
+                    clearInterval(floatingInterval);
+                    
+                    // Release nodes to allow forces to work
+                    data.nodes.forEach(node => {
+                        node.fx = undefined;
+                        node.fy = undefined;
+                        node.fz = undefined;
+                    });
+                    
+                    // Very gradually increase force strength to prevent snapping
+                    let forceStrength = -2;  // Start with extremely weak forces
+                    const targetStrength = -30;
+                    const forceRampInterval = setInterval(() => {
+                        forceStrength -= 3;  // Ramp up faster
+                        if (forceStrength <= targetStrength) {
+                            forceStrength = targetStrength;
+                            clearInterval(forceRampInterval);
+                        }
+                        Graph.d3Force('charge').strength(forceStrength);
+                        Graph.d3Force('link').strength(0.5);
+                    }, 50);  // Every 50ms
+                    
+                    // Phase 3: Fade in links
+                    setTimeout(() => {
+                        let linkOpacity = 0;
+                        const linkFadeInterval = setInterval(() => {
+                            linkOpacity += 0.03;  // Faster fade-in
+                            if (linkOpacity >= 0.6) {
+                                linkOpacity = 0.6;
+                                clearInterval(linkFadeInterval);
+                                
+                                // Phase 4: Apply current filter state (threshold + link count)
+                                setTimeout(() => {
+                                    if (typeof window.applyLinkFilters === 'function') {
+                                        window.applyLinkFilters();
+                                    } else {
+                                        // Fallback in case filters haven't been wired yet
+                                        const threshold = 0.3;
+                                        const filteredLinks = graphData.links.filter(link => link.value >= threshold);
+                                        Graph.graphData({ nodes: graphData.nodes, links: filteredLinks });
+                                        document.getElementById('stat-links').textContent = filteredLinks.length;
+                                    }
+                                    
+                                    // Phase 5: Start smooth rotation
+                                    setTimeout(() => {
+                                    Graph.enableNodeDrag(true);
+                                    
+                                    // Calculate initial network center
+                                    updateNetworkCenter();
+                                    console.log('Network center:', networkCenter);
+                                    
+                                    // Set controls to look at network center
+                                    const controls = Graph.controls();
+                                    controls.target.set(networkCenter.x, networkCenter.y, networkCenter.z);
+                                    controls.update();
+                                    
+                                    // Hide loading screen now that rotation is starting
+                                    document.getElementById('loading').style.display = 'none';
+                                    
+                                    let angle = 0;
+                                    let isRotating = true;
+                                    let lastInteractionTime = 0;
+                                    let rotationInterval = null;
+                                    let rotationFrozenByUser = false;
+                                    let capturedDistance = 800;
+                                    let capturedY = 0;
+                                    const rotationSpeed = 0.10;
+                                    
+                                    const startRotation = () => {
+                                        if (rotationInterval) return;
+                                        isRotating = true;
+                                        
+                                        // Capture current camera position and distance when starting/resuming
+                                        const camera = Graph.camera();
+                                        updateNetworkCenter();
+                                        
+                                        const relativePos = {
+                                            x: camera.position.x - networkCenter.x,
+                                            y: camera.position.y - networkCenter.y,
+                                            z: camera.position.z - networkCenter.z
+                                        };
+                                        
+                                        // Capture distance and y position - maintain these throughout rotation
+                                        const distXZ = Math.sqrt(relativePos.x ** 2 + relativePos.z ** 2);
+                                        capturedDistance = distXZ;
+                                        capturedY = camera.position.y;
+                                        
+                                        // Sync angle with current position in XZ plane
+                                        angle = Math.atan2(relativePos.x, relativePos.z) * 180 / Math.PI;
+                                        
+                                        rotationInterval = setInterval(() => {
+                                            if (!isRotating) return;
+                                            
+                                            angle += rotationSpeed;
+                                            const radians = angle * Math.PI / 180;
+                                            
+                                            // Rotate around network center with fixed distance
+                                            Graph.cameraPosition({
+                                                x: networkCenter.x + capturedDistance * Math.sin(radians),
+                                                y: capturedY,
+                                                z: networkCenter.z + capturedDistance * Math.cos(radians)
+                                            }, networkCenter, 0);
+                                        }, 33);  // 30fps
+                                    };
+                                    
+                                    const stopRotation = () => {
+                                        isRotating = false;
+                                        if (rotationInterval) {
+                                            clearInterval(rotationInterval);
+                                            rotationInterval = null;
+                                        }
+                                    };
+                                    
+                                    const checkResumeRotation = () => {
+                                        if (rotationFrozenByUser || document.hidden) return;
+                                        const now = Date.now();
+                                        if (!isRotating && now - lastInteractionTime > 2000) {
+                                            startRotation();
+                                        }
+                                    };
+                                    
+                                    // Monitor interaction events
+                                    controls.addEventListener('start', () => {
+                                        lastInteractionTime = Date.now();
+                                        stopRotation();
+                                    });
+                                    
+                                    controls.addEventListener('change', () => {
+                                        lastInteractionTime = Date.now();
+                                    });
+                                    
+                                    controls.addEventListener('end', () => {
+                                        lastInteractionTime = Date.now();
+                                    });
+                                    
+                                    // Check every 500ms if we should resume rotation
+                                    setInterval(checkResumeRotation, 500);
+                                    
+                                    // Freeze button: prevent rotation when toggled
+                                    const freezeBtn = document.getElementById('freeze-btn');
+                                    freezeBtn.onclick = () => {
+                                        rotationFrozenByUser = !rotationFrozenByUser;
+                                        if (rotationFrozenByUser) {
+                                            stopRotation();
+                                            freezeBtn.textContent = 'Resume ▶️';
+                                        } else {
+                                            startRotation();
+                                            freezeBtn.textContent = 'Freeze ❄️';
+                                        }
+                                    };
+                                    
+                                    //  pause when tab hidden to save resources
+                                    document.addEventListener('visibilitychange', () => {
+                                        if (document.hidden) {
+                                            stopRotation();
+                                            if (typeof Graph.pauseAnimation === 'function') Graph.pauseAnimation();
+                                        } else {
+                                            if (!rotationFrozenByUser) startRotation();
+                                            if (typeof Graph.resumeAnimation === 'function') Graph.resumeAnimation();
+                                        }
+                                    });
+                                    
+                                    // Start initial rotation
+                                    startRotation();
+                                }, 300);
+                            }, 200);
+                        }
+                        
+                        // Update link opacity
+                        Graph.linkOpacity(link => {
+                            if (highlightLinks.size === 0 || highlightLinks.has(link)) {
+                                return linkOpacity;
+                            }
+                            return linkOpacity * 0.15;
+                        });
+                    }, 50);  // Link fade update interval
+                }, 400);  // Start link fade shortly after assembly begins
+                }, 500);  // Float for 0.5s then begin assembly
+            }, 100);  // Initial delay
+        }
+
+        // Initialize the graph when the page loads
+        if (typeof networkData !== 'undefined') {
+            console.log('Network data loaded successfully');
+            initGraph(networkData);
+
+            // Update stats from data (factor count, variable count, link count all dynamic)
+            const factorCount = networkData.nodes.filter(n => n.type === 'factor').length;
+            const varCount = networkData.nodes.filter(n => n.type === 'variable').length;
+            document.getElementById('stat-factors').textContent = factorCount;
+            const legendFactorCount = document.getElementById('legend-factor-count');
+            if (legendFactorCount) legendFactorCount.textContent = factorCount;
+            document.getElementById('stat-variables').textContent = varCount;
+            document.getElementById('stat-links').textContent = networkData.links.length;
+        } else {
+            console.error('Network data not loaded!');
+            document.getElementById('loading').innerHTML = '<p style="color: #ff6b6b;">Error: Network data not found. Please ensure network_data.js is loaded.</p>';
+        }
+    </script>
+</body>
+</html>
