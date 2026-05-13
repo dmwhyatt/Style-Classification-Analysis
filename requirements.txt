@@ -6,3 +6,5 @@ scipy
 seaborn
 matplotlib
 xgboost
+pretty_midi
+soundfile

@@ -212,8 +212,6 @@ __marimo__/
 # Project-specific
 coefficients/
 essen:*/
-factor_eigenvalues_elbow_interactive_files/
-factor_network_full_files/
 midi/
 *.png
 shap*

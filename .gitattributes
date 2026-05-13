@@ -1,0 +1,2 @@
+docs/melody_examples/*.wav filter=lfs diff=lfs merge=lfs -text
+docs/melody_examples/*.png filter=lfs diff=lfs merge=lfs -text

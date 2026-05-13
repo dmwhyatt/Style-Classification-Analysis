@@ -1,8 +1,6 @@
 library(tidyverse)
 library(psych)
-library(plotly)
-library(htmlwidgets)
-library(visNetwork)
+library(jsonlite)
 
 set.seed(42)
 
@@ -102,15 +100,7 @@ p_scree <- ggplot(scree_df, aes(x = Factor)) +
   theme_minimal(base_size = 12)
 
 ggsave("factor_eigenvalues_elbow.pdf", plot = p_scree, width = 8, height = 6)
-
-# interactive version makes it easier to count factors and identify the elbow
-p_scree_interactive <- ggplotly(p_scree, tooltip = c("x", "y", "colour"))
-saveWidget(
-  p_scree_interactive,
-  file = "factor_eigenvalues_elbow_interactive.html",
-  selfcontained = FALSE
-)
-cat("Saved factor_eigenvalues_elbow.pdf and factor_eigenvalues_elbow_interactive.html\n")
+cat("Saved factor_eigenvalues_elbow.pdf\n")
 
 # inspect the scree/elbow outputs above to choose factor count
 N_FACTORS <- 8
@@ -133,16 +123,16 @@ cat(
 )
 
 
-# intepreted using the network diagram below
+# Interpreted using docs/index.html (3D network) and factor_top_loadings.csv
 factor_names <- c(
   "1. Long Pulses",
   "2. Metric Strength",
-  "3. Timing Variability",
-  "4. Interval Complexity",
+  "3. Range of Rhythms",
+  "4. Interval Variability",
   "5. General Complexity",
-  "6. Scale Conformity",
-  "7. Pitch Variability",
-  "8. Distinctiveness"
+  "6. Chromatic Pitch-Class Variety",
+  "7. Conjunct Pitch Variety",
+  "8. Corpus Distinctiveness"
 )
 if (length(factor_names) < N_FACTORS) {
   factor_names <- c(factor_names, paste0("Factor ", seq(length(factor_names) + 1, N_FACTORS)))
@@ -179,9 +169,7 @@ cat(
   sep = ""
 )
 
-# Interactive loading graph to help interpret the factors
-cat("\nCreating interactive factor network (visNetwork)...\n")
-
+# Top loadings per factor (CSV for tables / supplementary)
 TOP_LOADINGS_PER_FACTOR <- 10L
 top_loading_parts <- vector("list", N_FACTORS)
 for (i in seq_len(N_FACTORS)) {
@@ -207,114 +195,71 @@ cat(
   sep = ""
 )
 
-create_network_diagram <- function(loadings, cutoff = 0.3, max_factors = NULL,
-                                   custom_names = NULL) {
-  if (is.null(max_factors)) {
-    max_factors <- ncol(loadings)
+# 3D network data for docs/index.html webapp (mirrors essen_new/create_3d_network_data.R)
+NETWORK_CUTOFF <- 0.3
+dir.create("docs", showWarnings = FALSE, recursive = TRUE)
+
+build_3d_network_data <- function(loadings, cutoff = 0.3, factor_labels = NULL) {
+  n_factors <- ncol(loadings)
+  if (is.null(factor_labels)) {
+    factor_labels <- paste0("Factor ", seq_len(n_factors))
   }
-  if (is.null(custom_names)) {
-    factor_labels <- paste0("Factor ", seq_len(max_factors))
-  } else {
-    factor_labels <- custom_names[seq_len(max_factors)]
+
+  nodes <- vector("list", 0)
+  for (i in seq_len(n_factors)) {
+    nodes[[length(nodes) + 1L]] <- list(
+      id = paste0("F", i),
+      name = factor_labels[i],
+      type = "factor",
+      val = 25L
+    )
   }
 
-  factor_nodes <- data.frame(
-    id = paste0("F", seq_len(max_factors)),
-    label = factor_labels,
-    group = "factor",
-    shape = "ellipse",
-    color = "#ff7f0e",
-    size = 30,
-    font.size = 20,
-    title = factor_labels,
-    stringsAsFactors = FALSE
-  )
+  seen_vars <- character(0)
+  links <- vector("list", 0)
+  for (i in seq_len(n_factors)) {
+    fl <- loadings[, i]
+    fl[is.na(fl)] <- 0
+    sig_idx <- which(abs(fl) > cutoff)
+    for (j in sig_idx) {
+      var_name <- rownames(loadings)[j]
+      loading_value <- unname(fl[j])
 
-  var_nodes_list <- list()
-  edges_list <- list()
-
-  for (i in seq_len(max_factors)) {
-    factor_loadings <- loadings[, i]
-    factor_loadings[is.na(factor_loadings)] <- 0
-    sig_idx <- abs(factor_loadings) > cutoff
-
-    if (sum(sig_idx) > 0) {
-      sig_vars <- names(factor_loadings)[sig_idx]
-      sig_values <- factor_loadings[sig_idx]
-
-      for (j in seq_along(sig_vars)) {
-        var_name <- sig_vars[j]
-        loading_value <- sig_values[j]
-
-        if (!var_name %in% names(var_nodes_list)) {
-          var_nodes_list[[var_name]] <- data.frame(
-            id = var_name,
-            label = var_name,
-            group = "variable",
-            shape = "box",
-            color = "#1f77b4",
-            size = 20,
-            font.size = 12,
-            title = var_name,
-            stringsAsFactors = FALSE
-          )
-        }
-
-        edge_color <- ifelse(loading_value > 0, "green", "red")
-        edges_list[[length(edges_list) + 1]] <- data.frame(
-          from = paste0("F", i),
-          to = var_name,
-          value = abs(loading_value) * 10,
-          title = paste0("Loading: ", round(loading_value, 3)),
-          color = edge_color,
-          arrows = "to",
-          stringsAsFactors = FALSE
+      if (!var_name %in% seen_vars) {
+        nodes[[length(nodes) + 1L]] <- list(
+          id = var_name,
+          name = var_name,
+          type = "variable",
+          val = 8L
         )
+        seen_vars <- c(seen_vars, var_name)
       }
+
+      links[[length(links) + 1L]] <- list(
+        source = paste0("F", i),
+        target = var_name,
+        value = round(abs(loading_value), 4),
+        sign = if (loading_value > 0) "positive" else "negative"
+      )
     }
   }
 
-  if (length(edges_list) == 0) {
-    warning("No edges above loading cutoff ", cutoff, "; network HTML not written.")
-    return(NULL)
-  }
-
-  var_nodes <- do.call(rbind, var_nodes_list)
-  all_nodes <- rbind(factor_nodes, var_nodes)
-  all_edges <- do.call(rbind, edges_list)
-
-  visNetwork(all_nodes, all_edges, width = "100%", height = "800px") %>%
-    visGroups(groupname = "factor", color = "#ff7f0e", shape = "ellipse") %>%
-    visGroups(groupname = "variable", color = "#1f77b4", shape = "box") %>%
-    visOptions(
-      highlightNearest = list(enabled = TRUE, degree = 1, hover = TRUE),
-      nodesIdSelection = TRUE,
-      selectedBy = "group"
-    ) %>%
-    visLayout(randomSeed = 123) %>%
-    visPhysics(
-      solver = "forceAtlas2Based",
-      forceAtlas2Based = list(gravitationalConstant = -50)
-    ) %>%
-    visInteraction(
-      navigationButtons = TRUE,
-      dragNodes = TRUE,
-      dragView = TRUE,
-      zoomView = TRUE
-    ) %>%
-    visLegend(width = 0.1, position = "right", main = "Node Type")
+  list(nodes = nodes, links = links)
 }
 
-full_diagram <- create_network_diagram(
+network_data <- build_3d_network_data(
   loadings_mat,
-  cutoff = 0.3,
-  max_factors = N_FACTORS,
-  custom_names = factor_names
+  cutoff = NETWORK_CUTOFF,
+  factor_labels = factor_names
 )
-if (!is.null(full_diagram)) {
-  visSave(full_diagram, "factor_network_full.html", selfcontained = FALSE)
-  cat("Saved factor_network_full.html (open in browser; companion folder may be created)\n")
-}
+json_data <- toJSON(network_data, auto_unbox = TRUE, pretty = TRUE)
+writeLines(json_data, "docs/network_data.json")
+# JS shim so docs/index.html can be opened directly from disk (no HTTP server needed)
+writeLines(c("const networkData =", json_data, ";"), "docs/network_data.js")
+cat(sprintf(
+  "Wrote docs/network_data.json and docs/network_data.js (%d nodes, %d links)\n",
+  length(network_data$nodes), length(network_data$links)
+))
 
 cat("\nUsing factor names:\n")
 for (i in seq_along(factor_names)) {
