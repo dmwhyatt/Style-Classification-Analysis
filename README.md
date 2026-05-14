@@ -36,7 +36,7 @@ pip install -r requirements.txt
 **3. R packages** (for `factor_logistic.R` only)
 
 ```bash
-Rscript -e 'install.packages(c("tidyverse", "psych", "plotly", "htmlwidgets", "visNetwork"), repos="https://cloud.r-project.org")'
+Rscript -e 'install.packages(c("tidyverse", "psych", "jsonlite"), repos="https://cloud.r-project.org")'
 ```
 
 `ggplot2` is included in `tidyverse`.
@@ -92,6 +92,26 @@ python comparison.py
 | 2 | `xgb_confusion_matrix_test.pdf` | `python xgbclassifer.py` |
 | 3 | `factor_eigenvalues_elbow.pdf` | `Rscript factor_logistic.R` |
 | 4 | `factor_logistic_confusion_matrix_test.pdf` | `python factor_logistic_plot_confusion.py` (after **3**) |
+
+---
+
+## Factor network webapp
+
+`Rscript factor_logistic.R` also writes a self-contained 3D interactive visualization of the eight-factor solution to `docs/`:
+
+| File | Role |
+|------|------|
+| `docs/index.html` | Three.js / `3d-force-graph` viewer. |
+| `docs/network_data.js` | Nodes (factors + variables with \|loading\| > 0.3) and links. |
+| `docs/network_data.json` | Same data as a portable JSON sidecar. |
+
+### Melody examples
+
+`python build_melody_examples.py` populates `docs/melody_examples/` with a piano-roll PNG and a synthesized WAV for the 3 highest and 3 lowest-scoring melodies for every feature node and every factor node in the network. Clicking any node then displays these examples.
+
+- Features are ranked by their value in `essen_china_europe_features.csv`.
+- Factors are ranked by the regression factor scores in `factor_scores_for_logreg.csv` (produced by `factor_logistic.R`).
+- All of this is precomputed to make the webapp performant.
 
 ---
 
