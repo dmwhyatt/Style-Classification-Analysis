@@ -215,6 +215,8 @@ essen:*/
 midi/
 *.png
 !docs/melody_examples/*.png
+!docs/melody_examples/midi/
+!docs/melody_examples/midi/*.mid
 shap*
 *.krn
 *.pdf

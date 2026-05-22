@@ -18,9 +18,38 @@
             overflow: hidden;
         }
 
+        #graph-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+        }
         #graph-container {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100vw;
             height: 100vh;
+            z-index: 0;
+        }
+        #graph-container canvas {
+            display: block;
+        }
+        .graph-interaction-blocker {
+            position: fixed;
+            inset: 0;
+            z-index: 500;
+            background: rgba(10, 14, 39, 0.35);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+        .graph-interaction-blocker.visible {
+            opacity: 1;
+            pointer-events: auto;
+            cursor: default;
         }
 
         .overlay {
@@ -347,14 +376,14 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            width: 340px;
+            width: min(560px, calc(100vw - 40px));
             max-width: calc(100vw - 40px);
-            max-height: 85vh;
-            background: rgba(10, 14, 39, 0.92);
+            max-height: 90vh;
+            background: rgba(10, 14, 39, 0.96);
             backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 0;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
             border: 1px solid rgba(255, 255, 255, 0.1);
             z-index: 1000;
             display: none;
@@ -390,36 +419,61 @@
         .melody-panel-close:hover {
             color: #fff;
         }
-        .melody-panel-content {
-            overflow-y: auto;
-            padding: 12px 16px 16px;
+        .melody-panel-body {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+            padding: 12px 14px 14px;
+            gap: 10px;
         }
-        .melody-section {
-            margin-bottom: 18px;
-        }
-        .melody-section:last-child {
-            margin-bottom: 0;
-        }
-        .melody-section-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 8px;
-        }
-        .melody-section.high .melody-section-label { color: #5cb85c; }
-        .melody-section.low .melody-section-label { color: #d9534f; }
-        .melody-section-header {
+        .melody-toolbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 8px;
-            margin-bottom: 8px;
+            gap: 10px;
+            flex-shrink: 0;
         }
-        .melody-section-header .melody-section-label {
-            margin-bottom: 0;
+        .melody-tabs {
+            display: flex;
+            gap: 6px;
         }
-        .melody-section-nav {
+        .melody-tab {
+            padding: 5px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
+        }
+        .melody-tab:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        .melody-tab.active[data-kind="high"] {
+            border-color: #5cb85c;
+            color: #9fdf9f;
+            background: rgba(92, 184, 92, 0.15);
+        }
+        .melody-tab.active[data-kind="low"] {
+            border-color: #d9534f;
+            color: #f0a8a5;
+            background: rgba(217, 83, 79, 0.15);
+        }
+        .melody-tab:disabled,
+        .melody-tab[hidden] {
+            display: none;
+        }
+        .melody-tab:disabled {
+            opacity: 0.35;
+            cursor: default;
+        }
+        .melody-carousel-nav {
             display: flex;
             align-items: center;
             gap: 6px;
@@ -427,13 +481,13 @@
         .melody-section-counter {
             font-size: 11px;
             color: rgba(255, 255, 255, 0.55);
-            min-width: 30px;
+            min-width: 36px;
             text-align: center;
             font-variant-numeric: tabular-nums;
         }
         .melody-nav-btn {
-            width: 22px;
-            height: 22px;
+            width: 26px;
+            height: 26px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -441,7 +495,7 @@
             border: 1px solid rgba(255, 255, 255, 0.25);
             background: rgba(255, 255, 255, 0.05);
             color: rgba(255, 255, 255, 0.85);
-            font-size: 14px;
+            font-size: 15px;
             line-height: 1;
             cursor: pointer;
             padding: 0;
@@ -456,31 +510,82 @@
             opacity: 0.3;
             cursor: default;
         }
-        .melody-card {
-            display: none;
+        .melody-example-meta {
+            flex-shrink: 0;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.4;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 14px;
         }
-        .melody-card.active {
-            display: block;
+        .melody-example-meta .melody-example-value {
+            color: rgba(255, 255, 255, 0.75);
         }
-        .melody-example-img {
+        .melody-example-meta .melody-example-id {
+            color: rgba(255, 255, 255, 0.45);
+        }
+        .melody-player-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            flex-shrink: 0;
+        }
+        .melody-wave-roll-host {
             width: 100%;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.06);
-            margin-bottom: 6px;
+            height: 300px;
+            border-radius: 10px 10px 0 0;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: none;
+            background: #f4f4f6;
         }
-        .melody-example-audio {
+        .melody-player-iframe {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        .melody-transport {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-top: 6px;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 0 0 10px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.06);
         }
-        .melody-example-audio audio {
-            flex: 1;
-            height: 32px;
+        .melody-play-btn {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: none;
+            background: #667eea;
+            color: #fff;
+            font-size: 14px;
+            line-height: 1;
+            cursor: pointer;
+            padding: 0;
+            padding-left: 2px;
+            transition: background 0.15s, transform 0.1s;
         }
-        .melody-example-value {
+        .melody-play-btn:hover {
+            background: #7b8ff0;
+        }
+        .melody-play-btn:active {
+            transform: scale(0.96);
+        }
+        .melody-play-btn.playing {
+            padding-left: 0;
+        }
+        .melody-transport-hint {
             font-size: 11px;
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.45);
         }
 
         /* this should hopefully make the site dynamically scale to mobile screens etc */
@@ -529,9 +634,13 @@
                 gap: 6px;
             }
             .melody-panel {
-                width: min(340px, 90vw);
+                width: min(560px, 96vw);
                 right: 10px;
                 top: 10px;
+                max-height: 92vh;
+            }
+            .melody-wave-roll-host {
+                height: 280px;
             }
         }
 
@@ -766,10 +875,32 @@
             <h2 class="melody-panel-title" id="melody-panel-title">Melody examples</h2>
             <button type="button" class="melody-panel-close" id="melody-panel-close" aria-label="Close">&times;</button>
         </div>
-        <div class="melody-panel-content" id="melody-panel-content"></div>
+        <div class="melody-panel-body" id="melody-panel-body">
+            <div class="melody-toolbar" id="melody-toolbar">
+                <div class="melody-tabs" role="tablist" aria-label="Example group">
+                    <button type="button" class="melody-tab active" data-kind="high" role="tab" aria-selected="true">High</button>
+                    <button type="button" class="melody-tab" data-kind="low" role="tab" aria-selected="false">Low</button>
+                </div>
+                <div class="melody-carousel-nav">
+                    <button type="button" class="melody-nav-btn" id="melody-nav-prev" data-dir="prev" aria-label="Previous example" disabled>&#8249;</button>
+                    <span class="melody-section-counter" id="melody-carousel-counter">1 / 3</span>
+                    <button type="button" class="melody-nav-btn" id="melody-nav-next" data-dir="next" aria-label="Next example">&#8250;</button>
+                </div>
+            </div>
+            <div class="melody-example-meta" id="melody-active-meta"></div>
+            <div class="melody-player-wrap">
+                <div class="melody-wave-roll-host" id="melody-wave-roll-host"></div>
+                <div class="melody-transport">
+                    <button type="button" class="melody-play-btn" id="melody-play-btn" aria-label="Play">&#9654;</button>
+                    <span class="melody-transport-hint">Acoustic piano (FluidR3) · play / pause</span>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <div id="graph-bg" aria-hidden="true"></div>
     <div id="graph-container"></div>
+    <div class="graph-interaction-blocker" id="graph-blocker" aria-hidden="true"></div>
 
     <script src="https://unpkg.com/three@0.159.0/build/three.min.js"></script>
     <script src="https://unpkg.com/three-spritetext@1.8.2/dist/three-spritetext.min.js"></script>
@@ -787,9 +918,26 @@
         const infoBtn = document.getElementById('info-btn');
         const infoPanel = document.getElementById('info-panel');
         const melodyPanel = document.getElementById('melody-panel');
+        const graphBlocker = document.getElementById('graph-blocker');
         const melodyPanelTitle = document.getElementById('melody-panel-title');
-        const melodyPanelContent = document.getElementById('melody-panel-content');
         const melodyPanelClose = document.getElementById('melody-panel-close');
+        const melodyWaveRollHost = document.getElementById('melody-wave-roll-host');
+        const melodyActiveMeta = document.getElementById('melody-active-meta');
+        const melodyTabHigh = document.querySelector('.melody-tab[data-kind="high"]');
+        const melodyTabLow = document.querySelector('.melody-tab[data-kind="low"]');
+        const melodyNavPrev = document.getElementById('melody-nav-prev');
+        const melodyNavNext = document.getElementById('melody-nav-next');
+        const melodyCarouselCounter = document.getElementById('melody-carousel-counter');
+        const melodyPlayBtn = document.getElementById('melody-play-btn');
+        let melodyActiveEntry = null;
+        let melodyActiveKind = 'high';
+        let melodyActiveIdx = 0;
+        let melodyPlayerIframe = null;
+        let melodyWaveRollEl = null;
+        let melodyIsPlaying = false;
+        let melodyLoadedPath = null;
+        let melodyActiveVariableId = null;
+        let mountMelodyDebounceTimer = null;
         const controls = document.getElementById('controls');
         const controlsToggleBtn = document.getElementById('controls-toggle-btn');
         const legendItems = document.querySelectorAll('.legend-item[data-category]');
@@ -840,6 +988,14 @@
                 .join(' ');
         };
 
+        const hideGraphTooltip = () => {
+            hoverNode = null;
+            if (tooltip) tooltip.style.display = 'none';
+            document.body.style.cursor = 'default';
+        };
+
+        const isMelodyPanelOpen = () => melodyPanel?.classList.contains('visible');
+
         // Load melody examples manifest from file (requires HTTP server, e.g. GitHub Pages)
         const loadMelodyManifest = () => {
             if (melodyManifest !== null) return Promise.resolve(melodyManifest);
@@ -849,8 +1005,38 @@
                 .catch(() => null);
         };
 
-        const stopAllMelodyAudio = () => {
-            melodyPanelContent.querySelectorAll('audio').forEach(a => { a.pause(); a.currentTime = 0; });
+        const updateMelodyPlayButton = () => {
+            if (!melodyPlayBtn) return;
+            melodyPlayBtn.textContent = melodyIsPlaying ? '\u23F8' : '\u25B6';
+            melodyPlayBtn.classList.toggle('playing', melodyIsPlaying);
+            melodyPlayBtn.setAttribute('aria-label', melodyIsPlaying ? 'Pause' : 'Play');
+        };
+
+        const stopMelodyPlayback = () => {
+            if (melodyWaveRollEl && typeof melodyWaveRollEl.pause === 'function') {
+                melodyWaveRollEl.pause();
+            }
+            melodyIsPlaying = false;
+            updateMelodyPlayButton();
+        };
+
+        const toggleMelodyPlayback = async () => {
+            let el = getWaveRollFromIframe();
+            if (!el) syncWaveRollRef();
+            el = melodyWaveRollEl || getWaveRollFromIframe();
+            if (!el) return;
+            if (melodyIsPlaying) {
+                stopMelodyPlayback();
+                return;
+            }
+            try {
+                melodyPlayerIframe?.contentWindow?.focus();
+                await el.play();
+                melodyIsPlaying = Boolean(el.isPlaying);
+            } catch (_err) {
+                melodyIsPlaying = false;
+            }
+            updateMelodyPlayButton();
         };
 
         const formatMelodyValue = (v) => {
@@ -858,101 +1044,215 @@
             return Number.isInteger(n) ? String(n) : n.toFixed(4).replace(/\.?0+$/, '');
         };
 
-        const buildMelodyCarouselSection = (items, kind) => {
-            // kind: 'high' | 'low'. items: array of manifest entries.
-            const label = kind === 'high' ? 'High value' : 'Low value';
-            const showNav = items.length > 1;
-            let html = `<div class="melody-section ${kind}" data-section="${kind}">`;
-            html += '<div class="melody-section-header">';
-            html += `<div class="melody-section-label">${label}</div>`;
-            if (showNav) {
-                html += '<div class="melody-section-nav">';
-                html += `<button type="button" class="melody-nav-btn" data-section="${kind}" data-dir="prev" aria-label="Previous ${label}" disabled>&#8249;</button>`;
-                html += `<span class="melody-section-counter" data-section="${kind}">1 / ${items.length}</span>`;
-                html += `<button type="button" class="melody-nav-btn" data-section="${kind}" data-dir="next" aria-label="Next ${label}">&#8250;</button>`;
-                html += '</div>';
+        const resolveMelodyMidiPath = (ex) => {
+            if (ex.midi) return ex.midi;
+            if (ex.png) {
+                const stub = ex.png.replace(/^melody_examples\//, '').replace(/\.png$/i, '');
+                return `melody_examples/midi/${stub}.mid`;
             }
-            html += '</div>';
-            html += `<div class="melody-card-stack" data-section="${kind}">`;
-            items.forEach((ex, i) => {
-                html += `<div class="melody-card${i === 0 ? ' active' : ''}" data-idx="${i}">`;
-                if (ex.png) {
-                    html += `<img class="melody-example-img" src="${ex.png}" alt="Melody piano roll">`;
-                }
-                if (ex.value !== undefined) {
-                    html += `<div class="melody-example-value">Value: ${formatMelodyValue(ex.value)}</div>`;
-                }
-                if (ex.audio) {
-                    html += `<div class="melody-example-audio"><audio controls preload="none" src="${ex.audio}"></audio></div>`;
-                }
-                html += '</div>';
-            });
-            html += '</div></div>';
-            return html;
+            return null;
         };
 
-        const wireMelodyCarouselNav = () => {
-            melodyPanelContent.querySelectorAll('.melody-nav-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const section = btn.dataset.section;
-                    const dir = btn.dataset.dir;
-                    const stack = melodyPanelContent.querySelector(`.melody-card-stack[data-section="${section}"]`);
-                    if (!stack) return;
-                    const cards = Array.from(stack.querySelectorAll('.melody-card'));
-                    const activeIdx = cards.findIndex(c => c.classList.contains('active'));
-                    if (activeIdx < 0) return;
-                    const nextIdx = dir === 'next'
-                        ? Math.min(cards.length - 1, activeIdx + 1)
-                        : Math.max(0, activeIdx - 1);
-                    if (nextIdx === activeIdx) return;
-                    // Pause any audio playing inside this section before switching
-                    stack.querySelectorAll('audio').forEach(a => { a.pause(); });
-                    cards[activeIdx].classList.remove('active');
-                    cards[nextIdx].classList.add('active');
-                    const counter = melodyPanelContent.querySelector(`.melody-section-counter[data-section="${section}"]`);
-                    if (counter) counter.textContent = `${nextIdx + 1} / ${cards.length}`;
-                    const prevBtn = melodyPanelContent.querySelector(`.melody-nav-btn[data-section="${section}"][data-dir="prev"]`);
-                    const nextBtn = melodyPanelContent.querySelector(`.melody-nav-btn[data-section="${section}"][data-dir="next"]`);
-                    if (prevBtn) prevBtn.disabled = (nextIdx === 0);
-                    if (nextBtn) nextBtn.disabled = (nextIdx === cards.length - 1);
+        const melodyDisplayName = (ex) => {
+            const id = ex.melody_id || '';
+            const base = id.split(/[/\\]/).pop() || id;
+            return base.replace(/\.midi?$/i, '') || 'Melody';
+        };
+
+        const getMelodyItems = (kind) => {
+            if (!melodyActiveEntry) return [];
+            const items = melodyActiveEntry[kind];
+            return items && items.length ? items : [];
+        };
+
+        const getWaveRollFromIframe = () => {
+            try {
+                return melodyPlayerIframe?.contentDocument?.querySelector('wave-roll') || null;
+            } catch (_err) {
+                return null;
+            }
+        };
+
+        const syncWaveRollRef = () => {
+            melodyWaveRollEl = getWaveRollFromIframe();
+        };
+
+        const destroyMelodyWaveRoll = () => {
+            clearTimeout(mountMelodyDebounceTimer);
+            mountMelodyDebounceTimer = null;
+            stopMelodyPlayback();
+            try {
+                const wr = getWaveRollFromIframe();
+                if (wr?.pause) wr.pause();
+                if (wr?.player?.destroy) wr.player.destroy();
+            } catch (_err) { /* ignore teardown errors */ }
+            if (melodyPlayerIframe) {
+                melodyPlayerIframe.src = 'about:blank';
+                melodyPlayerIframe.remove();
+                melodyPlayerIframe = null;
+            }
+            if (melodyWaveRollHost) melodyWaveRollHost.innerHTML = '';
+            melodyWaveRollEl = null;
+            melodyLoadedPath = null;
+        };
+
+        const pauseGraphForMelodyPanel = () => {
+            hideGraphTooltip();
+            if (graphBlocker) {
+                graphBlocker.classList.add('visible');
+                graphBlocker.setAttribute('aria-hidden', 'false');
+            }
+            if (typeof window.setGraphRotationEnabled === 'function') {
+                window.setGraphRotationEnabled(false);
+            }
+            if (window.Graph && typeof window.Graph.pauseAnimation === 'function') {
+                window.Graph.pauseAnimation();
+            }
+        };
+
+        const resumeGraphAfterMelodyPanel = () => {
+            if (graphBlocker) {
+                graphBlocker.classList.remove('visible');
+                graphBlocker.setAttribute('aria-hidden', 'true');
+            }
+            if (window.Graph && typeof window.Graph.resumeAnimation === 'function') {
+                window.Graph.resumeAnimation();
+            }
+            if (typeof window.setGraphRotationEnabled === 'function') {
+                window.setGraphRotationEnabled(true);
+            }
+        };
+
+        const mountActiveMelody = (ex) => {
+            const path = resolveMelodyMidiPath(ex);
+            if (!path || !melodyWaveRollHost) return;
+            clearTimeout(mountMelodyDebounceTimer);
+            mountMelodyDebounceTimer = setTimeout(() => {
+                if (path === melodyLoadedPath && melodyPlayerIframe) return;
+                destroyMelodyWaveRoll();
+                const params = new URLSearchParams({
+                    midi: path,
+                    name: melodyDisplayName(ex),
                 });
+                melodyPlayerIframe = document.createElement('iframe');
+                melodyPlayerIframe.className = 'melody-player-iframe';
+                melodyPlayerIframe.setAttribute('title', `Piano roll: ${melodyDisplayName(ex)}`);
+                melodyPlayerIframe.src = `melody_player.html?${params.toString()}`;
+                melodyWaveRollHost.appendChild(melodyPlayerIframe);
+                melodyLoadedPath = path;
+                melodyPlayerIframe.addEventListener('load', () => syncWaveRollRef(), { once: true });
+            }, 150);
+        };
+
+        const updateMelodyTabs = () => {
+            const hasHigh = getMelodyItems('high').length > 0;
+            const hasLow = getMelodyItems('low').length > 0;
+            if (melodyTabHigh) {
+                melodyTabHigh.disabled = !hasHigh;
+                melodyTabHigh.hidden = !hasHigh;
+            }
+            if (melodyTabLow) {
+                melodyTabLow.disabled = !hasLow;
+                melodyTabLow.hidden = !hasLow;
+            }
+            document.querySelectorAll('.melody-tab').forEach(tab => {
+                const isActive = tab.dataset.kind === melodyActiveKind;
+                tab.classList.toggle('active', isActive);
+                tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
             });
+        };
+
+        const updateActiveMelodyDisplay = () => {
+            const items = getMelodyItems(melodyActiveKind);
+            if (!items.length) {
+                melodyActiveMeta.innerHTML = '<span>No examples for this group.</span>';
+                return;
+            }
+            melodyActiveIdx = Math.max(0, Math.min(melodyActiveIdx, items.length - 1));
+            const ex = items[melodyActiveIdx];
+            mountActiveMelody(ex);
+            let metaHtml = '';
+            if (ex.value !== undefined) {
+                metaHtml += `<span class="melody-example-value">Value: ${formatMelodyValue(ex.value)}</span>`;
+            }
+            if (ex.melody_id) {
+                metaHtml += `<span class="melody-example-id">${melodyDisplayName(ex)}.mid</span>`;
+            }
+            melodyActiveMeta.innerHTML = metaHtml;
+            if (melodyCarouselCounter) {
+                melodyCarouselCounter.textContent = `${melodyActiveIdx + 1} / ${items.length}`;
+            }
+            if (melodyNavPrev) melodyNavPrev.disabled = (melodyActiveIdx === 0);
+            if (melodyNavNext) melodyNavNext.disabled = (melodyActiveIdx >= items.length - 1);
+            updateMelodyTabs();
+        };
+
+        const setMelodyKind = (kind) => {
+            if (!getMelodyItems(kind).length) return;
+            stopMelodyPlayback();
+            melodyActiveKind = kind;
+            melodyActiveIdx = 0;
+            updateActiveMelodyDisplay();
         };
 
         const showMelodyExamples = (variableId, variableName) => {
             if (!melodyManifest || !melodyManifest[variableId]) {
                 melodyPanel.classList.remove('visible');
+                destroyMelodyWaveRoll();
+                melodyActiveVariableId = null;
+                resumeGraphAfterMelodyPanel();
                 return;
             }
-            stopAllMelodyAudio();
-            const entry = melodyManifest[variableId];
-            const prettyName = prettifyName(variableName || entry.label || variableId);
+            if (melodyActiveVariableId !== variableId) {
+                destroyMelodyWaveRoll();
+            }
+            melodyActiveVariableId = variableId;
+            melodyActiveEntry = melodyManifest[variableId];
+            const prettyName = prettifyName(variableName || melodyActiveEntry.label || variableId);
             melodyPanelTitle.textContent = prettyName;
-            let html = '';
-            ['high', 'low'].forEach(k => {
-                const items = entry[k];
-                if (!items || items.length === 0) return;
-                html += buildMelodyCarouselSection(items, k);
-            });
-            melodyPanelContent.innerHTML = html || '<p style="color: rgba(255,255,255,0.5); font-size: 13px;">No examples for this variable.</p>';
-            wireMelodyCarouselNav();
-            // Ensure only one audio plays at a time: when one starts, stop all others
-            melodyPanelContent.querySelectorAll('audio').forEach(audio => {
-                audio.addEventListener('play', () => {
-                    melodyPanelContent.querySelectorAll('audio').forEach(other => {
-                        if (other !== audio) { other.pause(); other.currentTime = 0; }
-                    });
-                });
-            });
+            const defaultKind = getMelodyItems('high').length ? 'high' : 'low';
+            melodyActiveKind = defaultKind;
+            melodyActiveIdx = 0;
+            pauseGraphForMelodyPanel();
+            updateActiveMelodyDisplay();
             melodyPanel.classList.add('visible');
         };
 
         const hideMelodyExamples = () => {
-            stopAllMelodyAudio();
             melodyPanel.classList.remove('visible');
+            melodyActiveVariableId = null;
+            destroyMelodyWaveRoll();
+            resumeGraphAfterMelodyPanel();
         };
 
         if (melodyPanelClose) melodyPanelClose.addEventListener('click', hideMelodyExamples);
+        if (graphBlocker) graphBlocker.addEventListener('click', hideMelodyExamples);
+        if (melodyPlayBtn) {
+            melodyPlayBtn.addEventListener('click', () => { toggleMelodyPlayback(); });
+        }
+        if (melodyTabHigh) {
+            melodyTabHigh.addEventListener('click', () => setMelodyKind('high'));
+        }
+        if (melodyTabLow) {
+            melodyTabLow.addEventListener('click', () => setMelodyKind('low'));
+        }
+        if (melodyNavPrev) {
+            melodyNavPrev.addEventListener('click', () => {
+                if (melodyActiveIdx <= 0) return;
+                stopMelodyPlayback();
+                melodyActiveIdx -= 1;
+                updateActiveMelodyDisplay();
+            });
+        }
+        if (melodyNavNext) {
+            melodyNavNext.addEventListener('click', () => {
+                const items = getMelodyItems(melodyActiveKind);
+                if (melodyActiveIdx >= items.length - 1) return;
+                stopMelodyPlayback();
+                melodyActiveIdx += 1;
+                updateActiveMelodyDisplay();
+            });
+        }
 
         // Rainbow color palette for categories
         const categoryColors = {
@@ -1088,7 +1388,7 @@
             const Graph = ForceGraph3D()
                 (document.getElementById('graph-container'))
                 .graphData(data)
-                .backgroundColor('#00000000')
+                .backgroundColor('#0a0e27')
                 .nodeLabel(() => '')
                 .nodeRelSize(4)
                 .nodeVal(node => node.category === 'factor' ? node.val * 2.5 : node.val)
@@ -1169,6 +1469,10 @@
                 .linkDirectionalParticleWidth(2)
                 .linkDirectionalParticleSpeed(0.005)
                 .onNodeHover(node => {
+                    if (isMelodyPanelOpen()) {
+                        hideGraphTooltip();
+                        return;
+                    }
                     document.body.style.cursor = node ? 'pointer' : 'default';
                     hoverNode = node;
                     
@@ -1193,6 +1497,7 @@
                 })
                 .onNodeClick(node => {
                     if (node) {
+                        hideGraphTooltip();
                         clearLegendSelection();
                         highlightNodes.clear();
                         highlightLinks.clear();
@@ -1363,6 +1668,10 @@
 
             // Mouse move for tooltip positioning
             document.addEventListener('mousemove', (e) => {
+                if (isMelodyPanelOpen()) {
+                    if (tooltip.style.display === 'block') hideGraphTooltip();
+                    return;
+                }
                 if (tooltip.style.display === 'block') {
                     tooltip.style.left = (e.clientX + 15) + 'px';
                     tooltip.style.top = (e.clientY + 15) + 'px';
@@ -1379,8 +1688,14 @@
                     Graph.width(width);
                     Graph.height(height);
                 }
-                if (Graph.renderer && Graph.renderer()) {
-                    Graph.renderer().setSize(width, height);
+                const renderer = Graph.renderer && Graph.renderer();
+                if (renderer) {
+                    renderer.setSize(width, height);
+                    renderer.setClearColor(0x0a0e27, 1);
+                    const canvas = renderer.domElement;
+                    if (canvas?.style) {
+                        canvas.style.display = 'block';
+                    }
                 }
                 if (Graph.camera && Graph.camera()) {
                     const camera = Graph.camera();
@@ -1388,6 +1703,35 @@
                     camera.updateProjectionMatrix();
                 }
             };
+
+            const refreshForceGraph = () => {
+                resizeGraph();
+                if (typeof Graph.refresh === 'function') {
+                    Graph.refresh();
+                }
+            };
+            window.refreshForceGraph = refreshForceGraph;
+
+            const setupGraphWebGLRecovery = () => {
+                const renderer = Graph.renderer && Graph.renderer();
+                const canvas = renderer?.domElement;
+                if (!canvas) return;
+                canvas.addEventListener('webglcontextlost', (e) => {
+                    e.preventDefault();
+                }, false);
+                canvas.addEventListener('webglcontextrestored', () => {
+                    if (typeof window.applyLinkFilters === 'function') {
+                        window.applyLinkFilters();
+                    }
+                    refreshForceGraph();
+                    if (!melodyPanel?.classList.contains('visible')
+                        && typeof window.setGraphRotationEnabled === 'function') {
+                        window.setGraphRotationEnabled(true);
+                    }
+                }, false);
+            };
+            setupGraphWebGLRecovery();
+
             window.addEventListener('resize', resizeGraph);
             resizeGraph();
             
@@ -1542,7 +1886,7 @@
                                                 y: capturedY,
                                                 z: networkCenter.z + capturedDistance * Math.cos(radians)
                                             }, networkCenter, 0);
-                                        }, 33);  // 30fps
+                                        }, 50);  // 20fps — lower GPU use when rotating
                                     };
                                     
                                     const stopRotation = () => {
@@ -1552,9 +1896,18 @@
                                             rotationInterval = null;
                                         }
                                     };
+
+                                    window.setGraphRotationEnabled = (enabled) => {
+                                        if (enabled) {
+                                            if (!rotationFrozenByUser && !document.hidden) startRotation();
+                                        } else {
+                                            stopRotation();
+                                        }
+                                    };
                                     
                                     const checkResumeRotation = () => {
-                                        if (rotationFrozenByUser || document.hidden) return;
+                                        if (rotationFrozenByUser || document.hidden
+                                            || melodyPanel?.classList.contains('visible')) return;
                                         const now = Date.now();
                                         if (!isRotating && now - lastInteractionTime > 2000) {
                                             startRotation();
@@ -1597,8 +1950,14 @@
                                             stopRotation();
                                             if (typeof Graph.pauseAnimation === 'function') Graph.pauseAnimation();
                                         } else {
-                                            if (!rotationFrozenByUser) startRotation();
-                                            if (typeof Graph.resumeAnimation === 'function') Graph.resumeAnimation();
+                                            if (!rotationFrozenByUser
+                                                && !melodyPanel?.classList.contains('visible')) {
+                                                startRotation();
+                                            }
+                                            if (!melodyPanel?.classList.contains('visible')
+                                                && typeof Graph.resumeAnimation === 'function') {
+                                                Graph.resumeAnimation();
+                                            }
                                         }
                                     });
                                     

@@ -3,6 +3,7 @@ import random
 from typing import Dict, List
 
 import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -417,14 +418,57 @@ if coef.ndim == 2:
         perm_out.to_csv("logistic_permutation_importance.csv", index=False)
 
         topk = perm_out.head(20).iloc[::-1].reset_index(drop=True)
+        coef_sign = np.sign(topk["coefficient"].to_numpy(dtype=float))
+        coef_sign = np.where(coef_sign == 0, 1.0, coef_sign)
+        signed_imp = topk["importance_mean"].to_numpy() * coef_sign
+        bar_colors = np.where(
+            topk["coefficient"].to_numpy() >= 0, "#2166ac", "#b2182b"
+        )
         fig, ax = plt.subplots(figsize=(8, 6))
-        ax.barh(topk["pretty_feature"], topk["importance_mean"],
-                xerr=topk["importance_std"], color="#4c72b0", edgecolor="white")
-        ax.set_xlabel("Mean accuracy decrease", fontsize=12)
+        ax.barh(
+            topk["pretty_feature"],
+            signed_imp,
+            xerr=topk["importance_std"],
+            color=bar_colors,
+            edgecolor="white",
+        )
+        ax.axvline(0, color="0.35", linewidth=0.8, zorder=0)
+        ax.set_title(
+            "Logistic Regression: Permuted Feature Importance",
+            fontsize=13,
+            pad=10,
+        )
+        pos_class, neg_class = le.classes_[1], le.classes_[0]
+        ax.legend(
+            handles=[
+                Patch(
+                    facecolor="#2166ac",
+                    edgecolor="white",
+                    label=f"β > 0 (higher → {pos_class})",
+                ),
+                Patch(
+                    facecolor="#b2182b",
+                    edgecolor="white",
+                    label=f"β < 0 (higher → {neg_class})",
+                ),
+            ],
+            loc="lower right",
+            frameon=True,
+            fontsize=9,
+        )
+        ax.set_xlabel(
+            "Mean accuracy decrease\n(sign from logistic coefficient)",
+            fontsize=12,
+        )
         ax.set_ylabel("Feature", fontsize=12)
         ax.tick_params(axis="both", labelsize=10)
-        plt.tight_layout(pad=0.5)
-        plt.savefig("logistic_permutation_importance_bar.pdf", dpi=150)
+        fig.subplots_adjust(left=0.32, bottom=0.14, right=0.96, top=0.90)
+        plt.savefig(
+            "logistic_permutation_importance_bar.pdf",
+            dpi=150,
+            bbox_inches="tight",
+            pad_inches=0.12,
+        )
         plt.close()
         print("Saved permutation importance: 'logistic_permutation_importance.csv', 'logistic_permutation_importance_bar.pdf'")
         print("\nTop 20 features by permutation importance:")

@@ -130,7 +130,7 @@ factor_names <- c(
   "3. Range of Rhythms",
   "4. Interval Variability",
   "5. General Complexity",
-  "6. Chromatic Pitch-Class Variety",
+  "6. Ascending",
   "7. Conjunct Pitch Variety",
   "8. Corpus Distinctiveness"
 )

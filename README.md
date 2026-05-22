@@ -107,11 +107,11 @@ python comparison.py
 
 ### Melody examples
 
-`python build_melody_examples.py` populates `docs/melody_examples/` with a piano-roll PNG and a synthesized WAV for the 3 highest and 3 lowest-scoring melodies for every feature node and every factor node in the network. Clicking any node then displays these examples.
+`python build_melody_examples.py` copies MIDI files and writes `docs/melody_examples/manifest.json` for the 3 highest and 3 lowest-scoring melodies per feature node and per factor node. Clicking a node opens an interactive [WaveRoll](https://github.com/crescent-stdio/wave-roll) piano-roll viewer (full melody, scroll/zoom, playback).
 
 - Features are ranked by their value in `essen_china_europe_features.csv`.
 - Factors are ranked by the regression factor scores in `factor_scores_for_logreg.csv` (produced by `factor_logistic.R`).
-- All of this is precomputed to make the webapp performant.
+- Use the ‹ › controls in each panel section to browse the top or bottom three examples.
 
 ---
 

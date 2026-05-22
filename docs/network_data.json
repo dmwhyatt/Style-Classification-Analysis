@@ -32,7 +32,7 @@
     },
     {
       "id": "F6",
-      "name": "6. Chromatic Pitch-Class Variety",
+      "name": "6. Ascending",
       "type": "factor",
       "val": 25
     },
@@ -47,6 +47,12 @@
       "name": "8. Corpus Distinctiveness",
       "type": "factor",
       "val": 25
+    },
+    {
+      "id": "contour.interpolation_contour_mean_gradient",
+      "name": "contour.interpolation_contour_mean_gradient",
+      "type": "variable",
+      "val": 8
     },
     {
       "id": "timing.average_note_duration",
@@ -393,12 +399,6 @@
     {
       "id": "corpus.min_log_df",
       "name": "corpus.min_log_df",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "contour.interpolation_contour_mean_gradient",
-      "name": "contour.interpolation_contour_mean_gradient",
       "type": "variable",
       "val": 8
     },
@@ -1042,1418 +1042,1406 @@
   "links": [
     {
       "source": "F1",
+      "target": "contour.interpolation_contour_mean_gradient",
+      "value": 0.3013,
+      "sign": "negative"
+    },
+    {
+      "source": "F1",
       "target": "timing.average_note_duration",
-      "value": 0.9261,
+      "value": 0.9278,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.combined_strength_of_two_strongest_rhythmic_pulses",
-      "value": 0.668,
+      "value": 0.675,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.combined_strength_of_two_strongest_rhythmic_pulses_tempo_standardized",
-      "value": 0.668,
+      "value": 0.675,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.duration_range",
-      "value": 0.7053,
+      "value": 0.7208,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.duration_standard_deviation",
-      "value": 0.8101,
+      "value": 0.8203,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.global_duration",
-      "value": 0.7185,
+      "value": 0.7315,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "inter_onset_interval.ioi_mean",
-      "value": 0.9197,
+      "value": 0.9221,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "inter_onset_interval.ioi_range",
-      "value": 0.6938,
+      "value": 0.7095,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "inter_onset_interval.ioi_standard_deviation",
-      "value": 0.8033,
+      "value": 0.8149,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.longest_complete_rest",
-      "value": 0.4775,
+      "value": 0.4874,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.longest_rhythmic_value",
-      "value": 0.8085,
+      "value": 0.8228,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.maximum_note_duration",
-      "value": 0.8213,
+      "value": 0.8347,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.mean_complete_rest_duration",
-      "value": 0.541,
+      "value": 0.5503,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.mean_duration",
-      "value": 0.9261,
+      "value": 0.9278,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.mean_rhythmic_value",
-      "value": 0.9262,
+      "value": 0.9279,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.median_complete_rest_duration",
-      "value": 0.5296,
+      "value": 0.5392,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.minimum_note_duration",
-      "value": 0.828,
+      "value": 0.8286,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.modal_duration",
-      "value": 0.8311,
+      "value": 0.833,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.most_common_rhythmic_value",
-      "value": 0.8305,
+      "value": 0.8324,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.note_density",
-      "value": 0.4429,
+      "value": 0.4545,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "timing.note_density_per_quarter_note",
-      "value": 0.4429,
+      "value": 0.4545,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "timing.number_of_moderate_rhythmic_pulses",
-      "value": 0.3806,
+      "value": 0.3874,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "timing.number_of_moderate_rhythmic_pulses_tempo_standardized",
-      "value": 0.3806,
+      "value": 0.3874,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "timing.number_of_relatively_strong_rhythmic_pulses",
-      "value": 0.3172,
+      "value": 0.3257,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "timing.number_of_relatively_strong_rhythmic_pulses_tempo_standardized",
-      "value": 0.3172,
+      "value": 0.3257,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "timing.number_of_strong_rhythmic_pulses",
-      "value": 0.6734,
+      "value": 0.6782,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "timing.number_of_strong_rhythmic_pulses_tempo_standardized",
-      "value": 0.6734,
+      "value": 0.6782,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "timing.polyrhythms",
-      "value": 0.4389,
+      "value": 0.4487,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.polyrhythms_tempo_standardized",
-      "value": 0.4389,
+      "value": 0.4487,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.prevalence_of_long_rhythmic_values",
-      "value": 0.9188,
+      "value": 0.922,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.prevalence_of_short_rhythmic_values",
-      "value": 0.5031,
+      "value": 0.5122,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "timing.prevalence_of_very_long_rhythmic_values",
-      "value": 0.718,
+      "value": 0.7123,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.shortest_rhythmic_value",
-      "value": 0.8281,
+      "value": 0.8287,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.strength_ratio_of_two_strongest_rhythmic_pulses",
-      "value": 0.653,
+      "value": 0.6484,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.strength_ratio_of_two_strongest_rhythmic_pulses_tempo_standardized",
-      "value": 0.653,
+      "value": 0.6484,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.variability_of_complete_rest_durations",
-      "value": 0.3265,
+      "value": 0.3373,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.variability_of_note_durations",
-      "value": 0.8101,
+      "value": 0.8203,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.harmonicity_of_two_strongest_rhythmic_pulses",
-      "value": 0.8512,
+      "value": 0.8436,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.harmonicity_of_two_strongest_rhythmic_pulses_tempo_standardized",
-      "value": 0.8512,
+      "value": 0.8436,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.rhythmic_variability",
-      "value": 0.7931,
+      "value": 0.7969,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.rhythmic_variability_tempo_standardized",
-      "value": 0.7931,
+      "value": 0.7969,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.strength_of_second_strongest_rhythmic_pulse",
-      "value": 0.3706,
+      "value": 0.3714,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "timing.strength_of_second_strongest_rhythmic_pulse_tempo_standardized",
-      "value": 0.3706,
+      "value": 0.3714,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "timing.strength_of_strongest_rhythmic_pulse",
-      "value": 0.8799,
+      "value": 0.8817,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.strength_of_strongest_rhythmic_pulse_tempo_standardized",
-      "value": 0.8799,
+      "value": 0.8817,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.meter_accent",
-      "value": 0.5184,
+      "value": 0.5275,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "tonality.mean_cloud_diameter",
-      "value": 0.5511,
+      "value": 0.5613,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "tonality.std_cloud_diameter",
-      "value": 0.5457,
+      "value": 0.5539,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "tonality.mean_cloud_momentum",
-      "value": 0.3799,
+      "value": 0.3877,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "tonality.std_cloud_momentum",
-      "value": 0.3586,
+      "value": 0.3708,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "metre.meter_denominator",
-      "value": 0.4284,
+      "value": 0.4417,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "complexity.complebm_rhythm",
-      "value": 0.3896,
+      "value": 0.394,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "complexity.mean_duration_accent",
-      "value": 0.7716,
+      "value": 0.7786,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "lexical_diversity.yules_k",
-      "value": 0.4336,
+      "value": 0.4211,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "lexical_diversity.simpsons_d",
-      "value": 0.4869,
+      "value": 0.4741,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "corpus.norm_log_dist",
-      "value": 0.5762,
+      "value": 0.5613,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "corpus.max_log_df",
-      "value": 0.5386,
+      "value": 0.5294,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "corpus.min_log_df",
-      "value": 0.5481,
+      "value": 0.5389,
       "sign": "positive"
     },
     {
       "source": "F2",
       "target": "contour.interpolation_contour_mean_gradient",
-      "value": 0.4956,
+      "value": 0.4954,
       "sign": "negative"
     },
     {
       "source": "F2",
       "target": "contour.interpolation_contour_gradient_std",
-      "value": 0.4871,
+      "value": 0.4862,
       "sign": "negative"
     },
     {
       "source": "F2",
       "target": "timing.combined_strength_of_two_strongest_rhythmic_pulses",
-      "value": 0.509,
+      "value": 0.4913,
       "sign": "positive"
     },
     {
       "source": "F2",
       "target": "timing.combined_strength_of_two_strongest_rhythmic_pulses_tempo_standardized",
-      "value": 0.509,
+      "value": 0.4913,
       "sign": "positive"
     },
     {
       "source": "F2",
       "target": "timing.difference_between_most_common_rhythmic_values",
-      "value": 0.6151,
+      "value": 0.6079,
       "sign": "positive"
     },
     {
       "source": "F2",
       "target": "timing.note_density",
-      "value": 0.7581,
+      "value": 0.7513,
       "sign": "negative"
     },
     {
       "source": "F2",
       "target": "timing.note_density_per_quarter_note",
-      "value": 0.7581,
+      "value": 0.7513,
       "sign": "negative"
     },
     {
       "source": "F2",
       "target": "timing.note_density_per_quarter_note_variability",
-      "value": 0.4718,
+      "value": 0.468,
       "sign": "negative"
     },
     {
       "source": "F2",
       "target": "timing.note_density_variability",
-      "value": 0.327,
+      "value": 0.3249,
       "sign": "negative"
     },
     {
       "source": "F2",
       "target": "timing.number_of_moderate_rhythmic_pulses",
-      "value": 0.5427,
+      "value": 0.5265,
       "sign": "negative"
     },
     {
       "source": "F2",
       "target": "timing.number_of_moderate_rhythmic_pulses_tempo_standardized",
-      "value": 0.5427,
+      "value": 0.5265,
       "sign": "negative"
     },
     {
       "source": "F2",
       "target": "timing.number_of_relatively_strong_rhythmic_pulses",
-      "value": 0.7272,
+      "value": 0.719,
       "sign": "negative"
     },
     {
       "source": "F2",
       "target": "timing.number_of_relatively_strong_rhythmic_pulses_tempo_standardized",
-      "value": 0.7272,
+      "value": 0.719,
       "sign": "negative"
     },
     {
       "source": "F2",
       "target": "timing.polyrhythms",
-      "value": 0.546,
+      "value": 0.5399,
       "sign": "positive"
     },
     {
       "source": "F2",
       "target": "timing.polyrhythms_tempo_standardized",
-      "value": 0.546,
+      "value": 0.5399,
       "sign": "positive"
     },
     {
       "source": "F2",
       "target": "timing.prevalence_of_medium_rhythmic_values",
-      "value": 0.8801,
+      "value": 0.8798,
       "sign": "positive"
     },
     {
       "source": "F2",
       "target": "timing.prevalence_of_short_rhythmic_values",
-      "value": 0.5832,
+      "value": 0.5692,
       "sign": "negative"
     },
     {
       "source": "F2",
       "target": "timing.prevalence_of_very_short_rhythmic_values",
-      "value": 0.8158,
+      "value": 0.814,
       "sign": "negative"
     },
     {
       "source": "F2",
       "target": "timing.harmonicity_of_two_strongest_rhythmic_pulses",
-      "value": 0.3751,
+      "value": 0.3828,
       "sign": "negative"
     },
     {
       "source": "F2",
       "target": "timing.harmonicity_of_two_strongest_rhythmic_pulses_tempo_standardized",
-      "value": 0.3751,
+      "value": 0.3828,
       "sign": "negative"
     },
     {
       "source": "F2",
-      "target": "timing.rhythmic_variability",
-      "value": 0.3055,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "timing.rhythmic_variability_tempo_standardized",
-      "value": 0.3055,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
       "target": "timing.strength_of_second_strongest_rhythmic_pulse",
-      "value": 0.9561,
+      "value": 0.9537,
       "sign": "positive"
     },
     {
       "source": "F2",
       "target": "timing.strength_of_second_strongest_rhythmic_pulse_tempo_standardized",
-      "value": 0.9561,
+      "value": 0.9537,
       "sign": "positive"
     },
     {
       "source": "F2",
       "target": "timing.meter_accent",
-      "value": 0.3536,
+      "value": 0.3421,
       "sign": "negative"
     },
     {
       "source": "F2",
       "target": "tonality.mean_cloud_diameter",
-      "value": 0.4822,
+      "value": 0.4676,
       "sign": "negative"
     },
     {
       "source": "F2",
       "target": "tonality.mean_cloud_momentum",
-      "value": 0.6475,
+      "value": 0.6369,
       "sign": "positive"
     },
     {
       "source": "F2",
       "target": "tonality.std_cloud_momentum",
-      "value": 0.5541,
+      "value": 0.5477,
       "sign": "positive"
     },
     {
       "source": "F2",
       "target": "tonality.std_tensile_strain",
-      "value": 0.3616,
+      "value": 0.364,
       "sign": "positive"
     },
     {
       "source": "F2",
       "target": "complexity.complebm_rhythm",
-      "value": 0.4967,
+      "value": 0.4817,
       "sign": "negative"
     },
     {
       "source": "F2",
       "target": "complexity.complebm_optimal",
-      "value": 0.4242,
+      "value": 0.4152,
       "sign": "negative"
     },
     {
       "source": "F2",
       "target": "complexity.duration_accent_std",
-      "value": 0.5174,
+      "value": 0.523,
       "sign": "positive"
     },
     {
       "source": "F2",
       "target": "complexity.mean_duration_accent",
-      "value": 0.4157,
+      "value": 0.3996,
       "sign": "positive"
     },
     {
       "source": "F3",
       "target": "timing.dotted_duration_transitions",
-      "value": 0.5639,
+      "value": 0.5581,
       "sign": "positive"
     },
     {
       "source": "F3",
       "target": "timing.duration_standard_deviation",
-      "value": 0.324,
+      "value": 0.3281,
       "sign": "positive"
     },
     {
       "source": "F3",
       "target": "timing.equal_duration_transitions",
-      "value": 0.9332,
+      "value": 0.9272,
       "sign": "negative"
     },
     {
       "source": "F3",
       "target": "timing.half_duration_transitions",
-      "value": 0.3631,
+      "value": 0.3625,
       "sign": "positive"
     },
     {
       "source": "F3",
       "target": "inter_onset_interval.ioi_contour_standard_deviation",
-      "value": 0.9349,
+      "value": 0.9295,
       "sign": "positive"
     },
     {
       "source": "F3",
       "target": "inter_onset_interval.ioi_ratio_mean",
-      "value": 0.7058,
+      "value": 0.7041,
       "sign": "positive"
     },
     {
       "source": "F3",
       "target": "inter_onset_interval.ioi_ratio_standard_deviation",
-      "value": 0.5715,
+      "value": 0.5706,
       "sign": "positive"
     },
     {
       "source": "F3",
       "target": "timing.mean_rhythmic_value_run_length",
-      "value": 0.564,
+      "value": 0.5625,
       "sign": "negative"
     },
     {
       "source": "F3",
       "target": "timing.median_rhythmic_value_run_length",
-      "value": 0.3741,
+      "value": 0.3742,
       "sign": "negative"
     },
     {
       "source": "F3",
       "target": "timing.npvi",
-      "value": 0.9521,
+      "value": 0.9486,
       "sign": "positive"
     },
     {
       "source": "F3",
       "target": "timing.number_of_common_rhythmic_values_present",
-      "value": 0.5583,
+      "value": 0.5479,
       "sign": "positive"
     },
     {
       "source": "F3",
       "target": "timing.number_of_different_rhythmic_values_present",
-      "value": 0.4357,
+      "value": 0.439,
       "sign": "positive"
     },
     {
       "source": "F3",
       "target": "timing.number_of_unique_durations",
-      "value": 0.4355,
+      "value": 0.4402,
       "sign": "positive"
     },
     {
       "source": "F3",
       "target": "timing.polyrhythms",
-      "value": 0.3028,
+      "value": 0.3072,
       "sign": "negative"
     },
     {
       "source": "F3",
       "target": "timing.polyrhythms_tempo_standardized",
-      "value": 0.3028,
+      "value": 0.3072,
       "sign": "negative"
     },
     {
       "source": "F3",
       "target": "timing.prevalence_of_dotted_notes",
-      "value": 0.6382,
+      "value": 0.6333,
       "sign": "positive"
     },
     {
       "source": "F3",
       "target": "timing.prevalence_of_most_common_rhythmic_value",
-      "value": 0.8564,
+      "value": 0.8558,
       "sign": "negative"
     },
     {
       "source": "F3",
       "target": "timing.range_of_rhythmic_values",
-      "value": 0.3655,
+      "value": 0.3758,
       "sign": "positive"
     },
     {
       "source": "F3",
       "target": "timing.relative_prevalence_of_most_common_rhythmic_values",
-      "value": 0.584,
+      "value": 0.583,
       "sign": "positive"
     },
     {
       "source": "F3",
       "target": "timing.variability_in_rhythmic_value_run_lengths",
-      "value": 0.6922,
+      "value": 0.6895,
       "sign": "negative"
     },
     {
       "source": "F3",
       "target": "timing.variability_of_note_durations",
-      "value": 0.324,
+      "value": 0.3281,
       "sign": "positive"
     },
     {
       "source": "F3",
       "target": "timing.strongest_rhythmic_pulse",
-      "value": 0.3304,
+      "value": 0.3236,
       "sign": "negative"
     },
     {
       "source": "F3",
       "target": "timing.strongest_rhythmic_pulse_tempo_standardized",
-      "value": 0.3304,
+      "value": 0.3236,
       "sign": "negative"
     },
     {
       "source": "F3",
       "target": "metre.syncopicity",
-      "value": 0.3427,
+      "value": 0.3378,
       "sign": "positive"
     },
     {
       "source": "F3",
       "target": "expectation.melodic_embellishment",
-      "value": 0.428,
+      "value": 0.4273,
       "sign": "positive"
     },
     {
       "source": "F3",
       "target": "complexity.complebm_rhythm",
-      "value": 0.4971,
+      "value": 0.4967,
       "sign": "positive"
     },
     {
       "source": "F3",
       "target": "complexity.duration_accent_std",
-      "value": 0.6024,
+      "value": 0.6077,
       "sign": "positive"
     },
     {
       "source": "F3",
       "target": "complexity.duration_entropy",
-      "value": 0.8489,
+      "value": 0.8519,
       "sign": "positive"
     },
     {
       "source": "F3",
       "target": "corpus.mean_log_tfdf",
-      "value": 0.3852,
+      "value": 0.3707,
       "sign": "negative"
     },
     {
       "source": "F4",
       "target": "absolute_pitch.interval_between_most_prevalent_pitches",
-      "value": 0.4496,
+      "value": 0.4471,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "absolute_pitch.melodic_pitch_variety",
-      "value": 0.4661,
+      "value": 0.4766,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "absolute_pitch.number_of_unique_pitches",
-      "value": 0.5001,
+      "value": 0.5105,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "absolute_pitch.pitch_range",
-      "value": 0.6361,
+      "value": 0.6382,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "absolute_pitch.pitch_standard_deviation",
-      "value": 0.8303,
+      "value": 0.8304,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "absolute_pitch.prevalence_of_most_common_pitch",
-      "value": 0.3512,
+      "value": 0.3505,
       "sign": "negative"
     },
     {
       "source": "F4",
       "target": "absolute_pitch.stepwise_motion",
-      "value": 0.482,
+      "value": 0.4721,
       "sign": "negative"
     },
     {
       "source": "F4",
       "target": "pitch_class.strong_tonal_centres",
-      "value": 0.4383,
+      "value": 0.4358,
       "sign": "negative"
     },
     {
       "source": "F4",
       "target": "pitch_interval.absolute_interval_range",
-      "value": 0.5936,
+      "value": 0.5918,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "pitch_interval.average_interval_span_by_melodic_arcs",
-      "value": 0.6628,
+      "value": 0.6714,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "pitch_interval.mean_absolute_interval",
-      "value": 0.8093,
+      "value": 0.8075,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "pitch_interval.melodic_octaves",
-      "value": 0.4134,
+      "value": 0.4155,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "pitch_interval.melodic_perfect_fifths",
-      "value": 0.3685,
+      "value": 0.3649,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "pitch_interval.melodic_perfect_fourths",
-      "value": 0.4153,
+      "value": 0.4133,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "pitch_interval.melodic_sevenths",
-      "value": 0.3377,
+      "value": 0.3389,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "pitch_interval.melodic_sixths",
-      "value": 0.378,
+      "value": 0.3755,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "pitch_interval.prevalence_of_most_common_melodic_interval",
-      "value": 0.4889,
+      "value": 0.4892,
       "sign": "negative"
     },
     {
       "source": "F4",
       "target": "pitch_interval.standard_deviation_absolute_interval",
-      "value": 0.7794,
+      "value": 0.7797,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "contour.step_contour_global_variation",
-      "value": 0.7892,
+      "value": 0.789,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "contour.step_contour_local_variation",
-      "value": 0.3986,
+      "value": 0.3931,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "contour.interpolation_contour_mean_gradient",
-      "value": 0.4106,
+      "value": 0.4071,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "contour.interpolation_contour_gradient_std",
-      "value": 0.408,
+      "value": 0.403,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "tonality.tonalness",
-      "value": 0.5503,
+      "value": 0.5476,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "tonality.longest_conjunct_scalar_passage",
-      "value": 0.4427,
+      "value": 0.4426,
       "sign": "negative"
     },
     {
       "source": "F4",
       "target": "tonality.proportion_conjunct_scalar",
-      "value": 0.3715,
+      "value": 0.3627,
       "sign": "negative"
     },
     {
       "source": "F4",
       "target": "expectation.mean_mobility",
-      "value": 0.3517,
+      "value": 0.3537,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "expectation.mobility_std",
-      "value": 0.4138,
+      "value": 0.4189,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "complexity.interval_entropy",
-      "value": 0.6194,
+      "value": 0.6212,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "complexity.pitch_entropy",
-      "value": 0.593,
+      "value": 0.6012,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "corpus.mean_log_tfdf",
-      "value": 0.6284,
+      "value": 0.619,
       "sign": "negative"
     },
     {
       "source": "F5",
       "target": "absolute_pitch.number_of_unique_pitches",
-      "value": 0.3979,
+      "value": 0.3885,
       "sign": "positive"
     },
     {
       "source": "F5",
       "target": "pitch_class.pitch_class_kurtosis",
-      "value": 0.3975,
+      "value": 0.4057,
       "sign": "negative"
     },
     {
       "source": "F5",
       "target": "pitch_interval.minor_major_third_ratio",
-      "value": 0.3143,
+      "value": 0.333,
       "sign": "positive"
     },
     {
       "source": "F5",
       "target": "contour.step_contour_local_variation",
-      "value": 0.6155,
+      "value": 0.6406,
       "sign": "positive"
     },
     {
       "source": "F5",
       "target": "timing.duration_range",
-      "value": 0.3562,
+      "value": 0.3298,
       "sign": "positive"
     },
     {
       "source": "F5",
       "target": "timing.global_duration",
-      "value": 0.5823,
+      "value": 0.5816,
       "sign": "positive"
     },
     {
       "source": "F5",
       "target": "timing.half_duration_transitions",
-      "value": 0.3284,
+      "value": 0.3091,
       "sign": "negative"
     },
     {
       "source": "F5",
       "target": "inter_onset_interval.ioi_range",
-      "value": 0.3771,
+      "value": 0.3546,
       "sign": "positive"
     },
     {
       "source": "F5",
       "target": "timing.length",
-      "value": 0.8075,
+      "value": 0.825,
       "sign": "positive"
     },
     {
       "source": "F5",
       "target": "timing.number_of_different_rhythmic_values_present",
-      "value": 0.4993,
+      "value": 0.4836,
       "sign": "positive"
     },
     {
       "source": "F5",
       "target": "timing.number_of_unique_durations",
-      "value": 0.5153,
+      "value": 0.4993,
       "sign": "positive"
     },
     {
       "source": "F5",
       "target": "timing.range_of_rhythmic_values",
-      "value": 0.457,
+      "value": 0.4351,
       "sign": "positive"
     },
     {
       "source": "F5",
       "target": "timing.total_number_of_notes",
-      "value": 0.8075,
+      "value": 0.825,
       "sign": "positive"
     },
     {
       "source": "F5",
       "target": "tonality.proportion_conjunct_scalar",
-      "value": 0.4049,
+      "value": 0.4247,
       "sign": "negative"
     },
     {
       "source": "F5",
       "target": "tonality.proportion_scalar",
-      "value": 0.4509,
+      "value": 0.4688,
       "sign": "negative"
     },
     {
       "source": "F5",
       "target": "expectation.mean_melodic_accent",
-      "value": 0.3015,
+      "value": 0.3098,
       "sign": "negative"
     },
     {
       "source": "F5",
       "target": "expectation.mean_mobility",
-      "value": 0.3342,
+      "value": 0.3248,
       "sign": "positive"
     },
     {
       "source": "F5",
       "target": "complexity.complebm_pitch",
-      "value": 0.6119,
+      "value": 0.6244,
       "sign": "positive"
     },
     {
       "source": "F5",
       "target": "complexity.complebm_optimal",
-      "value": 0.4837,
+      "value": 0.4883,
       "sign": "positive"
     },
     {
       "source": "F5",
       "target": "lexical_diversity.simpsons_d",
-      "value": 0.3208,
+      "value": 0.3503,
       "sign": "negative"
     },
     {
       "source": "F5",
       "target": "lexical_diversity.mean_entropy",
-      "value": 0.8076,
+      "value": 0.8383,
       "sign": "positive"
     },
     {
       "source": "F5",
       "target": "corpus.norm_log_dist",
-      "value": 0.5365,
+      "value": 0.5672,
       "sign": "negative"
     },
     {
       "source": "F5",
       "target": "corpus.mean_log_df",
-      "value": 0.5302,
+      "value": 0.6189,
       "sign": "negative"
     },
     {
       "source": "F5",
       "target": "corpus.mean_global_local_weight",
-      "value": 0.3007,
+      "value": 0.3132,
       "sign": "positive"
     },
     {
       "source": "F5",
       "target": "corpus.std_global_local_weight",
-      "value": 0.5117,
+      "value": 0.5364,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "absolute_pitch.first_pitch",
-      "value": 0.6959,
+      "value": 0.7,
       "sign": "negative"
     },
     {
       "source": "F6",
       "target": "absolute_pitch.importance_of_high_register",
-      "value": 0.547,
+      "value": 0.5529,
       "sign": "negative"
     },
     {
       "source": "F6",
       "target": "absolute_pitch.importance_of_middle_register",
-      "value": 0.5125,
+      "value": 0.524,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "absolute_pitch.mean_pitch",
-      "value": 0.5791,
+      "value": 0.5694,
       "sign": "negative"
     },
     {
       "source": "F6",
       "target": "absolute_pitch.most_common_pitch",
-      "value": 0.5663,
+      "value": 0.5559,
       "sign": "negative"
     },
     {
       "source": "F6",
       "target": "absolute_pitch.number_of_unique_pitches",
-      "value": 0.463,
+      "value": 0.4324,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "pitch_class.number_of_common_pitches_classes",
-      "value": 0.3385,
+      "value": 0.3118,
       "sign": "negative"
     },
     {
       "source": "F6",
       "target": "pitch_class.number_of_unique_pitch_classes",
-      "value": 0.6573,
+      "value": 0.6358,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "pitch_class.prevalence_of_most_common_pitch_class",
-      "value": 0.3236,
+      "value": 0.3196,
       "sign": "negative"
     },
     {
       "source": "F6",
       "target": "pitch_interval.chromatic_motion",
-      "value": 0.5607,
+      "value": 0.546,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "pitch_interval.mean_absolute_interval",
-      "value": 0.3309,
+      "value": 0.3362,
       "sign": "negative"
     },
     {
       "source": "F6",
       "target": "contour.step_contour_global_direction",
-      "value": 0.477,
+      "value": 0.4699,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "contour.interpolation_contour_global_direction",
-      "value": 0.3835,
+      "value": 0.3951,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "timing.onset_autocorr_peak",
-      "value": 0.4536,
+      "value": 0.45,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "timing.range_of_rhythmic_values",
-      "value": 0.3956,
+      "value": 0.3975,
       "sign": "negative"
     },
     {
       "source": "F6",
       "target": "tonality.longest_monotonic_conjunct_scalar_passage",
-      "value": 0.5172,
+      "value": 0.5055,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "tonality.std_cloud_diameter",
-      "value": 0.3396,
+      "value": 0.326,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "metre.syncopation",
-      "value": 0.3973,
+      "value": 0.3924,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "metre.syncopicity",
-      "value": 0.3531,
+      "value": 0.3516,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "expectation.mean_melodic_attraction",
-      "value": 0.3745,
+      "value": 0.3799,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "complexity.complebm_pitch",
-      "value": 0.4064,
+      "value": 0.3887,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "complexity.duration_accent_std",
-      "value": 0.3941,
+      "value": 0.3985,
       "sign": "negative"
     },
     {
       "source": "F6",
       "target": "complexity.pitch_entropy",
-      "value": 0.4566,
+      "value": 0.4359,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "idyom.pitch_ltm_mean_information_content",
-      "value": 0.3522,
+      "value": 0.3445,
       "sign": "positive"
     },
     {
       "source": "F7",
       "target": "absolute_pitch.melodic_pitch_variety",
-      "value": 0.4935,
+      "value": 0.491,
       "sign": "positive"
     },
     {
       "source": "F7",
       "target": "absolute_pitch.prevalence_of_most_common_pitch",
-      "value": 0.5331,
+      "value": 0.5329,
       "sign": "negative"
     },
     {
       "source": "F7",
       "target": "absolute_pitch.relative_prevalence_of_top_pitches",
-      "value": 0.3107,
+      "value": 0.3078,
       "sign": "positive"
     },
     {
       "source": "F7",
       "target": "absolute_pitch.repeated_notes",
-      "value": 0.856,
+      "value": 0.8456,
       "sign": "negative"
     },
     {
       "source": "F7",
       "target": "absolute_pitch.stepwise_motion",
-      "value": 0.7982,
+      "value": 0.808,
       "sign": "positive"
     },
     {
       "source": "F7",
       "target": "pitch_class.dominant_spread",
-      "value": 0.3253,
+      "value": 0.325,
       "sign": "positive"
     },
     {
       "source": "F7",
       "target": "pitch_class.prevalence_of_most_common_pitch_class",
-      "value": 0.5516,
+      "value": 0.5527,
       "sign": "negative"
     },
     {
       "source": "F7",
       "target": "pitch_class.relative_prevalence_of_top_pitch_classes",
-      "value": 0.3192,
+      "value": 0.3156,
       "sign": "positive"
     },
     {
       "source": "F7",
       "target": "pitch_interval.amount_of_arpeggiation",
-      "value": 0.8013,
+      "value": 0.8044,
       "sign": "negative"
     },
     {
       "source": "F7",
       "target": "pitch_interval.distance_between_most_prevalent_melodic_intervals",
-      "value": 0.4695,
+      "value": 0.4684,
       "sign": "negative"
     },
     {
       "source": "F7",
       "target": "pitch_interval.interval_direction_std",
-      "value": 0.8113,
+      "value": 0.7999,
       "sign": "positive"
     },
     {
       "source": "F7",
       "target": "pitch_interval.modal_interval",
-      "value": 0.4746,
+      "value": 0.4596,
       "sign": "positive"
     },
     {
       "source": "F7",
       "target": "pitch_interval.prevalence_of_most_common_melodic_interval",
-      "value": 0.4443,
+      "value": 0.4639,
       "sign": "positive"
     },
     {
       "source": "F7",
       "target": "pitch_interval.relative_prevalence_of_most_common_melodic_intervals",
-      "value": 0.4063,
+      "value": 0.4151,
       "sign": "negative"
     },
     {
       "source": "F7",
       "target": "tonality.tonal_spike",
-      "value": 0.3718,
+      "value": 0.3781,
       "sign": "negative"
     },
     {
       "source": "F7",
       "target": "tonality.longest_conjunct_scalar_passage",
-      "value": 0.3888,
+      "value": 0.3976,
       "sign": "positive"
     },
     {
       "source": "F7",
       "target": "tonality.proportion_conjunct_scalar",
-      "value": 0.3409,
+      "value": 0.3455,
       "sign": "positive"
     },
     {
       "source": "F7",
       "target": "expectation.melodic_accent_std",
-      "value": 0.7333,
+      "value": 0.7285,
       "sign": "negative"
     },
     {
       "source": "F7",
       "target": "expectation.melodic_attraction_std",
-      "value": 0.5356,
+      "value": 0.5348,
       "sign": "positive"
     },
     {
       "source": "F7",
       "target": "complexity.gradus",
-      "value": 0.8739,
+      "value": 0.873,
       "sign": "positive"
     },
     {
       "source": "F7",
       "target": "complexity.pitch_entropy",
-      "value": 0.4044,
+      "value": 0.411,
       "sign": "positive"
     },
     {
       "source": "F7",
       "target": "corpus.mean_log_tfdf",
-      "value": 0.3404,
+      "value": 0.3636,
       "sign": "positive"
     },
     {
       "source": "F8",
       "target": "contour.step_contour_local_variation",
-      "value": 0.4944,
-      "sign": "positive"
-    },
-    {
-      "source": "F8",
-      "target": "timing.global_duration",
-      "value": 0.3163,
+      "value": 0.4689,
       "sign": "positive"
     },
     {
       "source": "F8",
       "target": "timing.length",
-      "value": 0.4448,
-      "sign": "positive"
-    },
-    {
-      "source": "F8",
-      "target": "timing.onset_autocorr_peak",
-      "value": 0.3052,
+      "value": 0.4106,
       "sign": "positive"
     },
     {
       "source": "F8",
       "target": "timing.total_number_of_notes",
-      "value": 0.4448,
+      "value": 0.4106,
       "sign": "positive"
     },
     {
       "source": "F8",
       "target": "tonality.proportion_scalar",
-      "value": 0.3294,
+      "value": 0.3014,
       "sign": "negative"
     },
     {
       "source": "F8",
+      "target": "lexical_diversity.yules_k",
+      "value": 0.3129,
+      "sign": "positive"
+    },
+    {
+      "source": "F8",
       "target": "lexical_diversity.sichels_s",
-      "value": 0.6296,
+      "value": 0.6336,
       "sign": "positive"
     },
     {
       "source": "F8",
       "target": "lexical_diversity.honores_h",
-      "value": 0.6625,
+      "value": 0.6656,
       "sign": "negative"
     },
     {
       "source": "F8",
       "target": "lexical_diversity.mean_productivity",
-      "value": 0.7602,
+      "value": 0.7642,
       "sign": "negative"
     },
     {
       "source": "F8",
       "target": "corpus.tfdf_spearman",
-      "value": 0.5163,
+      "value": 0.5239,
       "sign": "negative"
     },
     {
       "source": "F8",
       "target": "corpus.tfdf_kendall",
-      "value": 0.5286,
+      "value": 0.5345,
       "sign": "negative"
     },
     {
       "source": "F8",
       "target": "corpus.mean_global_local_weight",
-      "value": 0.8381,
+      "value": 0.8394,
       "sign": "positive"
     },
     {
       "source": "F8",
       "target": "corpus.std_global_local_weight",
-      "value": 0.6243,
+      "value": 0.6099,
       "sign": "positive"
     },
     {
       "source": "F8",
       "target": "corpus.mean_global_weight",
-      "value": 0.6757,
+      "value": 0.6768,
       "sign": "positive"
     },
     {
       "source": "F8",
       "target": "corpus.std_global_weight",
-      "value": 0.6591,
+      "value": 0.6499,
       "sign": "positive"
     }
   ]
