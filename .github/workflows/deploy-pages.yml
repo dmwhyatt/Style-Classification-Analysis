@@ -26,6 +26,18 @@ jobs:
         with:
           lfs: true
 
+      - name: Materialize Git LFS files
+        run: git lfs pull
+
+      - name: Verify melody assets for Pages
+        run: |
+          test -f docs/melody_player.html
+          test -f docs/melody_examples/manifest.json
+          f=$(find docs/melody_examples/midi -name '*.mid' | head -1)
+          test -n "$f"
+          head -c 4 "$f" | grep -q $'\x4d\x54\x68\x64' || \
+            (echo "MIDI file looks like an LFS pointer, not binary: $f" && exit 1)
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 

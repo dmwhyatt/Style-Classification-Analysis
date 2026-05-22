@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melody player</title>
+    <style>
+        html, body {
+            margin: 0;
+            height: 100%;
+            background: #f4f4f6;
+            overflow: hidden;
+        }
+        wave-roll {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script type="module">
+        import 'https://cdn.jsdelivr.net/npm/wave-roll@0.4.0/dist/wave-roll.es.js';
+
+        const forcePiano = (el) => {
+            const mgr = el?.player?.midiManager;
+            if (!mgr?.getState || !mgr.setTrackAutoInstrument) return false;
+            let applied = false;
+            for (const file of mgr.getState().files || []) {
+                const tracks = file.parsedData?.tracks;
+                if (tracks?.length) {
+                    tracks.forEach((track) => {
+                        mgr.setTrackAutoInstrument(file.id, track.id, false);
+                        applied = true;
+                    });
+                } else {
+                    mgr.setTrackAutoInstrument(file.id, 0, false);
+                    applied = true;
+                }
+            }
+            return applied;
+        };
+
+        const params = new URLSearchParams(location.search);
+        const midi = params.get('midi');
+        const name = params.get('name') || 'Melody';
+        const el = document.getElementById('wr');
+
+        if (!midi || !el) {
+            document.body.innerHTML = '<p style="padding:12px;color:#666;font:13px system-ui,sans-serif;">No MIDI file specified.</p>';
+        } else {
+            el.setAttribute('readonly', '');
+            el.setAttribute('files', JSON.stringify([{ path: midi, name, type: 'midi' }]));
+            [450, 1000].forEach((ms) => setTimeout(() => forcePiano(el), ms));
+        }
+    </script>
+</head>
+<body>
+    <wave-roll id="wr"></wave-roll>
+</body>
+</html>

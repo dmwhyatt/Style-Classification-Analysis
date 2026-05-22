@@ -229,6 +229,7 @@ shap*
 *.html
 *.tex
 !docs/index.html
+!docs/melody_player.html
 !docs/network_data.json
 !docs/melody_examples/manifest.json
 factor_eigenvalues_elbow_interactive_files/
