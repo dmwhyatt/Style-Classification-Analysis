@@ -465,6 +465,70 @@
             color: #f0a8a5;
             background: rgba(217, 83, 79, 0.15);
         }
+        .melody-tab.active[data-kind="loadings"] {
+            border-color: #667eea;
+            color: #a8b4f5;
+            background: rgba(102, 126, 234, 0.18);
+        }
+        .melody-toolbar.melody-mode-loadings .melody-carousel-nav {
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .melody-wave-roll-host.melody-loadings-host {
+            height: auto;
+            min-height: 300px;
+            max-height: 360px;
+            overflow: auto;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px 10px 0 0;
+        }
+        .melody-loadings-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+        .melody-loadings-table th,
+        .melody-loadings-table td {
+            padding: 6px 10px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .melody-loadings-table th {
+            position: sticky;
+            top: 0;
+            background: rgba(10, 14, 39, 0.98);
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 600;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .melody-loadings-table td.rank {
+            color: rgba(255, 255, 255, 0.4);
+            width: 28px;
+            font-variant-numeric: tabular-nums;
+        }
+        .melody-loadings-table td.feature {
+            color: rgba(255, 255, 255, 0.85);
+        }
+        .melody-loadings-table td.loading-val {
+            font-variant-numeric: tabular-nums;
+            text-align: right;
+            white-space: nowrap;
+            font-weight: 600;
+        }
+        .melody-loadings-table td.loading-val.positive {
+            color: #5cb85c;
+        }
+        .melody-loadings-table td.loading-val.negative {
+            color: #d9534f;
+        }
+        .melody-loadings-empty {
+            padding: 24px 14px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 12px;
+        }
         .melody-tab:disabled,
         .melody-tab[hidden] {
             display: none;
@@ -880,6 +944,7 @@
                 <div class="melody-tabs" role="tablist" aria-label="Example group">
                     <button type="button" class="melody-tab active" data-kind="high" role="tab" aria-selected="true">High</button>
                     <button type="button" class="melody-tab" data-kind="low" role="tab" aria-selected="false">Low</button>
+                    <button type="button" class="melody-tab" data-kind="loadings" role="tab" aria-selected="false" hidden>Loadings</button>
                 </div>
                 <div class="melody-carousel-nav">
                     <button type="button" class="melody-nav-btn" id="melody-nav-prev" data-dir="prev" aria-label="Previous example" disabled>&#8249;</button>
@@ -890,7 +955,7 @@
             <div class="melody-example-meta" id="melody-active-meta"></div>
             <div class="melody-player-wrap">
                 <div class="melody-wave-roll-host" id="melody-wave-roll-host"></div>
-                <div class="melody-transport">
+                <div class="melody-transport" id="melody-transport">
                     <button type="button" class="melody-play-btn" id="melody-play-btn" aria-label="Play">&#9654;</button>
                     <span class="melody-transport-hint">Acoustic piano (FluidR3) · play / pause</span>
                 </div>
@@ -905,6 +970,7 @@
     <script src="https://unpkg.com/three@0.159.0/build/three.min.js"></script>
     <script src="https://unpkg.com/three-spritetext@1.8.2/dist/three-spritetext.min.js"></script>
     <script src="https://unpkg.com/3d-force-graph@1.73.3/dist/3d-force-graph.min.js"></script>
+    <script src="factor_loadings.js"></script>
     <script src="network_data.js"></script>
     <script>
         const tooltip = document.getElementById('tooltip');
@@ -925,6 +991,10 @@
         const melodyActiveMeta = document.getElementById('melody-active-meta');
         const melodyTabHigh = document.querySelector('.melody-tab[data-kind="high"]');
         const melodyTabLow = document.querySelector('.melody-tab[data-kind="low"]');
+        const melodyTabLoadings = document.querySelector('.melody-tab[data-kind="loadings"]');
+        const melodyToolbar = document.getElementById('melody-toolbar');
+        const melodyPanelBody = document.getElementById('melody-panel-body');
+        const melodyTransport = document.getElementById('melody-transport');
         const melodyNavPrev = document.getElementById('melody-nav-prev');
         const melodyNavNext = document.getElementById('melody-nav-next');
         const melodyCarouselCounter = document.getElementById('melody-carousel-counter');
@@ -943,6 +1013,7 @@
         const legendItems = document.querySelectorAll('.legend-item[data-category]');
         let graphData = null;
         let melodyManifest = null;
+        const factorLoadingsById = new Map();
         let highlightNodes = new Set();
         let highlightLinks = new Set();
         let hoverNode = null;
@@ -1065,6 +1136,77 @@
             return items && items.length ? items : [];
         };
 
+        const isFactorNodeId = (id) => /^F\d+$/.test(id || '');
+
+        const getFactorLoadings = (factorId) => factorLoadingsById.get(factorId) || [];
+
+        const formatLoadingValue = (v) => {
+            const n = Number(v);
+            if (!Number.isFinite(n)) return String(v);
+            return (n >= 0 ? '+' : '') + n.toFixed(3);
+        };
+
+        const escapeHtml = (s) => String(s)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+
+        const restoreWaveRollHostForPlayer = () => {
+            if (!melodyWaveRollHost) return;
+            melodyWaveRollHost.classList.remove('melody-loadings-host');
+            melodyWaveRollHost.innerHTML = '';
+            if (melodyTransport) melodyTransport.style.display = '';
+        };
+
+        const buildLoadingsTableHtml = (rows) => {
+            const body = rows.map(row => {
+                const signClass = row.loading >= 0 ? 'positive' : 'negative';
+                const featureLabel = prettifyName(row.feature);
+                return `<tr>
+                    <td class="rank">${row.rank}</td>
+                    <td class="feature" title="${escapeHtml(row.feature)}">${escapeHtml(featureLabel)}</td>
+                    <td class="loading-val ${signClass}">${formatLoadingValue(row.loading)}</td>
+                </tr>`;
+            }).join('');
+            return `<table class="melody-loadings-table">
+                <thead>
+                    <tr><th scope="col">#</th><th scope="col">Feature</th><th scope="col">Loading</th></tr>
+                </thead>
+                <tbody>${body}</tbody>
+            </table>`;
+        };
+
+        const renderFactorLoadings = (factorId) => {
+            if (!melodyWaveRollHost) return;
+            const rows = getFactorLoadings(factorId);
+            if (melodyTransport) melodyTransport.style.display = 'none';
+            melodyWaveRollHost.classList.add('melody-loadings-host');
+            if (!rows.length) {
+                melodyWaveRollHost.innerHTML = '<div class="melody-loadings-empty">Loading data unavailable. Re-run <code>Rscript factor_logistic.R</code>.</div>';
+                return;
+            }
+            melodyWaveRollHost.innerHTML = buildLoadingsTableHtml(rows);
+        };
+
+        const initFactorLoadings = () => {
+            factorLoadingsById.clear();
+            const src = window.factorLoadingsData
+                || (typeof networkData !== 'undefined' && networkData.factor_loadings)
+                || {};
+            Object.entries(src).forEach(([fid, rows]) => {
+                if (Array.isArray(rows) && rows.length) {
+                    factorLoadingsById.set(fid, rows);
+                }
+            });
+        };
+
+        const setMelodyPanelMode = (kind) => {
+            const isLoadings = kind === 'loadings';
+            melodyPanelBody?.classList.toggle('melody-mode-loadings', isLoadings);
+            melodyToolbar?.classList.toggle('melody-mode-loadings', isLoadings);
+        };
+
         const getWaveRollFromIframe = () => {
             try {
                 return melodyPlayerIframe?.contentDocument?.querySelector('wave-roll') || null;
@@ -1091,7 +1233,7 @@
                 melodyPlayerIframe.remove();
                 melodyPlayerIframe = null;
             }
-            if (melodyWaveRollHost) melodyWaveRollHost.innerHTML = '';
+            restoreWaveRollHostForPlayer();
             melodyWaveRollEl = null;
             melodyLoadedPath = null;
         };
@@ -1128,6 +1270,7 @@
             if (!path || !melodyWaveRollHost) return;
             clearTimeout(mountMelodyDebounceTimer);
             mountMelodyDebounceTimer = setTimeout(() => {
+                if (melodyActiveKind === 'loadings') return;
                 if (path === melodyLoadedPath && melodyPlayerIframe) return;
                 destroyMelodyWaveRoll();
                 const params = new URLSearchParams({
@@ -1147,6 +1290,8 @@
         const updateMelodyTabs = () => {
             const hasHigh = getMelodyItems('high').length > 0;
             const hasLow = getMelodyItems('low').length > 0;
+            const hasLoadings = isFactorNodeId(melodyActiveVariableId)
+                && getFactorLoadings(melodyActiveVariableId).length > 0;
             if (melodyTabHigh) {
                 melodyTabHigh.disabled = !hasHigh;
                 melodyTabHigh.hidden = !hasHigh;
@@ -1154,6 +1299,10 @@
             if (melodyTabLow) {
                 melodyTabLow.disabled = !hasLow;
                 melodyTabLow.hidden = !hasLow;
+            }
+            if (melodyTabLoadings) {
+                melodyTabLoadings.disabled = !hasLoadings;
+                melodyTabLoadings.hidden = !hasLoadings;
             }
             document.querySelectorAll('.melody-tab').forEach(tab => {
                 const isActive = tab.dataset.kind === melodyActiveKind;
@@ -1163,13 +1312,32 @@
         };
 
         const updateActiveMelodyDisplay = () => {
+            setMelodyPanelMode(melodyActiveKind);
+            if (melodyActiveKind === 'loadings') {
+                stopMelodyPlayback();
+                clearTimeout(mountMelodyDebounceTimer);
+                mountMelodyDebounceTimer = null;
+                if (melodyPlayerIframe) {
+                    melodyPlayerIframe.src = 'about:blank';
+                    melodyPlayerIframe.remove();
+                    melodyPlayerIframe = null;
+                }
+                melodyWaveRollEl = null;
+                melodyLoadedPath = null;
+                renderFactorLoadings(melodyActiveVariableId);
+                melodyActiveMeta.innerHTML = '<span>Top 10 features by |loading| (promax rotation).</span>';
+                updateMelodyTabs();
+                return;
+            }
             const items = getMelodyItems(melodyActiveKind);
             if (!items.length) {
                 melodyActiveMeta.innerHTML = '<span>No examples for this group.</span>';
+                updateMelodyTabs();
                 return;
             }
             melodyActiveIdx = Math.max(0, Math.min(melodyActiveIdx, items.length - 1));
             const ex = items[melodyActiveIdx];
+            restoreWaveRollHostForPlayer();
             mountActiveMelody(ex);
             let metaHtml = '';
             if (ex.value !== undefined) {
@@ -1188,7 +1356,13 @@
         };
 
         const setMelodyKind = (kind) => {
-            if (!getMelodyItems(kind).length) return;
+            if (kind === 'loadings') {
+                if (!isFactorNodeId(melodyActiveVariableId) || !getFactorLoadings(melodyActiveVariableId).length) {
+                    return;
+                }
+            } else if (!getMelodyItems(kind).length) {
+                return;
+            }
             stopMelodyPlayback();
             melodyActiveKind = kind;
             melodyActiveIdx = 0;
@@ -1196,7 +1370,10 @@
         };
 
         const showMelodyExamples = (variableId, variableName) => {
-            if (!melodyManifest || !melodyManifest[variableId]) {
+            if (factorLoadingsById.size === 0) initFactorLoadings();
+            const hasManifest = melodyManifest && melodyManifest[variableId];
+            const hasLoadings = isFactorNodeId(variableId) && getFactorLoadings(variableId).length > 0;
+            if (!hasManifest && !hasLoadings) {
                 melodyPanel.classList.remove('visible');
                 destroyMelodyWaveRoll();
                 melodyActiveVariableId = null;
@@ -1207,10 +1384,15 @@
                 destroyMelodyWaveRoll();
             }
             melodyActiveVariableId = variableId;
-            melodyActiveEntry = melodyManifest[variableId];
-            const prettyName = prettifyName(variableName || melodyActiveEntry.label || variableId);
+            melodyActiveEntry = hasManifest ? melodyManifest[variableId] : null;
+            const prettyName = prettifyName(
+                variableName || melodyActiveEntry?.label || variableId
+            );
             melodyPanelTitle.textContent = prettyName;
-            const defaultKind = getMelodyItems('high').length ? 'high' : 'low';
+            let defaultKind = 'loadings';
+            if (getMelodyItems('high').length) defaultKind = 'high';
+            else if (getMelodyItems('low').length) defaultKind = 'low';
+            else if (!hasLoadings) defaultKind = 'high';
             melodyActiveKind = defaultKind;
             melodyActiveIdx = 0;
             pauseGraphForMelodyPanel();
@@ -1221,6 +1403,8 @@
         const hideMelodyExamples = () => {
             melodyPanel.classList.remove('visible');
             melodyActiveVariableId = null;
+            melodyActiveKind = 'high';
+            setMelodyPanelMode('high');
             destroyMelodyWaveRoll();
             resumeGraphAfterMelodyPanel();
         };
@@ -1235,6 +1419,9 @@
         }
         if (melodyTabLow) {
             melodyTabLow.addEventListener('click', () => setMelodyKind('low'));
+        }
+        if (melodyTabLoadings) {
+            melodyTabLoadings.addEventListener('click', () => setMelodyKind('loadings'));
         }
         if (melodyNavPrev) {
             melodyNavPrev.addEventListener('click', () => {
@@ -1526,8 +1713,11 @@
 
                         // Show melody examples panel for any node with manifest entries
                         // (now keyed by both variable id and factor id, e.g. "F1")
-                        loadMelodyManifest().then(manifest => {
-                            if (manifest && manifest[node.id]) {
+                        loadMelodyManifest().then(() => {
+                            const hasManifest = melodyManifest && melodyManifest[node.id];
+                            const hasLoadings = node.type === 'factor'
+                                && getFactorLoadings(node.id).length > 0;
+                            if (hasManifest || hasLoadings) {
                                 showMelodyExamples(node.id, node.name);
                             } else {
                                 hideMelodyExamples();
@@ -1980,9 +2170,14 @@
             }, 100);  // Initial delay
         }
 
+        initFactorLoadings();
+        console.log('Factor loadings:', factorLoadingsById.size, 'factors');
+
         // Initialize the graph when the page loads
         if (typeof networkData !== 'undefined') {
             console.log('Network data loaded successfully');
+            initFactorLoadings();
+            console.log('Factor loadings:', factorLoadingsById.size, 'factors');
             initGraph(networkData);
 
             // Update stats from data (factor count, variable count, link count all dynamic)

@@ -252,14 +252,29 @@ network_data <- build_3d_network_data(
   cutoff = NETWORK_CUTOFF,
   factor_labels = factor_names
 )
+# Top |loading| features per factor for docs/index.html "Loadings" tab
+network_data$factor_loadings <- lapply(top_loading_parts, function(df) {
+  lapply(seq_len(nrow(df)), function(r) {
+    list(
+      rank = as.integer(df$rank[r]),
+      feature = df$feature[r],
+      loading = round(unname(df$loading[r]), 4),
+      abs_loading = round(unname(df$abs_loading[r]), 4)
+    )
+  })
+})
+names(network_data$factor_loadings) <- paste0("F", seq_len(N_FACTORS))
 json_data <- toJSON(network_data, auto_unbox = TRUE, pretty = TRUE)
 writeLines(json_data, "docs/network_data.json")
 # JS shim so docs/index.html can be opened directly from disk (no HTTP server needed)
 writeLines(c("const networkData =", json_data, ";"), "docs/network_data.js")
+loadings_json <- toJSON(network_data$factor_loadings, auto_unbox = TRUE, pretty = TRUE)
+writeLines(c("window.factorLoadingsData =", loadings_json, ";"), "docs/factor_loadings.js")
 cat(sprintf(
   "Wrote docs/network_data.json and docs/network_data.js (%d nodes, %d links)\n",
   length(network_data$nodes), length(network_data$links)
 ))
+cat("Wrote docs/factor_loadings.js\n")
 
 cat("\nUsing factor names:\n")
 for (i in seq_along(factor_names)) {
