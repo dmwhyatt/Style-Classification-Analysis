@@ -127,12 +127,12 @@ cat(
 factor_names <- c(
   "1. Long Pulses",
   "2. Metric Strength",
-  "3. Range of Rhythms",
+  "3. Scalic Ascent & Narrow Rhythm",
   "4. Interval Variability",
-  "5. General Complexity",
-  "6. Ascending",
-  "7. Conjunct Pitch Variety",
-  "8. Corpus Distinctiveness"
+  "5. Busy Stepwise Melody",
+  "6. Corpus Familiar & Long",
+  "7. Dual-Pulse Rhythm",
+  "8. High Pitch Height"
 )
 if (length(factor_names) < N_FACTORS) {
   factor_names <- c(factor_names, paste0("Factor ", seq(length(factor_names) + 1, N_FACTORS)))
