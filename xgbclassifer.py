@@ -5,6 +5,7 @@ from typing import Dict, List
 
 import seaborn as sns
 import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
 from sklearn.model_selection import StratifiedKFold, train_test_split
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
@@ -109,7 +110,6 @@ for i in range(len(le.classes_)):
 plt.figure(figsize=(5, 4))
 sns.heatmap(cm_cv, annot=annot_cv, fmt="", cmap="Blues",
             xticklabels=le.classes_, yticklabels=le.classes_)
-plt.title("Confusion Matrix (Cross-Validation, XGBoost)")
 plt.xlabel("Predicted")
 plt.ylabel("True")
 plt.tight_layout()
@@ -172,18 +172,76 @@ perm_out = (
     .merge(shap_df, on="feature", how="left")
     .sort_values("importance_mean", ascending=False)
 )
-perm_out = perm_out[["feature", "coefficient", "importance_mean", "importance_std"]]
+def _prettify_feature_name(feature_name: str) -> str:
+    if not feature_name:
+        return feature_name
+    parts = feature_name.split(".")
+    category = parts[0] if parts else ""
+    remainder = " ".join(parts[1:]) if len(parts) > 1 else ""
+
+    def _clean(segment: str) -> str:
+        return segment.replace("_", " ").strip().title()
+
+    category_text = _clean(category)
+    if remainder:
+        return f"{category_text}: {_clean(remainder)}"
+    return category_text
+
+
+perm_out = (
+    perm_out.assign(
+        pretty_feature=lambda df: df["feature"].map(_prettify_feature_name)
+    )[
+        ["feature", "coefficient", "importance_mean", "importance_std", "pretty_feature"]
+    ]
+)
 perm_out.to_csv("xgb_permutation_importance.csv", index=False)
 
 topk = perm_out.head(20).iloc[::-1].reset_index(drop=True)
+coef_sign = np.sign(topk["coefficient"].to_numpy(dtype=float))
+coef_sign = np.where(coef_sign == 0, 1.0, coef_sign)
+signed_imp = topk["importance_mean"].to_numpy() * coef_sign
+bar_colors = np.where(topk["coefficient"].to_numpy() >= 0, "#2166ac", "#b2182b")
 fig, ax = plt.subplots(figsize=(8, 6))
-ax.barh(topk["feature"], topk["importance_mean"],
-        xerr=topk["importance_std"], color="#4c72b0", edgecolor="white")
-ax.set_xlabel("Mean accuracy decrease", fontsize=12)
+ax.barh(
+    topk["pretty_feature"],
+    signed_imp,
+    xerr=topk["importance_std"],
+    color=bar_colors,
+    edgecolor="white",
+)
+ax.axvline(0, color="0.35", linewidth=0.8, zorder=0)
+pos_class, neg_class = le.classes_[1], le.classes_[0]
+ax.legend(
+    handles=[
+        Patch(
+            facecolor="#2166ac",
+            edgecolor="white",
+            label=f"SHAP > 0 (higher → {pos_class})",
+        ),
+        Patch(
+            facecolor="#b2182b",
+            edgecolor="white",
+            label=f"SHAP < 0 (higher → {neg_class})",
+        ),
+    ],
+    loc="lower right",
+    frameon=True,
+    fontsize=9,
+)
+ax.set_xlabel(
+    "Mean accuracy decrease\n(sign from mean SHAP contribution)",
+    fontsize=12,
+)
 ax.set_ylabel("Feature", fontsize=12)
 ax.tick_params(axis="both", labelsize=10)
-plt.tight_layout()
-plt.savefig("xgb_permutation_importance_bar.pdf", dpi=150)
+fig.subplots_adjust(left=0.32, bottom=0.14, right=0.96, top=0.90)
+plt.savefig(
+    "xgb_permutation_importance_bar.pdf",
+    dpi=150,
+    bbox_inches="tight",
+    pad_inches=0.12,
+)
 plt.close()
 
 print("Saved permutation importance: 'xgb_permutation_importance.csv', 'xgb_permutation_importance_bar.pdf'")

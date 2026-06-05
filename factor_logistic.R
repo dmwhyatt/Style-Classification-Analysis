@@ -51,15 +51,18 @@ if (file.exists(pearce_txt)) {
 features_numeric <- features %>%
   select(where(is.numeric)) %>%
   select(-melody_num)
-features_numeric_clean <- features_numeric %>% drop_na()
-x_raw <- features_numeric_clean
+
+# Match feature_selection.prepare_numeric_feature_matrix (Python): inf -> NA -> 0; keep all rows
+features_numeric <- features_numeric %>%
+  mutate(across(everything(), ~ replace(.x, is.infinite(.x), NA_real_))) %>%
+  mutate(across(everything(), ~ replace_na(.x, 0)))
+x_raw <- features_numeric
 
 if (nrow(x_raw) == 0) {
-  stop("No complete rows remain after drop_na().")
+  stop("No rows remain in feature matrix.")
 }
 
-row_idx <- as.integer(rownames(x_raw))
-features_model <- features[row_idx, ] %>%
+features_model <- features %>%
   mutate(melody_key = tolower(basename_no_ext(melody_id)))
 
 variances <- sapply(x_raw, var)
@@ -393,7 +396,8 @@ write_csv(
 write_csv(tibble(class_label = classes), "factor_logistic_class_order.csv")
 cat(
   "Wrote factor_logistic_predictions_*.csv and factor_logistic_class_order.csv\n",
-  "Run: python factor_logistic_plot_confusion.py\n"
+  "Run: python factor_logistic_plot_confusion.py\n",
+  "     python factor_logistic_plot_importance.py\n"
 )
 
 # factor importance table: variance explained + logistic coefficient + significance

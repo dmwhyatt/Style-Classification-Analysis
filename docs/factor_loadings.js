@@ -4,280 +4,218 @@ window.factorLoadingsData =
     {
       "rank": 1,
       "feature": "complexity.mean_duration_accent",
-      "loading": 0.9701,
-      "abs_loading": 0.9701
+      "loading": 1.0026,
+      "abs_loading": 1.0026
     },
     {
       "rank": 2,
-      "feature": "complexity.complebm_pitch",
-      "loading": -0.9397,
-      "abs_loading": 0.9397
+      "feature": "timing.mean_rhythmic_value",
+      "loading": 0.9954,
+      "abs_loading": 0.9954
     },
     {
       "rank": 3,
-      "feature": "timing.mean_rhythmic_value",
-      "loading": 0.9244,
-      "abs_loading": 0.9244
+      "feature": "timing.average_note_duration",
+      "loading": 0.9948,
+      "abs_loading": 0.9948
     },
     {
       "rank": 4,
-      "feature": "timing.average_note_duration",
-      "loading": 0.9239,
-      "abs_loading": 0.9239
+      "feature": "timing.mean_duration",
+      "loading": 0.9948,
+      "abs_loading": 0.9948
     },
     {
       "rank": 5,
-      "feature": "timing.mean_duration",
-      "loading": 0.9239,
-      "abs_loading": 0.9239
+      "feature": "inter_onset_interval.ioi_mean",
+      "loading": 0.9893,
+      "abs_loading": 0.9893
     },
     {
       "rank": 6,
-      "feature": "inter_onset_interval.ioi_mean",
-      "loading": 0.9207,
-      "abs_loading": 0.9207
+      "feature": "complexity.complebm_pitch",
+      "loading": -0.9723,
+      "abs_loading": 0.9723
     },
     {
       "rank": 7,
-      "feature": "complexity.complebm_optimal",
-      "loading": -0.9207,
-      "abs_loading": 0.9207
+      "feature": "timing.strength_of_strongest_rhythmic_pulse",
+      "loading": 0.9487,
+      "abs_loading": 0.9487
     },
     {
       "rank": 8,
-      "feature": "timing.combined_strength_of_two_strongest_rhythmic_pulses_tempo_standardized",
-      "loading": 0.9173,
-      "abs_loading": 0.9173
+      "feature": "timing.strength_of_strongest_rhythmic_pulse_tempo_standardized",
+      "loading": 0.9487,
+      "abs_loading": 0.9487
     },
     {
       "rank": 9,
-      "feature": "timing.combined_strength_of_two_strongest_rhythmic_pulses",
-      "loading": 0.9173,
-      "abs_loading": 0.9173
+      "feature": "timing.prevalence_of_long_rhythmic_values",
+      "loading": 0.9439,
+      "abs_loading": 0.9439
     },
     {
       "rank": 10,
-      "feature": "timing.note_density",
-      "loading": -0.8949,
-      "abs_loading": 0.8949
+      "feature": "timing.rhythmic_variability",
+      "loading": 0.9388,
+      "abs_loading": 0.9388
     }
   ],
   "F2": [
     {
       "rank": 1,
-      "feature": "timing.npvi",
-      "loading": 0.9391,
-      "abs_loading": 0.9391
+      "feature": "absolute_pitch.pitch_standard_deviation",
+      "loading": 0.8544,
+      "abs_loading": 0.8544
     },
     {
       "rank": 2,
-      "feature": "inter_onset_interval.ioi_contour_standard_deviation",
-      "loading": 0.925,
-      "abs_loading": 0.925
+      "feature": "contour.step_contour_global_variation",
+      "loading": 0.8099,
+      "abs_loading": 0.8099
     },
     {
       "rank": 3,
-      "feature": "timing.equal_duration_transitions",
-      "loading": -0.907,
-      "abs_loading": 0.907
+      "feature": "pitch_interval.standard_deviation_absolute_interval",
+      "loading": 0.7648,
+      "abs_loading": 0.7648
     },
     {
       "rank": 4,
-      "feature": "complexity.duration_entropy",
-      "loading": 0.891,
-      "abs_loading": 0.891
+      "feature": "pitch_interval.mean_absolute_interval",
+      "loading": 0.7179,
+      "abs_loading": 0.7179
     },
     {
       "rank": 5,
-      "feature": "timing.prevalence_of_most_common_rhythmic_value",
-      "loading": -0.8777,
-      "abs_loading": 0.8777
+      "feature": "absolute_pitch.pitch_range",
+      "loading": 0.6874,
+      "abs_loading": 0.6874
     },
     {
       "rank": 6,
-      "feature": "inter_onset_interval.ioi_ratio_mean",
-      "loading": 0.7675,
-      "abs_loading": 0.7675
+      "feature": "complexity.pitch_entropy",
+      "loading": 0.6808,
+      "abs_loading": 0.6808
     },
     {
       "rank": 7,
-      "feature": "timing.prevalence_of_dotted_notes",
-      "loading": 0.6584,
-      "abs_loading": 0.6584
+      "feature": "complexity.interval_entropy",
+      "loading": 0.6466,
+      "abs_loading": 0.6466
     },
     {
       "rank": 8,
-      "feature": "inter_onset_interval.ioi_ratio_standard_deviation",
-      "loading": 0.6479,
-      "abs_loading": 0.6479
+      "feature": "pitch_interval.average_interval_span_by_melodic_arcs",
+      "loading": 0.6335,
+      "abs_loading": 0.6335
     },
     {
       "rank": 9,
-      "feature": "timing.variability_in_rhythmic_value_run_lengths",
-      "loading": -0.6459,
-      "abs_loading": 0.6459
+      "feature": "pitch_interval.absolute_interval_range",
+      "loading": 0.6289,
+      "abs_loading": 0.6289
     },
     {
       "rank": 10,
-      "feature": "timing.relative_prevalence_of_most_common_rhythmic_values",
-      "loading": 0.5934,
-      "abs_loading": 0.5934
+      "feature": "absolute_pitch.number_of_unique_pitches",
+      "loading": 0.5962,
+      "abs_loading": 0.5962
     }
   ],
   "F3": [
     {
       "rank": 1,
-      "feature": "pitch_interval.chromatic_motion",
-      "loading": 0.6356,
-      "abs_loading": 0.6356
+      "feature": "inter_onset_interval.ioi_contour_standard_deviation",
+      "loading": 0.9364,
+      "abs_loading": 0.9364
     },
     {
       "rank": 2,
-      "feature": "timing.onset_autocorr_peak",
-      "loading": 0.6048,
-      "abs_loading": 0.6048
+      "feature": "timing.npvi",
+      "loading": 0.9305,
+      "abs_loading": 0.9305
     },
     {
       "rank": 3,
-      "feature": "contour.step_contour_global_direction",
-      "loading": 0.5985,
-      "abs_loading": 0.5985
+      "feature": "timing.equal_duration_transitions",
+      "loading": -0.9218,
+      "abs_loading": 0.9218
     },
     {
       "rank": 4,
-      "feature": "timing.range_of_rhythmic_values",
-      "loading": -0.5754,
-      "abs_loading": 0.5754
+      "feature": "timing.prevalence_of_most_common_rhythmic_value",
+      "loading": -0.8807,
+      "abs_loading": 0.8807
     },
     {
       "rank": 5,
-      "feature": "absolute_pitch.first_pitch",
-      "loading": -0.5692,
-      "abs_loading": 0.5692
+      "feature": "complexity.duration_entropy",
+      "loading": 0.8566,
+      "abs_loading": 0.8566
     },
     {
       "rank": 6,
-      "feature": "metre.syncopicity",
-      "loading": 0.4662,
-      "abs_loading": 0.4662
+      "feature": "inter_onset_interval.ioi_ratio_mean",
+      "loading": 0.7128,
+      "abs_loading": 0.7128
     },
     {
       "rank": 7,
-      "feature": "timing.number_of_unique_durations",
-      "loading": -0.4586,
-      "abs_loading": 0.4586
+      "feature": "timing.variability_in_rhythmic_value_run_lengths",
+      "loading": -0.679,
+      "abs_loading": 0.679
     },
     {
       "rank": 8,
-      "feature": "timing.duration_range",
-      "loading": -0.4584,
-      "abs_loading": 0.4584
+      "feature": "timing.relative_prevalence_of_most_common_rhythmic_values",
+      "loading": 0.6237,
+      "abs_loading": 0.6237
     },
     {
       "rank": 9,
-      "feature": "contour.interpolation_contour_global_direction",
-      "loading": 0.4545,
-      "abs_loading": 0.4545
+      "feature": "timing.prevalence_of_dotted_notes",
+      "loading": 0.6165,
+      "abs_loading": 0.6165
     },
     {
       "rank": 10,
-      "feature": "timing.number_of_different_rhythmic_values_present",
-      "loading": -0.4544,
-      "abs_loading": 0.4544
+      "feature": "inter_onset_interval.ioi_ratio_standard_deviation",
+      "loading": 0.5841,
+      "abs_loading": 0.5841
     }
   ],
   "F4": [
     {
       "rank": 1,
-      "feature": "pitch_interval.standard_deviation_absolute_interval",
-      "loading": 0.7716,
-      "abs_loading": 0.7716
-    },
-    {
-      "rank": 2,
-      "feature": "absolute_pitch.pitch_standard_deviation",
-      "loading": 0.7625,
-      "abs_loading": 0.7625
-    },
-    {
-      "rank": 3,
-      "feature": "pitch_interval.mean_absolute_interval",
-      "loading": 0.7378,
-      "abs_loading": 0.7378
-    },
-    {
-      "rank": 4,
-      "feature": "complexity.interval_entropy",
-      "loading": 0.7274,
-      "abs_loading": 0.7274
-    },
-    {
-      "rank": 5,
-      "feature": "contour.step_contour_global_variation",
-      "loading": 0.7122,
-      "abs_loading": 0.7122
-    },
-    {
-      "rank": 6,
-      "feature": "pitch_interval.average_interval_span_by_melodic_arcs",
-      "loading": 0.5994,
-      "abs_loading": 0.5994
-    },
-    {
-      "rank": 7,
-      "feature": "complexity.pitch_entropy",
-      "loading": 0.5979,
-      "abs_loading": 0.5979
-    },
-    {
-      "rank": 8,
-      "feature": "absolute_pitch.pitch_range",
-      "loading": 0.5946,
-      "abs_loading": 0.5946
-    },
-    {
-      "rank": 9,
-      "feature": "pitch_interval.prevalence_of_most_common_melodic_interval",
-      "loading": -0.5901,
-      "abs_loading": 0.5901
-    },
-    {
-      "rank": 10,
-      "feature": "pitch_interval.absolute_interval_range",
-      "loading": 0.5737,
-      "abs_loading": 0.5737
-    }
-  ],
-  "F5": [
-    {
-      "rank": 1,
       "feature": "complexity.gradus",
-      "loading": 0.9372,
-      "abs_loading": 0.9372
+      "loading": 0.9199,
+      "abs_loading": 0.9199
     },
     {
       "rank": 2,
       "feature": "absolute_pitch.repeated_notes",
-      "loading": -0.8416,
-      "abs_loading": 0.8416
+      "loading": -0.823,
+      "abs_loading": 0.823
     },
     {
       "rank": 3,
       "feature": "pitch_interval.interval_direction_std",
-      "loading": 0.8184,
-      "abs_loading": 0.8184
+      "loading": 0.7971,
+      "abs_loading": 0.7971
     },
     {
       "rank": 4,
-      "feature": "pitch_interval.amount_of_arpeggiation",
-      "loading": -0.8001,
-      "abs_loading": 0.8001
+      "feature": "absolute_pitch.stepwise_motion",
+      "loading": 0.7761,
+      "abs_loading": 0.7761
     },
     {
       "rank": 5,
-      "feature": "absolute_pitch.stepwise_motion",
-      "loading": 0.7834,
-      "abs_loading": 0.7834
+      "feature": "pitch_interval.amount_of_arpeggiation",
+      "loading": -0.7621,
+      "abs_loading": 0.7621
     },
     {
       "rank": 6,
@@ -288,212 +226,274 @@ window.factorLoadingsData =
     {
       "rank": 7,
       "feature": "pitch_class.prevalence_of_most_common_pitch_class",
-      "loading": -0.6386,
-      "abs_loading": 0.6386
+      "loading": -0.6008,
+      "abs_loading": 0.6008
     },
     {
       "rank": 8,
       "feature": "absolute_pitch.prevalence_of_most_common_pitch",
-      "loading": -0.6056,
-      "abs_loading": 0.6056
+      "loading": -0.5628,
+      "abs_loading": 0.5628
     },
     {
       "rank": 9,
       "feature": "expectation.melodic_attraction_std",
-      "loading": 0.5513,
-      "abs_loading": 0.5513
+      "loading": 0.5525,
+      "abs_loading": 0.5525
     },
     {
       "rank": 10,
       "feature": "absolute_pitch.melodic_pitch_variety",
-      "loading": 0.5285,
-      "abs_loading": 0.5285
+      "loading": 0.4862,
+      "abs_loading": 0.4862
+    }
+  ],
+  "F5": [
+    {
+      "rank": 1,
+      "feature": "timing.range_of_rhythmic_values",
+      "loading": 0.7479,
+      "abs_loading": 0.7479
+    },
+    {
+      "rank": 2,
+      "feature": "timing.number_of_unique_durations",
+      "loading": 0.6386,
+      "abs_loading": 0.6386
+    },
+    {
+      "rank": 3,
+      "feature": "timing.number_of_different_rhythmic_values_present",
+      "loading": 0.6318,
+      "abs_loading": 0.6318
+    },
+    {
+      "rank": 4,
+      "feature": "timing.duration_range",
+      "loading": 0.6135,
+      "abs_loading": 0.6135
+    },
+    {
+      "rank": 5,
+      "feature": "timing.longest_rhythmic_value",
+      "loading": 0.5169,
+      "abs_loading": 0.5169
+    },
+    {
+      "rank": 6,
+      "feature": "timing.maximum_note_duration",
+      "loading": 0.5099,
+      "abs_loading": 0.5099
+    },
+    {
+      "rank": 7,
+      "feature": "inter_onset_interval.ioi_range",
+      "loading": 0.5054,
+      "abs_loading": 0.5054
+    },
+    {
+      "rank": 8,
+      "feature": "timing.onset_autocorr_peak",
+      "loading": -0.4793,
+      "abs_loading": 0.4793
+    },
+    {
+      "rank": 9,
+      "feature": "complexity.duration_accent_std",
+      "loading": 0.4363,
+      "abs_loading": 0.4363
+    },
+    {
+      "rank": 10,
+      "feature": "timing.variability_of_note_durations",
+      "loading": 0.4332,
+      "abs_loading": 0.4332
     }
   ],
   "F6": [
     {
       "rank": 1,
-      "feature": "lexical_diversity.mean_productivity",
-      "loading": -0.9579,
-      "abs_loading": 0.9579
+      "feature": "timing.strength_of_second_strongest_rhythmic_pulse",
+      "loading": -0.8067,
+      "abs_loading": 0.8067
     },
     {
       "rank": 2,
-      "feature": "corpus.std_global_local_weight",
-      "loading": 0.9571,
-      "abs_loading": 0.9571
+      "feature": "timing.strength_of_second_strongest_rhythmic_pulse_tempo_standardized",
+      "loading": -0.8067,
+      "abs_loading": 0.8067
     },
     {
       "rank": 3,
-      "feature": "corpus.mean_global_local_weight",
-      "loading": 0.9372,
-      "abs_loading": 0.9372
+      "feature": "timing.prevalence_of_medium_rhythmic_values",
+      "loading": -0.7126,
+      "abs_loading": 0.7126
     },
     {
       "rank": 4,
-      "feature": "lexical_diversity.honores_h",
-      "loading": -0.7679,
-      "abs_loading": 0.7679
+      "feature": "timing.harmonicity_of_two_strongest_rhythmic_pulses_tempo_standardized",
+      "loading": 0.6495,
+      "abs_loading": 0.6495
     },
     {
       "rank": 5,
-      "feature": "corpus.std_global_weight",
-      "loading": 0.7658,
-      "abs_loading": 0.7658
+      "feature": "timing.harmonicity_of_two_strongest_rhythmic_pulses",
+      "loading": 0.6495,
+      "abs_loading": 0.6495
     },
     {
       "rank": 6,
-      "feature": "timing.length",
-      "loading": 0.7137,
-      "abs_loading": 0.7137
+      "feature": "complexity.duration_accent_std",
+      "loading": -0.5314,
+      "abs_loading": 0.5314
     },
     {
       "rank": 7,
-      "feature": "corpus.mean_global_weight",
-      "loading": 0.6792,
-      "abs_loading": 0.6792
+      "feature": "corpus.min_log_df",
+      "loading": 0.5164,
+      "abs_loading": 0.5164
     },
     {
       "rank": 8,
-      "feature": "lexical_diversity.sichels_s",
-      "loading": 0.664,
-      "abs_loading": 0.664
+      "feature": "timing.prevalence_of_very_short_rhythmic_values",
+      "loading": 0.5041,
+      "abs_loading": 0.5041
     },
     {
       "rank": 9,
-      "feature": "contour.step_contour_local_variation",
-      "loading": 0.6142,
-      "abs_loading": 0.6142
+      "feature": "timing.strength_ratio_of_two_strongest_rhythmic_pulses",
+      "loading": 0.4748,
+      "abs_loading": 0.4748
     },
     {
       "rank": 10,
-      "feature": "tonality.proportion_scalar",
-      "loading": -0.6055,
-      "abs_loading": 0.6055
+      "feature": "timing.strength_ratio_of_two_strongest_rhythmic_pulses_tempo_standardized",
+      "loading": 0.4748,
+      "abs_loading": 0.4748
     }
   ],
   "F7": [
     {
       "rank": 1,
-      "feature": "timing.strength_of_second_strongest_rhythmic_pulse_tempo_standardized",
-      "loading": -0.7274,
-      "abs_loading": 0.7274
+      "feature": "lexical_diversity.mean_productivity",
+      "loading": -0.8919,
+      "abs_loading": 0.8919
     },
     {
       "rank": 2,
-      "feature": "timing.strength_of_second_strongest_rhythmic_pulse",
-      "loading": -0.7274,
-      "abs_loading": 0.7274
+      "feature": "corpus.mean_global_local_weight",
+      "loading": 0.8757,
+      "abs_loading": 0.8757
     },
     {
       "rank": 3,
-      "feature": "timing.harmonicity_of_two_strongest_rhythmic_pulses",
-      "loading": 0.6631,
-      "abs_loading": 0.6631
+      "feature": "corpus.std_global_local_weight",
+      "loading": 0.8614,
+      "abs_loading": 0.8614
     },
     {
       "rank": 4,
-      "feature": "timing.harmonicity_of_two_strongest_rhythmic_pulses_tempo_standardized",
-      "loading": 0.6631,
-      "abs_loading": 0.6631
+      "feature": "timing.length",
+      "loading": 0.738,
+      "abs_loading": 0.738
     },
     {
       "rank": 5,
-      "feature": "timing.prevalence_of_medium_rhythmic_values",
-      "loading": -0.6181,
-      "abs_loading": 0.6181
+      "feature": "lexical_diversity.honores_h",
+      "loading": -0.7003,
+      "abs_loading": 0.7003
     },
     {
       "rank": 6,
-      "feature": "corpus.min_log_df",
-      "loading": 0.5597,
-      "abs_loading": 0.5597
+      "feature": "corpus.std_global_weight",
+      "loading": 0.6866,
+      "abs_loading": 0.6866
     },
     {
       "rank": 7,
-      "feature": "corpus.norm_log_dist",
-      "loading": 0.528,
-      "abs_loading": 0.528
+      "feature": "corpus.mean_global_weight",
+      "loading": 0.6607,
+      "abs_loading": 0.6607
     },
     {
       "rank": 8,
-      "feature": "complexity.duration_accent_std",
-      "loading": -0.5078,
-      "abs_loading": 0.5078
+      "feature": "contour.step_contour_local_variation",
+      "loading": 0.66,
+      "abs_loading": 0.66
     },
     {
       "rank": 9,
-      "feature": "corpus.max_log_df",
-      "loading": -0.4948,
-      "abs_loading": 0.4948
+      "feature": "tonality.proportion_scalar",
+      "loading": -0.6248,
+      "abs_loading": 0.6248
     },
     {
       "rank": 10,
-      "feature": "timing.strength_ratio_of_two_strongest_rhythmic_pulses",
-      "loading": 0.4813,
-      "abs_loading": 0.4813
+      "feature": "lexical_diversity.sichels_s",
+      "loading": 0.6017,
+      "abs_loading": 0.6017
     }
   ],
   "F8": [
     {
       "rank": 1,
       "feature": "absolute_pitch.mean_pitch",
-      "loading": 0.7113,
-      "abs_loading": 0.7113
+      "loading": -0.7374,
+      "abs_loading": 0.7374
     },
     {
       "rank": 2,
       "feature": "absolute_pitch.most_common_pitch",
-      "loading": 0.6437,
-      "abs_loading": 0.6437
+      "loading": -0.6784,
+      "abs_loading": 0.6784
     },
     {
       "rank": 3,
-      "feature": "absolute_pitch.importance_of_high_register",
-      "loading": 0.5709,
-      "abs_loading": 0.5709
+      "feature": "absolute_pitch.first_pitch",
+      "loading": -0.6758,
+      "abs_loading": 0.6758
     },
     {
       "rank": 4,
-      "feature": "absolute_pitch.last_pitch",
-      "loading": 0.5526,
-      "abs_loading": 0.5526
+      "feature": "absolute_pitch.importance_of_high_register",
+      "loading": -0.6509,
+      "abs_loading": 0.6509
     },
     {
       "rank": 5,
-      "feature": "absolute_pitch.first_pitch",
-      "loading": 0.5339,
-      "abs_loading": 0.5339
+      "feature": "absolute_pitch.importance_of_middle_register",
+      "loading": 0.6123,
+      "abs_loading": 0.6123
     },
     {
       "rank": 6,
-      "feature": "absolute_pitch.importance_of_middle_register",
-      "loading": -0.5233,
-      "abs_loading": 0.5233
+      "feature": "pitch_class.number_of_unique_pitch_classes",
+      "loading": 0.4954,
+      "abs_loading": 0.4954
     },
     {
       "rank": 7,
-      "feature": "expectation.compltrans",
-      "loading": 0.4579,
-      "abs_loading": 0.4579
+      "feature": "absolute_pitch.last_pitch",
+      "loading": -0.4929,
+      "abs_loading": 0.4929
     },
     {
       "rank": 8,
-      "feature": "tonality.referent",
-      "loading": 0.4328,
-      "abs_loading": 0.4328
+      "feature": "tonality.longest_monotonic_conjunct_scalar_passage",
+      "loading": 0.4464,
+      "abs_loading": 0.4464
     },
     {
       "rank": 9,
-      "feature": "expectation.mean_mobility",
-      "loading": -0.4143,
-      "abs_loading": 0.4143
+      "feature": "absolute_pitch.number_of_unique_pitches",
+      "loading": 0.4283,
+      "abs_loading": 0.4283
     },
     {
       "rank": 10,
-      "feature": "expectation.mobility_std",
-      "loading": -0.3971,
-      "abs_loading": 0.3971
+      "feature": "complexity.pitch_entropy",
+      "loading": 0.4208,
+      "abs_loading": 0.4208
     }
   ]
 }

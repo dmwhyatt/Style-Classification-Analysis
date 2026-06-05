@@ -80,7 +80,6 @@ def _save_confusion_heatmap(
     y_pred,
     class_names: List[str],
     *,
-    title: str,
     out_path: str,
 ) -> None:
     cm = confusion_matrix(y_true, y_pred, labels=class_names)
@@ -99,7 +98,6 @@ def _save_confusion_heatmap(
         xticklabels=class_names,
         yticklabels=class_names,
     )
-    plt.title(title)
     plt.xlabel("Predicted")
     plt.ylabel("True")
     plt.tight_layout()
@@ -317,7 +315,6 @@ _save_confusion_heatmap(
     all_true_labels,
     all_pred_labels,
     list(le.classes_),
-    title="Confusion Matrix (Cross-Validation)",
     out_path="confusion_matrix_cv.png",
 )
 
@@ -344,7 +341,6 @@ _save_confusion_heatmap(
     y_test_labels,
     y_test_pred_labels,
     list(le.classes_),
-    title="Confusion Matrix (Test Set)",
     out_path="confusion_matrix.pdf",
 )
 print("Saved test set confusion matrix: 'confusion_matrix.pdf'")
@@ -433,11 +429,6 @@ if coef.ndim == 2:
             edgecolor="white",
         )
         ax.axvline(0, color="0.35", linewidth=0.8, zorder=0)
-        ax.set_title(
-            "Logistic Regression: Permuted Feature Importance",
-            fontsize=13,
-            pad=10,
-        )
         pos_class, neg_class = le.classes_[1], le.classes_[0]
         ax.legend(
             handles=[

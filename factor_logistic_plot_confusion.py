@@ -24,7 +24,6 @@ CV_PRED_CSV = "factor_logistic_predictions_cv.csv"
 def _plot_cm(
     df: pd.DataFrame,
     classes: list[str],
-    title: str,
     out_path: str,
 ) -> None:
     y_true = df["true_label"].astype(str)
@@ -70,7 +69,6 @@ def main() -> None:
         _plot_cm(
             pd.read_csv(TEST_PRED_CSV),
             classes,
-            "Confusion Matrix (Test Set, Factor Logistic)",
             "factor_logistic_confusion_matrix_test.pdf",
         )
     else:
@@ -80,7 +78,6 @@ def main() -> None:
         _plot_cm(
             pd.read_csv(CV_PRED_CSV),
             classes,
-            "Confusion Matrix (CV, Factor Logistic)",
             "factor_logistic_confusion_matrix_cv.pdf",
         )
     else:

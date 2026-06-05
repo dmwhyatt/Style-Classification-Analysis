@@ -1,6 +1,6 @@
 """Shared numeric feature selection for Essen classifiers in Python.
 
-Aligns with factor_logistic.R:
+Shared with factor_logistic.R:
   - numeric columns only
   - exclude melody_num and id/metadata-like column names
   - replace inf, fillna(0), then drop zero-variance / non-finite std columns

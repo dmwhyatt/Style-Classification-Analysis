@@ -1,6 +1,6 @@
 # Style Classification Analysis
 
-This repository builds a series of classifiers that predict whether melodies from the Essen corpus originate from **China** or **Europe**, using numeric features from the Python package **`melody-features`** as predictors. It reproduces the manuscript’s confusion-matrix figures, runs exploratory factor analysis and a factor-based logistic model in **R**, and benchmarks logistic regression for each feature-extraction source (IDyOM, jSymbolic, etc.).
+This repository develops classifiers to predict whether melodies from the Essen corpus originate from **China** or **Europe**, using numeric features extracted with the [**`melody-features`** package](https://github.com/dmwhyatt/melody-features) as predictors. It reproduces the manuscript’s confusion-matrix analyses, conducts exploratory factor analysis and a factor-based logistic model in **R**, and benchmarks logistic regression for each feature extraction source (IDyOM, jSymbolic, etc.).
 
 Run everything from the repo root unless noted otherwise.
 
@@ -69,6 +69,7 @@ python logistic.py
 python xgbclassifer.py
 Rscript factor_logistic.R
 python factor_logistic_plot_confusion.py
+python factor_logistic_plot_importance.py
 python comparison.py
 ```
 
@@ -78,6 +79,7 @@ python comparison.py
 | **2** | `python xgbclassifer.py` | Needs the features CSV. Same split/features as **1**. Writes **Figure 2** (`xgb_confusion_matrix_test.pdf`). |
 | **3** | `Rscript factor_logistic.R` | EFA on the same numeric features (9 factors, promax, parallel analysis). Writes **Figure 3** (`factor_eigenvalues_elbow.pdf`), factor GLM output, and CSVs consumed by **4**. |
 | **4** | `python factor_logistic_plot_confusion.py` | Reads R’s prediction CSVs. Writes **Figure 4** (`factor_logistic_confusion_matrix_test.pdf`). |
+| **4b** | `python factor_logistic_plot_importance.py` | Permutation importance on factor scores (test set). Writes `factor_logistic_permutation_importance_bar.pdf`. |
 | **5** | `python comparison.py` | Needs the features CSV from **1**. Builds or loads `source_to_csv_columns_with_novel.json`, trains one logistic model per implementation source plus an all features baseline, writes comparison CSV/TeX/PDF and `coefficients/*.csv`. |
 
 **First run of Step 1** can take a long time. Later runs load `essen_china_europe_features.csv` and skip re-extraction unless you delete that file.
@@ -92,6 +94,7 @@ python comparison.py
 | 2 | `xgb_confusion_matrix_test.pdf` | `python xgbclassifer.py` |
 | 3 | `factor_eigenvalues_elbow.pdf` | `Rscript factor_logistic.R` |
 | 4 | `factor_logistic_confusion_matrix_test.pdf` | `python factor_logistic_plot_confusion.py` (after **3**) |
+| — | `factor_logistic_permutation_importance_bar.pdf` | `python factor_logistic_plot_importance.py` (after **3**) |
 
 ---
 
