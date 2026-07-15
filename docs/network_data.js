@@ -3,49 +3,49 @@ const networkData =
   "nodes": [
     {
       "id": "F1",
-      "name": "1. Long Pulses",
+      "name": "1. Long Rhythms",
       "type": "factor",
       "val": 25
     },
     {
       "id": "F2",
-      "name": "2. Metric Strength",
+      "name": "2. Irregular Rhythms",
       "type": "factor",
       "val": 25
     },
     {
       "id": "F3",
-      "name": "3. Scalic Ascent & Narrow Rhythm",
+      "name": "3. Pitch-Class Variety",
       "type": "factor",
       "val": 25
     },
     {
       "id": "F4",
-      "name": "4. Interval Variability",
+      "name": "4. Overall Complexity",
       "type": "factor",
       "val": 25
     },
     {
       "id": "F5",
-      "name": "5. Busy Stepwise Melody",
+      "name": "5. Wide Intervals",
       "type": "factor",
       "val": 25
     },
     {
       "id": "F6",
-      "name": "6. Corpus Familiar & Long",
+      "name": "6. Dense Rhythms",
       "type": "factor",
       "val": 25
     },
     {
       "id": "F7",
-      "name": "7. Dual-Pulse Rhythm",
+      "name": "7. Stepwise Complexity",
       "type": "factor",
       "val": 25
     },
     {
       "id": "F8",
-      "name": "8. High Pitch Height",
+      "name": "8. Corpus Familiarity",
       "type": "factor",
       "val": 25
     },
@@ -76,12 +76,6 @@ const networkData =
     {
       "id": "timing.combined_strength_of_two_strongest_rhythmic_pulses_tempo_standardized",
       "name": "timing.combined_strength_of_two_strongest_rhythmic_pulses_tempo_standardized",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "timing.difference_between_most_common_rhythmic_values",
-      "name": "timing.difference_between_most_common_rhythmic_values",
       "type": "variable",
       "val": 8
     },
@@ -190,12 +184,6 @@ const networkData =
     {
       "id": "timing.note_density_per_quarter_note_variability",
       "name": "timing.note_density_per_quarter_note_variability",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "timing.note_density_variability",
-      "name": "timing.note_density_variability",
       "type": "variable",
       "val": 8
     },
@@ -344,12 +332,6 @@ const networkData =
       "val": 8
     },
     {
-      "id": "timing.meter_accent",
-      "name": "timing.meter_accent",
-      "type": "variable",
-      "val": 8
-    },
-    {
       "id": "tonality.mean_cloud_diameter",
       "name": "tonality.mean_cloud_diameter",
       "type": "variable",
@@ -374,18 +356,6 @@ const networkData =
       "val": 8
     },
     {
-      "id": "tonality.mean_tensile_strain",
-      "name": "tonality.mean_tensile_strain",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "tonality.std_tensile_strain",
-      "name": "tonality.std_tensile_strain",
-      "type": "variable",
-      "val": 8
-    },
-    {
       "id": "metre.meter_accent",
       "name": "metre.meter_accent",
       "type": "variable",
@@ -394,6 +364,12 @@ const networkData =
     {
       "id": "metre.meter_denominator",
       "name": "metre.meter_denominator",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "complexity.av_local_p1_entropy",
+      "name": "complexity.av_local_p1_entropy",
       "type": "variable",
       "val": 8
     },
@@ -416,8 +392,50 @@ const networkData =
       "val": 8
     },
     {
+      "id": "complexity.event_density",
+      "name": "complexity.event_density",
+      "type": "variable",
+      "val": 8
+    },
+    {
       "id": "complexity.mean_duration_accent",
       "name": "complexity.mean_duration_accent",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "complexity.mel_abruptness",
+      "name": "complexity.mel_abruptness",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "complexity.rhythm_abruptness",
+      "name": "complexity.rhythm_abruptness",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "lexical_diversity.yules_k",
+      "name": "lexical_diversity.yules_k",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "lexical_diversity.simpsons_d",
+      "name": "lexical_diversity.simpsons_d",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "lexical_diversity.mean_entropy",
+      "name": "lexical_diversity.mean_entropy",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "corpus.mean_log_tfdf",
+      "name": "corpus.mean_log_tfdf",
       "type": "variable",
       "val": 8
     },
@@ -442,180 +460,6 @@ const networkData =
     {
       "id": "corpus.mean_log_df",
       "name": "corpus.mean_log_df",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "absolute_pitch.interval_between_most_prevalent_pitches",
-      "name": "absolute_pitch.interval_between_most_prevalent_pitches",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "absolute_pitch.melodic_pitch_variety",
-      "name": "absolute_pitch.melodic_pitch_variety",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "absolute_pitch.number_of_unique_pitches",
-      "name": "absolute_pitch.number_of_unique_pitches",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "absolute_pitch.pitch_range",
-      "name": "absolute_pitch.pitch_range",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "absolute_pitch.pitch_standard_deviation",
-      "name": "absolute_pitch.pitch_standard_deviation",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "absolute_pitch.prevalence_of_most_common_pitch",
-      "name": "absolute_pitch.prevalence_of_most_common_pitch",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "absolute_pitch.stepwise_motion",
-      "name": "absolute_pitch.stepwise_motion",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "pitch_class.dominant_spread",
-      "name": "pitch_class.dominant_spread",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "pitch_class.strong_tonal_centres",
-      "name": "pitch_class.strong_tonal_centres",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "pitch_interval.absolute_interval_range",
-      "name": "pitch_interval.absolute_interval_range",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "pitch_interval.average_interval_span_by_melodic_arcs",
-      "name": "pitch_interval.average_interval_span_by_melodic_arcs",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "pitch_interval.mean_absolute_interval",
-      "name": "pitch_interval.mean_absolute_interval",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "pitch_interval.melodic_octaves",
-      "name": "pitch_interval.melodic_octaves",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "pitch_interval.melodic_perfect_fifths",
-      "name": "pitch_interval.melodic_perfect_fifths",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "pitch_interval.melodic_perfect_fourths",
-      "name": "pitch_interval.melodic_perfect_fourths",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "pitch_interval.melodic_sevenths",
-      "name": "pitch_interval.melodic_sevenths",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "pitch_interval.melodic_sixths",
-      "name": "pitch_interval.melodic_sixths",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "pitch_interval.prevalence_of_most_common_melodic_interval",
-      "name": "pitch_interval.prevalence_of_most_common_melodic_interval",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "pitch_interval.standard_deviation_absolute_interval",
-      "name": "pitch_interval.standard_deviation_absolute_interval",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "contour.step_contour_global_variation",
-      "name": "contour.step_contour_global_variation",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "contour.step_contour_local_variation",
-      "name": "contour.step_contour_local_variation",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "tonality.tonalness",
-      "name": "tonality.tonalness",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "tonality.longest_conjunct_scalar_passage",
-      "name": "tonality.longest_conjunct_scalar_passage",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "tonality.proportion_conjunct_scalar",
-      "name": "tonality.proportion_conjunct_scalar",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "expectation.mean_mobility",
-      "name": "expectation.mean_mobility",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "expectation.mobility_std",
-      "name": "expectation.mobility_std",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "complexity.interval_entropy",
-      "name": "complexity.interval_entropy",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "complexity.pitch_entropy",
-      "name": "complexity.pitch_entropy",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "lexical_diversity.simpsons_d",
-      "name": "lexical_diversity.simpsons_d",
       "type": "variable",
       "val": 8
     },
@@ -746,6 +590,24 @@ const networkData =
       "val": 8
     },
     {
+      "id": "complexity.d1_entropy",
+      "name": "complexity.d1_entropy",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "complexity.d2_entropy",
+      "name": "complexity.d2_entropy",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "complexity.d3_entropy",
+      "name": "complexity.d3_entropy",
+      "type": "variable",
+      "val": 8
+    },
+    {
       "id": "complexity.duration_accent_std",
       "name": "complexity.duration_accent_std",
       "type": "variable",
@@ -758,20 +620,56 @@ const networkData =
       "val": 8
     },
     {
-      "id": "corpus.std_global_local_weight",
-      "name": "corpus.std_global_local_weight",
+      "id": "complexity.event_heterogeneity",
+      "name": "complexity.event_heterogeneity",
       "type": "variable",
       "val": 8
     },
     {
-      "id": "absolute_pitch.relative_prevalence_of_top_pitches",
-      "name": "absolute_pitch.relative_prevalence_of_top_pitches",
+      "id": "absolute_pitch.first_pitch",
+      "name": "absolute_pitch.first_pitch",
       "type": "variable",
       "val": 8
     },
     {
-      "id": "absolute_pitch.repeated_notes",
-      "name": "absolute_pitch.repeated_notes",
+      "id": "absolute_pitch.importance_of_high_register",
+      "name": "absolute_pitch.importance_of_high_register",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "absolute_pitch.importance_of_middle_register",
+      "name": "absolute_pitch.importance_of_middle_register",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "absolute_pitch.mean_pitch",
+      "name": "absolute_pitch.mean_pitch",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "absolute_pitch.most_common_pitch",
+      "name": "absolute_pitch.most_common_pitch",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "absolute_pitch.number_of_unique_pitches",
+      "name": "absolute_pitch.number_of_unique_pitches",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "pitch_class.number_of_common_pitch_classes",
+      "name": "pitch_class.number_of_common_pitch_classes",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "pitch_class.number_of_unique_pitch_classes",
+      "name": "pitch_class.number_of_unique_pitch_classes",
       "type": "variable",
       "val": 8
     },
@@ -782,20 +680,344 @@ const networkData =
       "val": 8
     },
     {
-      "id": "pitch_class.relative_prevalence_of_top_pitch_classes",
-      "name": "pitch_class.relative_prevalence_of_top_pitch_classes",
+      "id": "pitch_interval.chromatic_motion",
+      "name": "pitch_interval.chromatic_motion",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "pitch_interval.mean_absolute_interval",
+      "name": "pitch_interval.mean_absolute_interval",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "pitch_interval.melodic_thirds",
+      "name": "pitch_interval.melodic_thirds",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "pitch_interval.prevalence_of_most_common_melodic_interval",
+      "name": "pitch_interval.prevalence_of_most_common_melodic_interval",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "contour.step_contour_global_direction",
+      "name": "contour.step_contour_global_direction",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "contour.interpolation_contour_global_direction",
+      "name": "contour.interpolation_contour_global_direction",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "timing.onset_autocorr_peak",
+      "name": "timing.onset_autocorr_peak",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "tonality.longest_monotonic_conjunct_scalar_passage",
+      "name": "tonality.longest_monotonic_conjunct_scalar_passage",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "tonality.std_tensile_strain",
+      "name": "tonality.std_tensile_strain",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "metre.meter_numerator",
+      "name": "metre.meter_numerator",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "metre.syncopation",
+      "name": "metre.syncopation",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "complexity.av_abs_interval",
+      "name": "complexity.av_abs_interval",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "complexity.i1_entropy",
+      "name": "complexity.i1_entropy",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "complexity.i2_entropy",
+      "name": "complexity.i2_entropy",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "complexity.interval_entropy",
+      "name": "complexity.interval_entropy",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "complexity.p1_entropy",
+      "name": "complexity.p1_entropy",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "complexity.p2_entropy",
+      "name": "complexity.p2_entropy",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "complexity.p3_entropy",
+      "name": "complexity.p3_entropy",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "complexity.pitch_entropy",
+      "name": "complexity.pitch_entropy",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "idyom.pitch_ltm_mean_information_content",
+      "name": "idyom.pitch_ltm_mean_information_content",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "absolute_pitch.pitch_kurtosis",
+      "name": "absolute_pitch.pitch_kurtosis",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "absolute_pitch.pitch_range",
+      "name": "absolute_pitch.pitch_range",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "absolute_pitch.prevalence_of_most_common_pitch",
+      "name": "absolute_pitch.prevalence_of_most_common_pitch",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "pitch_class.pitch_class_kurtosis",
+      "name": "pitch_class.pitch_class_kurtosis",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "pitch_interval.absolute_interval_range",
+      "name": "pitch_interval.absolute_interval_range",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "pitch_interval.minor_major_third_ratio",
+      "name": "pitch_interval.minor_major_third_ratio",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "contour.step_contour_local_variation",
+      "name": "contour.step_contour_local_variation",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "timing.length",
+      "name": "timing.length",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "tonality.proportion_conjunct_scalar",
+      "name": "tonality.proportion_conjunct_scalar",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "tonality.proportion_scalar",
+      "name": "tonality.proportion_scalar",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "expectation.mean_melodic_accent",
+      "name": "expectation.mean_melodic_accent",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "complexity.wp_entropy",
+      "name": "complexity.wp_entropy",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "corpus.std_global_local_weight",
+      "name": "corpus.std_global_local_weight",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "absolute_pitch.interval_between_most_prevalent_pitches",
+      "name": "absolute_pitch.interval_between_most_prevalent_pitches",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "absolute_pitch.melodic_pitch_variety",
+      "name": "absolute_pitch.melodic_pitch_variety",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "absolute_pitch.pitch_standard_deviation",
+      "name": "absolute_pitch.pitch_standard_deviation",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "absolute_pitch.stepwise_motion",
+      "name": "absolute_pitch.stepwise_motion",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "pitch_class.strong_tonal_centres",
+      "name": "pitch_class.strong_tonal_centres",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "pitch_interval.average_interval_span_by_melodic_arcs",
+      "name": "pitch_interval.average_interval_span_by_melodic_arcs",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "pitch_interval.melodic_octaves",
+      "name": "pitch_interval.melodic_octaves",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "pitch_interval.melodic_perfect_fifths",
+      "name": "pitch_interval.melodic_perfect_fifths",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "pitch_interval.melodic_perfect_fourths",
+      "name": "pitch_interval.melodic_perfect_fourths",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "pitch_interval.melodic_sevenths",
+      "name": "pitch_interval.melodic_sevenths",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "pitch_interval.melodic_sixths",
+      "name": "pitch_interval.melodic_sixths",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "pitch_interval.number_of_common_melodic_intervals",
+      "name": "pitch_interval.number_of_common_melodic_intervals",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "pitch_interval.standard_deviation_absolute_interval",
+      "name": "pitch_interval.standard_deviation_absolute_interval",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "contour.step_contour_global_variation",
+      "name": "contour.step_contour_global_variation",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "tonality.tonalness",
+      "name": "tonality.tonalness",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "tonality.longest_conjunct_scalar_passage",
+      "name": "tonality.longest_conjunct_scalar_passage",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "complexity.asym_total",
+      "name": "complexity.asym_total",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "timing.difference_between_most_common_rhythmic_values",
+      "name": "timing.difference_between_most_common_rhythmic_values",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "timing.prevalence_of_medium_rhythmic_values",
+      "name": "timing.prevalence_of_medium_rhythmic_values",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "timing.strength_of_second_strongest_rhythmic_pulse",
+      "name": "timing.strength_of_second_strongest_rhythmic_pulse",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "timing.strength_of_second_strongest_rhythmic_pulse_tempo_standardized",
+      "name": "timing.strength_of_second_strongest_rhythmic_pulse_tempo_standardized",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "absolute_pitch.mean_tessitura",
+      "name": "absolute_pitch.mean_tessitura",
+      "type": "variable",
+      "val": 8
+    },
+    {
+      "id": "absolute_pitch.repeated_notes",
+      "name": "absolute_pitch.repeated_notes",
       "type": "variable",
       "val": 8
     },
     {
       "id": "pitch_interval.amount_of_arpeggiation",
       "name": "pitch_interval.amount_of_arpeggiation",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "pitch_interval.chromatic_motion",
-      "name": "pitch_interval.chromatic_motion",
       "type": "variable",
       "val": 8
     },
@@ -830,14 +1052,8 @@ const networkData =
       "val": 8
     },
     {
-      "id": "tonality.longest_monotonic_conjunct_scalar_passage",
-      "name": "tonality.longest_monotonic_conjunct_scalar_passage",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "expectation.mean_melodic_accent",
-      "name": "expectation.mean_melodic_accent",
+      "id": "expectation.mean_melodic_attraction",
+      "name": "expectation.mean_melodic_attraction",
       "type": "variable",
       "val": 8
     },
@@ -854,86 +1070,20 @@ const networkData =
       "val": 8
     },
     {
+      "id": "complexity.dur_abruptness",
+      "name": "complexity.dur_abruptness",
+      "type": "variable",
+      "val": 8
+    },
+    {
       "id": "complexity.gradus",
       "name": "complexity.gradus",
       "type": "variable",
       "val": 8
     },
     {
-      "id": "pitch_interval.number_of_common_melodic_intervals",
-      "name": "pitch_interval.number_of_common_melodic_intervals",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "contour.step_contour_global_direction",
-      "name": "contour.step_contour_global_direction",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "timing.onset_autocorr_peak",
-      "name": "timing.onset_autocorr_peak",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "timing.variability_of_rhythmic_value_offsets",
-      "name": "timing.variability_of_rhythmic_value_offsets",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "tonality.proportion_scalar",
-      "name": "tonality.proportion_scalar",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "timing.prevalence_of_medium_rhythmic_values",
-      "name": "timing.prevalence_of_medium_rhythmic_values",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "timing.strength_of_second_strongest_rhythmic_pulse",
-      "name": "timing.strength_of_second_strongest_rhythmic_pulse",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "timing.strength_of_second_strongest_rhythmic_pulse_tempo_standardized",
-      "name": "timing.strength_of_second_strongest_rhythmic_pulse_tempo_standardized",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "lexical_diversity.yules_k",
-      "name": "lexical_diversity.yules_k",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "lexical_diversity.mean_entropy",
-      "name": "lexical_diversity.mean_entropy",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "corpus.mean_log_tfdf",
-      "name": "corpus.mean_log_tfdf",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "absolute_pitch.mean_tessitura",
-      "name": "absolute_pitch.mean_tessitura",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "timing.length",
-      "name": "timing.length",
+      "id": "pitch_interval.average_length_of_melodic_arcs",
+      "name": "pitch_interval.average_length_of_melodic_arcs",
       "type": "variable",
       "val": 8
     },
@@ -984,1531 +1134,1663 @@ const networkData =
       "name": "corpus.std_global_weight",
       "type": "variable",
       "val": 8
-    },
-    {
-      "id": "absolute_pitch.first_pitch",
-      "name": "absolute_pitch.first_pitch",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "absolute_pitch.importance_of_bass_register",
-      "name": "absolute_pitch.importance_of_bass_register",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "absolute_pitch.importance_of_high_register",
-      "name": "absolute_pitch.importance_of_high_register",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "absolute_pitch.importance_of_middle_register",
-      "name": "absolute_pitch.importance_of_middle_register",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "absolute_pitch.last_pitch",
-      "name": "absolute_pitch.last_pitch",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "absolute_pitch.mean_pitch",
-      "name": "absolute_pitch.mean_pitch",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "absolute_pitch.most_common_pitch",
-      "name": "absolute_pitch.most_common_pitch",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "pitch_class.number_of_common_pitch_classes",
-      "name": "pitch_class.number_of_common_pitch_classes",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "pitch_class.number_of_unique_pitch_classes",
-      "name": "pitch_class.number_of_unique_pitch_classes",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "pitch_interval.average_length_of_melodic_arcs",
-      "name": "pitch_interval.average_length_of_melodic_arcs",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "pitch_interval.melodic_thirds",
-      "name": "pitch_interval.melodic_thirds",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "tonality.referent",
-      "name": "tonality.referent",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "expectation.compltrans",
-      "name": "expectation.compltrans",
-      "type": "variable",
-      "val": 8
-    },
-    {
-      "id": "expectation.mean_melodic_attraction",
-      "name": "expectation.mean_melodic_attraction",
-      "type": "variable",
-      "val": 8
     }
   ],
   "links": [
     {
       "source": "F1",
       "target": "contour.interpolation_contour_mean_gradient",
-      "value": 0.5933,
+      "value": 0.4578,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "contour.interpolation_contour_gradient_std",
-      "value": 0.5722,
+      "value": 0.4398,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "timing.average_note_duration",
-      "value": 0.9948,
+      "value": 1.0023,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.combined_strength_of_two_strongest_rhythmic_pulses",
-      "value": 0.9357,
+      "value": 0.8306,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.combined_strength_of_two_strongest_rhythmic_pulses_tempo_standardized",
-      "value": 0.9357,
-      "sign": "positive"
-    },
-    {
-      "source": "F1",
-      "target": "timing.difference_between_most_common_rhythmic_values",
-      "value": 0.4216,
+      "value": 0.8306,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.duration_range",
-      "value": 0.803,
+      "value": 0.8265,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.duration_standard_deviation",
-      "value": 0.9202,
+      "value": 0.9305,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.global_duration",
-      "value": 0.7644,
+      "value": 0.7885,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.harmonicity_of_two_strongest_rhythmic_pulses",
-      "value": 0.6276,
+      "value": 0.76,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.harmonicity_of_two_strongest_rhythmic_pulses_tempo_standardized",
-      "value": 0.6276,
+      "value": 0.76,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.longest_complete_rest",
-      "value": 0.4932,
+      "value": 0.5243,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.longest_rhythmic_value",
-      "value": 0.8994,
+      "value": 0.917,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.maximum_note_duration",
-      "value": 0.9008,
+      "value": 0.9241,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.mean_complete_rest_duration",
-      "value": 0.6004,
+      "value": 0.6212,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.mean_duration",
-      "value": 0.9948,
+      "value": 1.0023,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.mean_rhythmic_value",
-      "value": 0.9954,
+      "value": 1.0024,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.median_complete_rest_duration",
-      "value": 0.5989,
+      "value": 0.6216,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.minimum_note_duration",
-      "value": 0.8595,
+      "value": 0.8688,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.modal_duration",
-      "value": 0.903,
+      "value": 0.9062,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.most_common_rhythmic_value",
-      "value": 0.9023,
+      "value": 0.9055,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.note_density",
-      "value": 0.8836,
+      "value": 0.7122,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "timing.note_density_per_quarter_note",
-      "value": 0.8836,
+      "value": 0.7122,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "timing.note_density_per_quarter_note_variability",
-      "value": 0.4898,
-      "sign": "negative"
-    },
-    {
-      "source": "F1",
-      "target": "timing.note_density_variability",
-      "value": 0.3523,
+      "value": 0.3763,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "timing.number_of_moderate_rhythmic_pulses",
-      "value": 0.656,
+      "value": 0.5369,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "timing.number_of_moderate_rhythmic_pulses_tempo_standardized",
-      "value": 0.656,
+      "value": 0.5369,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "timing.number_of_relatively_strong_rhythmic_pulses",
-      "value": 0.7095,
+      "value": 0.5425,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "timing.number_of_relatively_strong_rhythmic_pulses_tempo_standardized",
-      "value": 0.7095,
+      "value": 0.5425,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "timing.number_of_strong_rhythmic_pulses",
-      "value": 0.7152,
+      "value": 0.721,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "timing.number_of_strong_rhythmic_pulses_tempo_standardized",
-      "value": 0.7152,
+      "value": 0.721,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "timing.polyrhythms",
-      "value": 0.7294,
+      "value": 0.6103,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.polyrhythms_tempo_standardized",
-      "value": 0.7294,
+      "value": 0.6103,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.prevalence_of_long_rhythmic_values",
-      "value": 0.9439,
+      "value": 0.9626,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.prevalence_of_short_rhythmic_values",
-      "value": 0.8438,
+      "value": 0.7043,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "timing.prevalence_of_very_long_rhythmic_values",
-      "value": 0.564,
+      "value": 0.673,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.prevalence_of_very_short_rhythmic_values",
-      "value": 0.5069,
+      "value": 0.3081,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "timing.rhythmic_variability",
-      "value": 0.9388,
+      "value": 0.8939,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.rhythmic_variability_tempo_standardized",
-      "value": 0.9388,
+      "value": 0.8939,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.shortest_rhythmic_value",
-      "value": 0.8593,
+      "value": 0.8686,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.strength_of_strongest_rhythmic_pulse",
-      "value": 0.9487,
+      "value": 0.9422,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.strength_of_strongest_rhythmic_pulse_tempo_standardized",
-      "value": 0.9487,
+      "value": 0.9422,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.strength_ratio_of_two_strongest_rhythmic_pulses",
-      "value": 0.4911,
+      "value": 0.576,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.strength_ratio_of_two_strongest_rhythmic_pulses_tempo_standardized",
-      "value": 0.4911,
+      "value": 0.576,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.variability_of_complete_rest_durations",
-      "value": 0.3061,
+      "value": 0.3489,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "timing.variability_of_note_durations",
-      "value": 0.9202,
+      "value": 0.9305,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "inter_onset_interval.ioi_mean",
-      "value": 0.9893,
+      "value": 0.9961,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "inter_onset_interval.ioi_range",
-      "value": 0.7907,
+      "value": 0.7957,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "inter_onset_interval.ioi_standard_deviation",
-      "value": 0.9138,
+      "value": 0.9124,
       "sign": "positive"
     },
     {
       "source": "F1",
-      "target": "timing.meter_accent",
-      "value": 0.7425,
-      "sign": "negative"
-    },
-    {
-      "source": "F1",
       "target": "tonality.mean_cloud_diameter",
-      "value": 0.8345,
+      "value": 0.7128,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "tonality.std_cloud_diameter",
-      "value": 0.4827,
+      "value": 0.5484,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "tonality.mean_cloud_momentum",
-      "value": 0.7442,
+      "value": 0.5982,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "tonality.std_cloud_momentum",
-      "value": 0.6831,
-      "sign": "positive"
-    },
-    {
-      "source": "F1",
-      "target": "tonality.mean_tensile_strain",
-      "value": 0.3365,
-      "sign": "positive"
-    },
-    {
-      "source": "F1",
-      "target": "tonality.std_tensile_strain",
-      "value": 0.3646,
+      "value": 0.5391,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "metre.meter_accent",
-      "value": 0.7425,
+      "value": 0.8689,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "metre.meter_denominator",
-      "value": 0.4654,
+      "value": 0.4874,
+      "sign": "negative"
+    },
+    {
+      "source": "F1",
+      "target": "complexity.av_local_p1_entropy",
+      "value": 0.7747,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "complexity.complebm_optimal",
-      "value": 0.9335,
+      "value": 0.8371,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "complexity.complebm_pitch",
-      "value": 0.9723,
+      "value": 0.9175,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "complexity.complebm_rhythm",
-      "value": 0.8427,
+      "value": 0.7283,
+      "sign": "negative"
+    },
+    {
+      "source": "F1",
+      "target": "complexity.event_density",
+      "value": 0.7148,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "complexity.mean_duration_accent",
-      "value": 1.0026,
+      "value": 0.9284,
+      "sign": "positive"
+    },
+    {
+      "source": "F1",
+      "target": "complexity.mel_abruptness",
+      "value": 0.3678,
+      "sign": "negative"
+    },
+    {
+      "source": "F1",
+      "target": "complexity.rhythm_abruptness",
+      "value": 0.3927,
+      "sign": "negative"
+    },
+    {
+      "source": "F1",
+      "target": "lexical_diversity.yules_k",
+      "value": 0.3146,
+      "sign": "positive"
+    },
+    {
+      "source": "F1",
+      "target": "lexical_diversity.simpsons_d",
+      "value": 0.3729,
+      "sign": "positive"
+    },
+    {
+      "source": "F1",
+      "target": "lexical_diversity.mean_entropy",
+      "value": 0.3341,
+      "sign": "negative"
+    },
+    {
+      "source": "F1",
+      "target": "corpus.mean_log_tfdf",
+      "value": 0.3444,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "corpus.norm_log_dist",
-      "value": 0.4336,
+      "value": 0.5287,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "corpus.max_log_df",
-      "value": 0.3485,
+      "value": 0.4686,
       "sign": "negative"
     },
     {
       "source": "F1",
       "target": "corpus.min_log_df",
-      "value": 0.3743,
+      "value": 0.5057,
       "sign": "positive"
     },
     {
       "source": "F1",
       "target": "corpus.mean_log_df",
-      "value": 0.3058,
+      "value": 0.3367,
       "sign": "positive"
     },
     {
       "source": "F2",
-      "target": "absolute_pitch.interval_between_most_prevalent_pitches",
-      "value": 0.4463,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "absolute_pitch.melodic_pitch_variety",
-      "value": 0.4557,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "absolute_pitch.number_of_unique_pitches",
-      "value": 0.5962,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "absolute_pitch.pitch_range",
-      "value": 0.6874,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "absolute_pitch.pitch_standard_deviation",
-      "value": 0.8544,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "absolute_pitch.prevalence_of_most_common_pitch",
-      "value": 0.4305,
-      "sign": "negative"
-    },
-    {
-      "source": "F2",
-      "target": "absolute_pitch.stepwise_motion",
-      "value": 0.4834,
-      "sign": "negative"
-    },
-    {
-      "source": "F2",
-      "target": "pitch_class.dominant_spread",
-      "value": 0.3199,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "pitch_class.strong_tonal_centres",
-      "value": 0.4376,
-      "sign": "negative"
-    },
-    {
-      "source": "F2",
-      "target": "pitch_interval.absolute_interval_range",
-      "value": 0.6289,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "pitch_interval.average_interval_span_by_melodic_arcs",
-      "value": 0.6335,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "pitch_interval.mean_absolute_interval",
-      "value": 0.7179,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "pitch_interval.melodic_octaves",
-      "value": 0.3876,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "pitch_interval.melodic_perfect_fifths",
-      "value": 0.3365,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "pitch_interval.melodic_perfect_fourths",
-      "value": 0.3648,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "pitch_interval.melodic_sevenths",
-      "value": 0.3189,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "pitch_interval.melodic_sixths",
-      "value": 0.3486,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "pitch_interval.prevalence_of_most_common_melodic_interval",
-      "value": 0.5077,
-      "sign": "negative"
-    },
-    {
-      "source": "F2",
-      "target": "pitch_interval.standard_deviation_absolute_interval",
-      "value": 0.7648,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "contour.step_contour_global_variation",
-      "value": 0.8099,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "contour.step_contour_local_variation",
-      "value": 0.4647,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "contour.interpolation_contour_mean_gradient",
-      "value": 0.3874,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "contour.interpolation_contour_gradient_std",
-      "value": 0.3896,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "tonality.tonalness",
-      "value": 0.5734,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "tonality.longest_conjunct_scalar_passage",
-      "value": 0.4358,
-      "sign": "negative"
-    },
-    {
-      "source": "F2",
-      "target": "tonality.proportion_conjunct_scalar",
-      "value": 0.4496,
-      "sign": "negative"
-    },
-    {
-      "source": "F2",
-      "target": "expectation.mean_mobility",
-      "value": 0.4521,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "expectation.mobility_std",
-      "value": 0.4754,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "complexity.interval_entropy",
-      "value": 0.6466,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "complexity.pitch_entropy",
-      "value": 0.6808,
-      "sign": "positive"
-    },
-    {
-      "source": "F2",
-      "target": "lexical_diversity.simpsons_d",
-      "value": 0.3265,
-      "sign": "negative"
-    },
-    {
-      "source": "F3",
       "target": "timing.dotted_duration_transitions",
-      "value": 0.5519,
+      "value": 0.5681,
       "sign": "positive"
     },
     {
-      "source": "F3",
+      "source": "F2",
       "target": "timing.equal_duration_transitions",
-      "value": 0.9218,
+      "value": 0.905,
       "sign": "negative"
     },
     {
-      "source": "F3",
+      "source": "F2",
       "target": "timing.half_duration_transitions",
-      "value": 0.3896,
+      "value": 0.3428,
       "sign": "positive"
     },
     {
-      "source": "F3",
+      "source": "F2",
       "target": "timing.mean_rhythmic_value_run_length",
-      "value": 0.5538,
+      "value": 0.5494,
       "sign": "negative"
     },
     {
-      "source": "F3",
+      "source": "F2",
       "target": "timing.median_rhythmic_value_run_length",
-      "value": 0.367,
+      "value": 0.3661,
       "sign": "negative"
     },
     {
-      "source": "F3",
+      "source": "F2",
       "target": "timing.npvi",
-      "value": 0.9305,
+      "value": 0.9335,
       "sign": "positive"
     },
     {
-      "source": "F3",
+      "source": "F2",
       "target": "timing.number_of_common_rhythmic_values_present",
-      "value": 0.5689,
+      "value": 0.5596,
       "sign": "positive"
     },
     {
-      "source": "F3",
+      "source": "F2",
       "target": "timing.number_of_different_rhythmic_values_present",
-      "value": 0.4522,
+      "value": 0.4661,
       "sign": "positive"
     },
     {
-      "source": "F3",
+      "source": "F2",
       "target": "timing.number_of_moderate_rhythmic_pulses",
-      "value": 0.3168,
+      "value": 0.3225,
       "sign": "positive"
     },
     {
-      "source": "F3",
+      "source": "F2",
       "target": "timing.number_of_moderate_rhythmic_pulses_tempo_standardized",
-      "value": 0.3168,
+      "value": 0.3225,
       "sign": "positive"
     },
     {
-      "source": "F3",
+      "source": "F2",
       "target": "timing.number_of_unique_durations",
-      "value": 0.4577,
+      "value": 0.4696,
       "sign": "positive"
     },
     {
-      "source": "F3",
+      "source": "F2",
       "target": "timing.polyrhythms",
-      "value": 0.3452,
+      "value": 0.3223,
       "sign": "negative"
     },
     {
-      "source": "F3",
+      "source": "F2",
       "target": "timing.polyrhythms_tempo_standardized",
-      "value": 0.3452,
+      "value": 0.3223,
       "sign": "negative"
     },
     {
-      "source": "F3",
+      "source": "F2",
       "target": "timing.prevalence_of_dotted_notes",
-      "value": 0.6165,
+      "value": 0.6376,
+      "sign": "positive"
+    },
+    {
+      "source": "F2",
+      "target": "timing.prevalence_of_most_common_rhythmic_value",
+      "value": 0.8793,
+      "sign": "negative"
+    },
+    {
+      "source": "F2",
+      "target": "timing.range_of_rhythmic_values",
+      "value": 0.3789,
+      "sign": "positive"
+    },
+    {
+      "source": "F2",
+      "target": "timing.relative_prevalence_of_most_common_rhythmic_values",
+      "value": 0.5987,
+      "sign": "positive"
+    },
+    {
+      "source": "F2",
+      "target": "timing.strongest_rhythmic_pulse",
+      "value": 0.3336,
+      "sign": "negative"
+    },
+    {
+      "source": "F2",
+      "target": "timing.strongest_rhythmic_pulse_tempo_standardized",
+      "value": 0.3336,
+      "sign": "negative"
+    },
+    {
+      "source": "F2",
+      "target": "timing.variability_in_rhythmic_value_run_lengths",
+      "value": 0.6722,
+      "sign": "negative"
+    },
+    {
+      "source": "F2",
+      "target": "inter_onset_interval.ioi_contour_standard_deviation",
+      "value": 0.9155,
+      "sign": "positive"
+    },
+    {
+      "source": "F2",
+      "target": "inter_onset_interval.ioi_ratio_mean",
+      "value": 0.7257,
+      "sign": "positive"
+    },
+    {
+      "source": "F2",
+      "target": "inter_onset_interval.ioi_ratio_standard_deviation",
+      "value": 0.5975,
+      "sign": "positive"
+    },
+    {
+      "source": "F2",
+      "target": "metre.syncopicity",
+      "value": 0.3273,
+      "sign": "positive"
+    },
+    {
+      "source": "F2",
+      "target": "expectation.melodic_embellishment",
+      "value": 0.4257,
+      "sign": "positive"
+    },
+    {
+      "source": "F2",
+      "target": "complexity.d1_entropy",
+      "value": 0.875,
+      "sign": "positive"
+    },
+    {
+      "source": "F2",
+      "target": "complexity.d2_entropy",
+      "value": 0.7979,
+      "sign": "positive"
+    },
+    {
+      "source": "F2",
+      "target": "complexity.d3_entropy",
+      "value": 0.4865,
+      "sign": "positive"
+    },
+    {
+      "source": "F2",
+      "target": "complexity.duration_accent_std",
+      "value": 0.5837,
+      "sign": "positive"
+    },
+    {
+      "source": "F2",
+      "target": "complexity.duration_entropy",
+      "value": 0.8794,
+      "sign": "positive"
+    },
+    {
+      "source": "F2",
+      "target": "complexity.event_heterogeneity",
+      "value": 0.3176,
+      "sign": "positive"
+    },
+    {
+      "source": "F2",
+      "target": "complexity.rhythm_abruptness",
+      "value": 0.6498,
       "sign": "positive"
     },
     {
       "source": "F3",
-      "target": "timing.prevalence_of_most_common_rhythmic_value",
-      "value": 0.8807,
+      "target": "absolute_pitch.first_pitch",
+      "value": 0.6541,
       "sign": "negative"
+    },
+    {
+      "source": "F3",
+      "target": "absolute_pitch.importance_of_high_register",
+      "value": 0.4885,
+      "sign": "negative"
+    },
+    {
+      "source": "F3",
+      "target": "absolute_pitch.importance_of_middle_register",
+      "value": 0.4639,
+      "sign": "positive"
+    },
+    {
+      "source": "F3",
+      "target": "absolute_pitch.mean_pitch",
+      "value": 0.477,
+      "sign": "negative"
+    },
+    {
+      "source": "F3",
+      "target": "absolute_pitch.most_common_pitch",
+      "value": 0.4701,
+      "sign": "negative"
+    },
+    {
+      "source": "F3",
+      "target": "absolute_pitch.number_of_unique_pitches",
+      "value": 0.412,
+      "sign": "positive"
+    },
+    {
+      "source": "F3",
+      "target": "pitch_class.number_of_common_pitch_classes",
+      "value": 0.3383,
+      "sign": "negative"
+    },
+    {
+      "source": "F3",
+      "target": "pitch_class.number_of_unique_pitch_classes",
+      "value": 0.6804,
+      "sign": "positive"
+    },
+    {
+      "source": "F3",
+      "target": "pitch_class.prevalence_of_most_common_pitch_class",
+      "value": 0.3157,
+      "sign": "negative"
+    },
+    {
+      "source": "F3",
+      "target": "pitch_interval.chromatic_motion",
+      "value": 0.614,
+      "sign": "positive"
+    },
+    {
+      "source": "F3",
+      "target": "pitch_interval.mean_absolute_interval",
+      "value": 0.3582,
+      "sign": "negative"
+    },
+    {
+      "source": "F3",
+      "target": "pitch_interval.melodic_thirds",
+      "value": 0.3069,
+      "sign": "negative"
+    },
+    {
+      "source": "F3",
+      "target": "pitch_interval.prevalence_of_most_common_melodic_interval",
+      "value": 0.3081,
+      "sign": "negative"
+    },
+    {
+      "source": "F3",
+      "target": "contour.step_contour_global_direction",
+      "value": 0.5322,
+      "sign": "positive"
+    },
+    {
+      "source": "F3",
+      "target": "contour.interpolation_contour_global_direction",
+      "value": 0.404,
+      "sign": "positive"
+    },
+    {
+      "source": "F3",
+      "target": "timing.duration_range",
+      "value": 0.3305,
+      "sign": "negative"
+    },
+    {
+      "source": "F3",
+      "target": "timing.onset_autocorr_peak",
+      "value": 0.5398,
+      "sign": "positive"
     },
     {
       "source": "F3",
       "target": "timing.range_of_rhythmic_values",
-      "value": 0.3501,
-      "sign": "positive"
-    },
-    {
-      "source": "F3",
-      "target": "timing.relative_prevalence_of_most_common_rhythmic_values",
-      "value": 0.6237,
-      "sign": "positive"
-    },
-    {
-      "source": "F3",
-      "target": "timing.strongest_rhythmic_pulse",
-      "value": 0.357,
+      "value": 0.4899,
       "sign": "negative"
     },
     {
       "source": "F3",
-      "target": "timing.strongest_rhythmic_pulse_tempo_standardized",
-      "value": 0.357,
-      "sign": "negative"
-    },
-    {
-      "source": "F3",
-      "target": "timing.variability_in_rhythmic_value_run_lengths",
-      "value": 0.679,
-      "sign": "negative"
-    },
-    {
-      "source": "F3",
-      "target": "inter_onset_interval.ioi_contour_standard_deviation",
-      "value": 0.9364,
+      "target": "tonality.longest_monotonic_conjunct_scalar_passage",
+      "value": 0.5431,
       "sign": "positive"
     },
     {
       "source": "F3",
-      "target": "inter_onset_interval.ioi_ratio_mean",
-      "value": 0.7128,
+      "target": "tonality.std_cloud_diameter",
+      "value": 0.3854,
       "sign": "positive"
     },
     {
       "source": "F3",
-      "target": "inter_onset_interval.ioi_ratio_standard_deviation",
-      "value": 0.5841,
+      "target": "tonality.std_cloud_momentum",
+      "value": 0.309,
+      "sign": "positive"
+    },
+    {
+      "source": "F3",
+      "target": "tonality.std_tensile_strain",
+      "value": 0.3624,
+      "sign": "positive"
+    },
+    {
+      "source": "F3",
+      "target": "metre.meter_numerator",
+      "value": 0.3674,
+      "sign": "positive"
+    },
+    {
+      "source": "F3",
+      "target": "metre.syncopation",
+      "value": 0.4355,
       "sign": "positive"
     },
     {
       "source": "F3",
       "target": "metre.syncopicity",
-      "value": 0.3546,
+      "value": 0.4241,
       "sign": "positive"
     },
     {
       "source": "F3",
-      "target": "expectation.melodic_embellishment",
-      "value": 0.4143,
-      "sign": "positive"
+      "target": "complexity.av_abs_interval",
+      "value": 0.4265,
+      "sign": "negative"
     },
     {
       "source": "F3",
       "target": "complexity.duration_accent_std",
-      "value": 0.5195,
-      "sign": "positive"
-    },
-    {
-      "source": "F3",
-      "target": "complexity.duration_entropy",
-      "value": 0.8566,
-      "sign": "positive"
-    },
-    {
-      "source": "F3",
-      "target": "lexical_diversity.simpsons_d",
-      "value": 0.3665,
+      "value": 0.4026,
       "sign": "negative"
     },
     {
       "source": "F3",
-      "target": "corpus.std_global_local_weight",
-      "value": 0.3278,
+      "target": "complexity.event_heterogeneity",
+      "value": 0.5242,
       "sign": "negative"
     },
     {
-      "source": "F4",
-      "target": "absolute_pitch.melodic_pitch_variety",
-      "value": 0.4862,
+      "source": "F3",
+      "target": "complexity.i1_entropy",
+      "value": 0.3269,
+      "sign": "positive"
+    },
+    {
+      "source": "F3",
+      "target": "complexity.i2_entropy",
+      "value": 0.3109,
+      "sign": "positive"
+    },
+    {
+      "source": "F3",
+      "target": "complexity.interval_entropy",
+      "value": 0.3269,
+      "sign": "positive"
+    },
+    {
+      "source": "F3",
+      "target": "complexity.p1_entropy",
+      "value": 0.4136,
+      "sign": "positive"
+    },
+    {
+      "source": "F3",
+      "target": "complexity.p2_entropy",
+      "value": 0.483,
+      "sign": "positive"
+    },
+    {
+      "source": "F3",
+      "target": "complexity.p3_entropy",
+      "value": 0.3244,
+      "sign": "positive"
+    },
+    {
+      "source": "F3",
+      "target": "complexity.pitch_entropy",
+      "value": 0.4136,
+      "sign": "positive"
+    },
+    {
+      "source": "F3",
+      "target": "idyom.pitch_ltm_mean_information_content",
+      "value": 0.3413,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "absolute_pitch.number_of_unique_pitches",
-      "value": 0.31,
+      "value": 0.5013,
+      "sign": "positive"
+    },
+    {
+      "source": "F4",
+      "target": "absolute_pitch.pitch_kurtosis",
+      "value": 0.3115,
+      "sign": "negative"
+    },
+    {
+      "source": "F4",
+      "target": "absolute_pitch.pitch_range",
+      "value": 0.376,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "absolute_pitch.prevalence_of_most_common_pitch",
-      "value": 0.5628,
+      "value": 0.3122,
       "sign": "negative"
     },
     {
       "source": "F4",
-      "target": "absolute_pitch.relative_prevalence_of_top_pitches",
-      "value": 0.3187,
+      "target": "pitch_class.number_of_unique_pitch_classes",
+      "value": 0.3316,
       "sign": "positive"
     },
     {
       "source": "F4",
-      "target": "absolute_pitch.repeated_notes",
-      "value": 0.823,
+      "target": "pitch_class.pitch_class_kurtosis",
+      "value": 0.4442,
       "sign": "negative"
-    },
-    {
-      "source": "F4",
-      "target": "absolute_pitch.stepwise_motion",
-      "value": 0.7761,
-      "sign": "positive"
-    },
-    {
-      "source": "F4",
-      "target": "pitch_class.dominant_spread",
-      "value": 0.3345,
-      "sign": "positive"
     },
     {
       "source": "F4",
       "target": "pitch_class.prevalence_of_most_common_pitch_class",
-      "value": 0.6008,
+      "value": 0.3157,
       "sign": "negative"
     },
     {
       "source": "F4",
-      "target": "pitch_class.relative_prevalence_of_top_pitch_classes",
-      "value": 0.3393,
+      "target": "pitch_interval.absolute_interval_range",
+      "value": 0.3321,
       "sign": "positive"
     },
     {
       "source": "F4",
-      "target": "pitch_interval.amount_of_arpeggiation",
-      "value": 0.7621,
+      "target": "pitch_interval.minor_major_third_ratio",
+      "value": 0.3142,
+      "sign": "positive"
+    },
+    {
+      "source": "F4",
+      "target": "contour.step_contour_local_variation",
+      "value": 0.6424,
+      "sign": "positive"
+    },
+    {
+      "source": "F4",
+      "target": "timing.duration_range",
+      "value": 0.3113,
+      "sign": "positive"
+    },
+    {
+      "source": "F4",
+      "target": "timing.global_duration",
+      "value": 0.5168,
+      "sign": "positive"
+    },
+    {
+      "source": "F4",
+      "target": "timing.length",
+      "value": 0.7523,
+      "sign": "positive"
+    },
+    {
+      "source": "F4",
+      "target": "timing.number_of_different_rhythmic_values_present",
+      "value": 0.474,
+      "sign": "positive"
+    },
+    {
+      "source": "F4",
+      "target": "timing.number_of_unique_durations",
+      "value": 0.4802,
+      "sign": "positive"
+    },
+    {
+      "source": "F4",
+      "target": "timing.range_of_rhythmic_values",
+      "value": 0.4089,
+      "sign": "positive"
+    },
+    {
+      "source": "F4",
+      "target": "inter_onset_interval.ioi_range",
+      "value": 0.3392,
+      "sign": "positive"
+    },
+    {
+      "source": "F4",
+      "target": "tonality.proportion_conjunct_scalar",
+      "value": 0.4633,
       "sign": "negative"
     },
     {
       "source": "F4",
-      "target": "pitch_interval.chromatic_motion",
-      "value": 0.3049,
-      "sign": "positive"
-    },
-    {
-      "source": "F4",
-      "target": "pitch_interval.distance_between_most_prevalent_melodic_intervals",
-      "value": 0.4831,
+      "target": "tonality.proportion_scalar",
+      "value": 0.5899,
       "sign": "negative"
-    },
-    {
-      "source": "F4",
-      "target": "pitch_interval.interval_direction_std",
-      "value": 0.7971,
-      "sign": "positive"
-    },
-    {
-      "source": "F4",
-      "target": "pitch_interval.modal_interval",
-      "value": 0.4477,
-      "sign": "positive"
-    },
-    {
-      "source": "F4",
-      "target": "pitch_interval.prevalence_of_most_common_melodic_interval",
-      "value": 0.3695,
-      "sign": "positive"
-    },
-    {
-      "source": "F4",
-      "target": "pitch_interval.relative_prevalence_of_most_common_melodic_intervals",
-      "value": 0.3436,
-      "sign": "negative"
-    },
-    {
-      "source": "F4",
-      "target": "tonality.tonal_spike",
-      "value": 0.3955,
-      "sign": "negative"
-    },
-    {
-      "source": "F4",
-      "target": "tonality.longest_monotonic_conjunct_scalar_passage",
-      "value": 0.3172,
-      "sign": "positive"
-    },
-    {
-      "source": "F4",
-      "target": "tonality.longest_conjunct_scalar_passage",
-      "value": 0.388,
-      "sign": "positive"
     },
     {
       "source": "F4",
       "target": "expectation.mean_melodic_accent",
-      "value": 0.3082,
+      "value": 0.3025,
       "sign": "negative"
     },
     {
       "source": "F4",
-      "target": "expectation.melodic_accent_std",
-      "value": 0.7297,
-      "sign": "negative"
-    },
-    {
-      "source": "F4",
-      "target": "expectation.melodic_attraction_std",
-      "value": 0.5525,
+      "target": "complexity.d3_entropy",
+      "value": 0.5489,
       "sign": "positive"
     },
     {
       "source": "F4",
-      "target": "complexity.gradus",
-      "value": 0.9199,
+      "target": "complexity.i2_entropy",
+      "value": 0.7362,
+      "sign": "positive"
+    },
+    {
+      "source": "F4",
+      "target": "complexity.p1_entropy",
+      "value": 0.4125,
+      "sign": "positive"
+    },
+    {
+      "source": "F4",
+      "target": "complexity.p2_entropy",
+      "value": 0.7195,
+      "sign": "positive"
+    },
+    {
+      "source": "F4",
+      "target": "complexity.p3_entropy",
+      "value": 0.8943,
       "sign": "positive"
     },
     {
       "source": "F4",
       "target": "complexity.pitch_entropy",
-      "value": 0.4488,
+      "value": 0.4125,
+      "sign": "positive"
+    },
+    {
+      "source": "F4",
+      "target": "complexity.wp_entropy",
+      "value": 0.5142,
+      "sign": "positive"
+    },
+    {
+      "source": "F4",
+      "target": "lexical_diversity.simpsons_d",
+      "value": 0.5224,
+      "sign": "negative"
+    },
+    {
+      "source": "F4",
+      "target": "lexical_diversity.mean_entropy",
+      "value": 0.8097,
+      "sign": "positive"
+    },
+    {
+      "source": "F4",
+      "target": "corpus.mean_log_df",
+      "value": 0.5584,
+      "sign": "negative"
+    },
+    {
+      "source": "F4",
+      "target": "corpus.std_global_local_weight",
+      "value": 0.4002,
       "sign": "positive"
     },
     {
       "source": "F5",
-      "target": "pitch_interval.chromatic_motion",
-      "value": 0.3498,
+      "target": "absolute_pitch.interval_between_most_prevalent_pitches",
+      "value": 0.3888,
+      "sign": "positive"
+    },
+    {
+      "source": "F5",
+      "target": "absolute_pitch.melodic_pitch_variety",
+      "value": 0.3854,
+      "sign": "positive"
+    },
+    {
+      "source": "F5",
+      "target": "absolute_pitch.number_of_unique_pitches",
+      "value": 0.3409,
+      "sign": "positive"
+    },
+    {
+      "source": "F5",
+      "target": "absolute_pitch.pitch_range",
+      "value": 0.4974,
+      "sign": "positive"
+    },
+    {
+      "source": "F5",
+      "target": "absolute_pitch.pitch_standard_deviation",
+      "value": 0.6769,
+      "sign": "positive"
+    },
+    {
+      "source": "F5",
+      "target": "absolute_pitch.stepwise_motion",
+      "value": 0.5412,
       "sign": "negative"
+    },
+    {
+      "source": "F5",
+      "target": "pitch_class.strong_tonal_centres",
+      "value": 0.3716,
+      "sign": "negative"
+    },
+    {
+      "source": "F5",
+      "target": "pitch_interval.absolute_interval_range",
+      "value": 0.5294,
+      "sign": "positive"
+    },
+    {
+      "source": "F5",
+      "target": "pitch_interval.average_interval_span_by_melodic_arcs",
+      "value": 0.5631,
+      "sign": "positive"
+    },
+    {
+      "source": "F5",
+      "target": "pitch_interval.mean_absolute_interval",
+      "value": 0.8319,
+      "sign": "positive"
+    },
+    {
+      "source": "F5",
+      "target": "pitch_interval.melodic_octaves",
+      "value": 0.3985,
+      "sign": "positive"
+    },
+    {
+      "source": "F5",
+      "target": "pitch_interval.melodic_perfect_fifths",
+      "value": 0.4032,
+      "sign": "positive"
+    },
+    {
+      "source": "F5",
+      "target": "pitch_interval.melodic_perfect_fourths",
+      "value": 0.4196,
+      "sign": "positive"
+    },
+    {
+      "source": "F5",
+      "target": "pitch_interval.melodic_sevenths",
+      "value": 0.3345,
+      "sign": "positive"
+    },
+    {
+      "source": "F5",
+      "target": "pitch_interval.melodic_sixths",
+      "value": 0.3719,
+      "sign": "positive"
     },
     {
       "source": "F5",
       "target": "pitch_interval.number_of_common_melodic_intervals",
-      "value": 0.307,
-      "sign": "negative"
+      "value": 0.337,
+      "sign": "positive"
     },
     {
       "source": "F5",
       "target": "pitch_interval.prevalence_of_most_common_melodic_interval",
-      "value": 0.3647,
-      "sign": "positive"
-    },
-    {
-      "source": "F5",
-      "target": "contour.step_contour_global_direction",
-      "value": 0.309,
+      "value": 0.5517,
       "sign": "negative"
     },
     {
       "source": "F5",
-      "target": "timing.duration_range",
-      "value": 0.6135,
+      "target": "pitch_interval.standard_deviation_absolute_interval",
+      "value": 0.7689,
       "sign": "positive"
     },
     {
       "source": "F5",
-      "target": "timing.duration_standard_deviation",
-      "value": 0.4332,
+      "target": "contour.step_contour_global_variation",
+      "value": 0.6406,
       "sign": "positive"
     },
     {
       "source": "F5",
-      "target": "timing.half_duration_transitions",
-      "value": 0.3016,
+      "target": "contour.step_contour_local_variation",
+      "value": 0.3502,
+      "sign": "positive"
+    },
+    {
+      "source": "F5",
+      "target": "contour.interpolation_contour_mean_gradient",
+      "value": 0.3872,
+      "sign": "positive"
+    },
+    {
+      "source": "F5",
+      "target": "contour.interpolation_contour_gradient_std",
+      "value": 0.391,
+      "sign": "positive"
+    },
+    {
+      "source": "F5",
+      "target": "tonality.tonalness",
+      "value": 0.4667,
+      "sign": "positive"
+    },
+    {
+      "source": "F5",
+      "target": "tonality.longest_conjunct_scalar_passage",
+      "value": 0.5189,
       "sign": "negative"
     },
     {
       "source": "F5",
-      "target": "timing.longest_rhythmic_value",
-      "value": 0.5169,
-      "sign": "positive"
-    },
-    {
-      "source": "F5",
-      "target": "timing.maximum_note_duration",
-      "value": 0.5099,
-      "sign": "positive"
-    },
-    {
-      "source": "F5",
-      "target": "timing.number_of_different_rhythmic_values_present",
-      "value": 0.6318,
-      "sign": "positive"
-    },
-    {
-      "source": "F5",
-      "target": "timing.number_of_unique_durations",
-      "value": 0.6386,
-      "sign": "positive"
-    },
-    {
-      "source": "F5",
-      "target": "timing.onset_autocorr_peak",
-      "value": 0.4793,
+      "target": "tonality.proportion_conjunct_scalar",
+      "value": 0.3875,
       "sign": "negative"
     },
     {
       "source": "F5",
-      "target": "timing.range_of_rhythmic_values",
-      "value": 0.7479,
+      "target": "complexity.asym_total",
+      "value": 0.5152,
       "sign": "positive"
     },
     {
       "source": "F5",
-      "target": "timing.variability_of_note_durations",
-      "value": 0.4332,
+      "target": "complexity.av_abs_interval",
+      "value": 0.6535,
       "sign": "positive"
     },
     {
       "source": "F5",
-      "target": "timing.variability_of_rhythmic_value_offsets",
-      "value": 0.3281,
-      "sign": "positive"
-    },
-    {
-      "source": "F5",
-      "target": "inter_onset_interval.ioi_range",
-      "value": 0.5054,
-      "sign": "positive"
-    },
-    {
-      "source": "F5",
-      "target": "inter_onset_interval.ioi_ratio_mean",
-      "value": 0.3133,
-      "sign": "positive"
-    },
-    {
-      "source": "F5",
-      "target": "inter_onset_interval.ioi_ratio_standard_deviation",
-      "value": 0.4057,
-      "sign": "positive"
-    },
-    {
-      "source": "F5",
-      "target": "inter_onset_interval.ioi_standard_deviation",
-      "value": 0.3547,
-      "sign": "positive"
-    },
-    {
-      "source": "F5",
-      "target": "tonality.proportion_scalar",
-      "value": 0.3181,
-      "sign": "negative"
-    },
-    {
-      "source": "F5",
-      "target": "expectation.mean_mobility",
-      "value": 0.3533,
-      "sign": "positive"
-    },
-    {
-      "source": "F5",
-      "target": "expectation.mobility_std",
-      "value": 0.3266,
-      "sign": "positive"
-    },
-    {
-      "source": "F5",
-      "target": "complexity.duration_accent_std",
-      "value": 0.4363,
-      "sign": "positive"
-    },
-    {
-      "source": "F5",
-      "target": "complexity.duration_entropy",
-      "value": 0.3186,
+      "target": "complexity.i1_entropy",
+      "value": 0.6551,
       "sign": "positive"
     },
     {
       "source": "F5",
       "target": "complexity.interval_entropy",
-      "value": 0.3641,
-      "sign": "negative"
+      "value": 0.6551,
+      "sign": "positive"
+    },
+    {
+      "source": "F5",
+      "target": "complexity.p1_entropy",
+      "value": 0.4128,
+      "sign": "positive"
+    },
+    {
+      "source": "F5",
+      "target": "complexity.p2_entropy",
+      "value": 0.3214,
+      "sign": "positive"
+    },
+    {
+      "source": "F5",
+      "target": "complexity.pitch_entropy",
+      "value": 0.4128,
+      "sign": "positive"
     },
     {
       "source": "F6",
       "target": "contour.interpolation_contour_mean_gradient",
-      "value": 0.3241,
+      "value": 0.3866,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "contour.interpolation_contour_gradient_std",
-      "value": 0.3105,
+      "value": 0.3767,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "timing.difference_between_most_common_rhythmic_values",
-      "value": 0.3612,
+      "value": 0.4757,
       "sign": "negative"
     },
     {
       "source": "F6",
       "target": "timing.harmonicity_of_two_strongest_rhythmic_pulses",
-      "value": 0.6495,
+      "value": 0.534,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "timing.harmonicity_of_two_strongest_rhythmic_pulses_tempo_standardized",
-      "value": 0.6495,
+      "value": 0.534,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "timing.note_density",
-      "value": 0.3898,
+      "value": 0.5618,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "timing.note_density_per_quarter_note",
-      "value": 0.3898,
+      "value": 0.5618,
+      "sign": "positive"
+    },
+    {
+      "source": "F6",
+      "target": "timing.note_density_per_quarter_note_variability",
+      "value": 0.3551,
+      "sign": "positive"
+    },
+    {
+      "source": "F6",
+      "target": "timing.number_of_moderate_rhythmic_pulses",
+      "value": 0.3307,
+      "sign": "positive"
+    },
+    {
+      "source": "F6",
+      "target": "timing.number_of_moderate_rhythmic_pulses_tempo_standardized",
+      "value": 0.3307,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "timing.number_of_relatively_strong_rhythmic_pulses",
-      "value": 0.3729,
+      "value": 0.5254,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "timing.number_of_relatively_strong_rhythmic_pulses_tempo_standardized",
-      "value": 0.3729,
+      "value": 0.5254,
       "sign": "positive"
     },
     {
       "source": "F6",
-      "target": "timing.prevalence_of_medium_rhythmic_values",
-      "value": 0.7126,
+      "target": "timing.polyrhythms",
+      "value": 0.3608,
       "sign": "negative"
     },
     {
       "source": "F6",
+      "target": "timing.polyrhythms_tempo_standardized",
+      "value": 0.3608,
+      "sign": "negative"
+    },
+    {
+      "source": "F6",
+      "target": "timing.prevalence_of_medium_rhythmic_values",
+      "value": 0.8086,
+      "sign": "negative"
+    },
+    {
+      "source": "F6",
+      "target": "timing.prevalence_of_short_rhythmic_values",
+      "value": 0.3912,
+      "sign": "positive"
+    },
+    {
+      "source": "F6",
       "target": "timing.prevalence_of_very_long_rhythmic_values",
-      "value": 0.4591,
+      "value": 0.3893,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "timing.prevalence_of_very_short_rhythmic_values",
-      "value": 0.5041,
+      "value": 0.6519,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "timing.strength_of_second_strongest_rhythmic_pulse",
-      "value": 0.8067,
+      "value": 0.8713,
       "sign": "negative"
     },
     {
       "source": "F6",
       "target": "timing.strength_of_second_strongest_rhythmic_pulse_tempo_standardized",
-      "value": 0.8067,
+      "value": 0.8713,
       "sign": "negative"
     },
     {
       "source": "F6",
       "target": "timing.strength_ratio_of_two_strongest_rhythmic_pulses",
-      "value": 0.4748,
+      "value": 0.3835,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "timing.strength_ratio_of_two_strongest_rhythmic_pulses_tempo_standardized",
-      "value": 0.4748,
+      "value": 0.3835,
+      "sign": "positive"
+    },
+    {
+      "source": "F6",
+      "target": "tonality.mean_cloud_diameter",
+      "value": 0.3266,
+      "sign": "positive"
+    },
+    {
+      "source": "F6",
+      "target": "tonality.mean_cloud_momentum",
+      "value": 0.4306,
+      "sign": "negative"
+    },
+    {
+      "source": "F6",
+      "target": "tonality.std_cloud_momentum",
+      "value": 0.3851,
+      "sign": "negative"
+    },
+    {
+      "source": "F6",
+      "target": "complexity.complebm_rhythm",
+      "value": 0.3541,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "complexity.duration_accent_std",
-      "value": 0.5314,
+      "value": 0.5819,
       "sign": "negative"
     },
     {
       "source": "F6",
+      "target": "complexity.event_density",
+      "value": 0.5676,
+      "sign": "positive"
+    },
+    {
+      "source": "F6",
+      "target": "complexity.mel_abruptness",
+      "value": 0.3021,
+      "sign": "positive"
+    },
+    {
+      "source": "F6",
+      "target": "complexity.rhythm_abruptness",
+      "value": 0.3398,
+      "sign": "positive"
+    },
+    {
+      "source": "F6",
       "target": "lexical_diversity.yules_k",
-      "value": 0.3972,
+      "value": 0.3546,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "lexical_diversity.simpsons_d",
-      "value": 0.4192,
+      "value": 0.3035,
       "sign": "positive"
     },
     {
       "source": "F6",
-      "target": "lexical_diversity.mean_entropy",
-      "value": 0.354,
-      "sign": "negative"
-    },
-    {
-      "source": "F6",
       "target": "corpus.mean_log_tfdf",
-      "value": 0.3786,
+      "value": 0.334,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "corpus.norm_log_dist",
-      "value": 0.4618,
+      "value": 0.3502,
       "sign": "positive"
     },
     {
       "source": "F6",
       "target": "corpus.max_log_df",
-      "value": 0.4649,
+      "value": 0.4036,
       "sign": "negative"
     },
     {
       "source": "F6",
       "target": "corpus.min_log_df",
-      "value": 0.5164,
+      "value": 0.4457,
       "sign": "positive"
     },
     {
       "source": "F7",
       "target": "absolute_pitch.mean_tessitura",
-      "value": 0.3146,
+      "value": 0.314,
+      "sign": "positive"
+    },
+    {
+      "source": "F7",
+      "target": "absolute_pitch.melodic_pitch_variety",
+      "value": 0.5104,
+      "sign": "positive"
+    },
+    {
+      "source": "F7",
+      "target": "absolute_pitch.prevalence_of_most_common_pitch",
+      "value": 0.4767,
       "sign": "negative"
     },
     {
       "source": "F7",
-      "target": "contour.step_contour_local_variation",
-      "value": 0.66,
+      "target": "absolute_pitch.repeated_notes",
+      "value": 0.9083,
+      "sign": "negative"
+    },
+    {
+      "source": "F7",
+      "target": "absolute_pitch.stepwise_motion",
+      "value": 0.7771,
       "sign": "positive"
     },
     {
       "source": "F7",
-      "target": "timing.global_duration",
-      "value": 0.4905,
+      "target": "pitch_class.prevalence_of_most_common_pitch_class",
+      "value": 0.4967,
+      "sign": "negative"
+    },
+    {
+      "source": "F7",
+      "target": "pitch_interval.amount_of_arpeggiation",
+      "value": 0.7968,
+      "sign": "negative"
+    },
+    {
+      "source": "F7",
+      "target": "pitch_interval.distance_between_most_prevalent_melodic_intervals",
+      "value": 0.4617,
+      "sign": "negative"
+    },
+    {
+      "source": "F7",
+      "target": "pitch_interval.interval_direction_std",
+      "value": 0.8606,
       "sign": "positive"
     },
     {
       "source": "F7",
-      "target": "timing.length",
-      "value": 0.738,
+      "target": "pitch_interval.modal_interval",
+      "value": 0.4961,
+      "sign": "positive"
+    },
+    {
+      "source": "F7",
+      "target": "pitch_interval.prevalence_of_most_common_melodic_interval",
+      "value": 0.4142,
+      "sign": "positive"
+    },
+    {
+      "source": "F7",
+      "target": "pitch_interval.relative_prevalence_of_most_common_melodic_intervals",
+      "value": 0.37,
+      "sign": "negative"
+    },
+    {
+      "source": "F7",
+      "target": "tonality.tonal_spike",
+      "value": 0.3365,
+      "sign": "negative"
+    },
+    {
+      "source": "F7",
+      "target": "tonality.longest_conjunct_scalar_passage",
+      "value": 0.346,
       "sign": "positive"
     },
     {
       "source": "F7",
       "target": "tonality.proportion_conjunct_scalar",
-      "value": 0.4586,
-      "sign": "negative"
-    },
-    {
-      "source": "F7",
-      "target": "tonality.proportion_scalar",
-      "value": 0.6248,
-      "sign": "negative"
-    },
-    {
-      "source": "F7",
-      "target": "lexical_diversity.sichels_s",
-      "value": 0.6017,
+      "value": 0.3065,
       "sign": "positive"
     },
     {
       "source": "F7",
-      "target": "lexical_diversity.honores_h",
-      "value": 0.7003,
-      "sign": "negative"
-    },
-    {
-      "source": "F7",
-      "target": "lexical_diversity.mean_entropy",
-      "value": 0.3399,
-      "sign": "positive"
-    },
-    {
-      "source": "F7",
-      "target": "lexical_diversity.mean_productivity",
-      "value": 0.8919,
-      "sign": "negative"
-    },
-    {
-      "source": "F7",
-      "target": "corpus.tfdf_spearman",
-      "value": 0.4593,
-      "sign": "negative"
-    },
-    {
-      "source": "F7",
-      "target": "corpus.tfdf_kendall",
-      "value": 0.4769,
-      "sign": "negative"
-    },
-    {
-      "source": "F7",
-      "target": "corpus.mean_log_df",
-      "value": 0.4387,
-      "sign": "negative"
-    },
-    {
-      "source": "F7",
-      "target": "corpus.mean_global_local_weight",
-      "value": 0.8757,
-      "sign": "positive"
-    },
-    {
-      "source": "F7",
-      "target": "corpus.std_global_local_weight",
-      "value": 0.8614,
-      "sign": "positive"
-    },
-    {
-      "source": "F7",
-      "target": "corpus.mean_global_weight",
-      "value": 0.6607,
-      "sign": "positive"
-    },
-    {
-      "source": "F7",
-      "target": "corpus.std_global_weight",
-      "value": 0.6866,
-      "sign": "positive"
-    },
-    {
-      "source": "F8",
-      "target": "absolute_pitch.first_pitch",
-      "value": 0.6758,
-      "sign": "negative"
-    },
-    {
-      "source": "F8",
-      "target": "absolute_pitch.importance_of_bass_register",
-      "value": 0.3457,
-      "sign": "positive"
-    },
-    {
-      "source": "F8",
-      "target": "absolute_pitch.importance_of_high_register",
-      "value": 0.6509,
-      "sign": "negative"
-    },
-    {
-      "source": "F8",
-      "target": "absolute_pitch.importance_of_middle_register",
-      "value": 0.6123,
-      "sign": "positive"
-    },
-    {
-      "source": "F8",
-      "target": "absolute_pitch.last_pitch",
-      "value": 0.4929,
-      "sign": "negative"
-    },
-    {
-      "source": "F8",
-      "target": "absolute_pitch.mean_pitch",
-      "value": 0.7374,
-      "sign": "negative"
-    },
-    {
-      "source": "F8",
-      "target": "absolute_pitch.most_common_pitch",
-      "value": 0.6784,
-      "sign": "negative"
-    },
-    {
-      "source": "F8",
-      "target": "absolute_pitch.number_of_unique_pitches",
-      "value": 0.4283,
-      "sign": "positive"
-    },
-    {
-      "source": "F8",
-      "target": "absolute_pitch.repeated_notes",
-      "value": 0.36,
-      "sign": "positive"
-    },
-    {
-      "source": "F8",
-      "target": "pitch_class.number_of_common_pitch_classes",
-      "value": 0.3004,
-      "sign": "negative"
-    },
-    {
-      "source": "F8",
-      "target": "pitch_class.number_of_unique_pitch_classes",
-      "value": 0.4954,
-      "sign": "positive"
-    },
-    {
-      "source": "F8",
-      "target": "pitch_interval.average_length_of_melodic_arcs",
-      "value": 0.324,
-      "sign": "positive"
-    },
-    {
-      "source": "F8",
-      "target": "pitch_interval.chromatic_motion",
-      "value": 0.3501,
-      "sign": "positive"
-    },
-    {
-      "source": "F8",
-      "target": "pitch_interval.interval_direction_std",
-      "value": 0.3544,
-      "sign": "negative"
-    },
-    {
-      "source": "F8",
-      "target": "pitch_interval.mean_absolute_interval",
-      "value": 0.4177,
-      "sign": "negative"
-    },
-    {
-      "source": "F8",
-      "target": "pitch_interval.melodic_thirds",
-      "value": 0.3366,
-      "sign": "negative"
-    },
-    {
-      "source": "F8",
-      "target": "pitch_interval.modal_interval",
+      "target": "expectation.mean_melodic_accent",
       "value": 0.3063,
       "sign": "negative"
     },
     {
-      "source": "F8",
-      "target": "tonality.referent",
-      "value": 0.349,
-      "sign": "negative"
-    },
-    {
-      "source": "F8",
-      "target": "tonality.longest_monotonic_conjunct_scalar_passage",
-      "value": 0.4464,
-      "sign": "positive"
-    },
-    {
-      "source": "F8",
-      "target": "expectation.compltrans",
-      "value": 0.3937,
-      "sign": "negative"
-    },
-    {
-      "source": "F8",
+      "source": "F7",
       "target": "expectation.mean_melodic_attraction",
-      "value": 0.397,
+      "value": 0.4726,
       "sign": "positive"
     },
     {
-      "source": "F8",
-      "target": "expectation.mean_mobility",
-      "value": 0.3732,
+      "source": "F7",
+      "target": "expectation.melodic_accent_std",
+      "value": 0.7762,
+      "sign": "negative"
+    },
+    {
+      "source": "F7",
+      "target": "expectation.melodic_attraction_std",
+      "value": 0.5496,
       "sign": "positive"
     },
     {
-      "source": "F8",
-      "target": "expectation.mobility_std",
-      "value": 0.3306,
+      "source": "F7",
+      "target": "complexity.av_abs_interval",
+      "value": 0.5142,
       "sign": "positive"
     },
     {
-      "source": "F8",
+      "source": "F7",
+      "target": "complexity.dur_abruptness",
+      "value": 0.4745,
+      "sign": "positive"
+    },
+    {
+      "source": "F7",
+      "target": "complexity.gradus",
+      "value": 0.958,
+      "sign": "positive"
+    },
+    {
+      "source": "F7",
+      "target": "complexity.p1_entropy",
+      "value": 0.3819,
+      "sign": "positive"
+    },
+    {
+      "source": "F7",
       "target": "complexity.pitch_entropy",
-      "value": 0.4208,
+      "value": 0.3819,
+      "sign": "positive"
+    },
+    {
+      "source": "F7",
+      "target": "complexity.wp_entropy",
+      "value": 0.3162,
+      "sign": "negative"
+    },
+    {
+      "source": "F8",
+      "target": "pitch_interval.average_length_of_melodic_arcs",
+      "value": 0.3111,
+      "sign": "negative"
+    },
+    {
+      "source": "F8",
+      "target": "contour.step_contour_local_variation",
+      "value": 0.4938,
+      "sign": "positive"
+    },
+    {
+      "source": "F8",
+      "target": "timing.global_duration",
+      "value": 0.3252,
+      "sign": "positive"
+    },
+    {
+      "source": "F8",
+      "target": "timing.length",
+      "value": 0.4999,
+      "sign": "positive"
+    },
+    {
+      "source": "F8",
+      "target": "tonality.proportion_conjunct_scalar",
+      "value": 0.3156,
+      "sign": "negative"
+    },
+    {
+      "source": "F8",
+      "target": "tonality.proportion_scalar",
+      "value": 0.4712,
+      "sign": "negative"
+    },
+    {
+      "source": "F8",
+      "target": "lexical_diversity.sichels_s",
+      "value": 0.6003,
+      "sign": "positive"
+    },
+    {
+      "source": "F8",
+      "target": "lexical_diversity.honores_h",
+      "value": 0.6789,
+      "sign": "negative"
+    },
+    {
+      "source": "F8",
+      "target": "lexical_diversity.mean_productivity",
+      "value": 0.8058,
+      "sign": "negative"
+    },
+    {
+      "source": "F8",
+      "target": "corpus.tfdf_spearman",
+      "value": 0.4909,
+      "sign": "negative"
+    },
+    {
+      "source": "F8",
+      "target": "corpus.tfdf_kendall",
+      "value": 0.5031,
+      "sign": "negative"
+    },
+    {
+      "source": "F8",
+      "target": "corpus.mean_global_local_weight",
+      "value": 0.815,
+      "sign": "positive"
+    },
+    {
+      "source": "F8",
+      "target": "corpus.std_global_local_weight",
+      "value": 0.7119,
+      "sign": "positive"
+    },
+    {
+      "source": "F8",
+      "target": "corpus.mean_global_weight",
+      "value": 0.6653,
+      "sign": "positive"
+    },
+    {
+      "source": "F8",
+      "target": "corpus.std_global_weight",
+      "value": 0.6439,
       "sign": "positive"
     }
   ],
@@ -2516,497 +2798,497 @@ const networkData =
     "F1": [
       {
         "rank": 1,
-        "feature": "complexity.mean_duration_accent",
-        "loading": 1.0026,
-        "abs_loading": 1.0026
+        "feature": "timing.mean_rhythmic_value",
+        "loading": 1.0024,
+        "abs_loading": 1.0024
       },
       {
         "rank": 2,
-        "feature": "timing.mean_rhythmic_value",
-        "loading": 0.9954,
-        "abs_loading": 0.9954
+        "feature": "timing.mean_duration",
+        "loading": 1.0023,
+        "abs_loading": 1.0023
       },
       {
         "rank": 3,
         "feature": "timing.average_note_duration",
-        "loading": 0.9948,
-        "abs_loading": 0.9948
+        "loading": 1.0023,
+        "abs_loading": 1.0023
       },
       {
         "rank": 4,
-        "feature": "timing.mean_duration",
-        "loading": 0.9948,
-        "abs_loading": 0.9948
+        "feature": "inter_onset_interval.ioi_mean",
+        "loading": 0.9961,
+        "abs_loading": 0.9961
       },
       {
         "rank": 5,
-        "feature": "inter_onset_interval.ioi_mean",
-        "loading": 0.9893,
-        "abs_loading": 0.9893
+        "feature": "timing.prevalence_of_long_rhythmic_values",
+        "loading": 0.9626,
+        "abs_loading": 0.9626
       },
       {
         "rank": 6,
-        "feature": "complexity.complebm_pitch",
-        "loading": -0.9723,
-        "abs_loading": 0.9723
+        "feature": "timing.strength_of_strongest_rhythmic_pulse",
+        "loading": 0.9422,
+        "abs_loading": 0.9422
       },
       {
         "rank": 7,
-        "feature": "timing.strength_of_strongest_rhythmic_pulse",
-        "loading": 0.9487,
-        "abs_loading": 0.9487
+        "feature": "timing.strength_of_strongest_rhythmic_pulse_tempo_standardized",
+        "loading": 0.9422,
+        "abs_loading": 0.9422
       },
       {
         "rank": 8,
-        "feature": "timing.strength_of_strongest_rhythmic_pulse_tempo_standardized",
-        "loading": 0.9487,
-        "abs_loading": 0.9487
+        "feature": "timing.duration_standard_deviation",
+        "loading": 0.9305,
+        "abs_loading": 0.9305
       },
       {
         "rank": 9,
-        "feature": "timing.prevalence_of_long_rhythmic_values",
-        "loading": 0.9439,
-        "abs_loading": 0.9439
+        "feature": "timing.variability_of_note_durations",
+        "loading": 0.9305,
+        "abs_loading": 0.9305
       },
       {
         "rank": 10,
-        "feature": "timing.rhythmic_variability",
-        "loading": 0.9388,
-        "abs_loading": 0.9388
+        "feature": "complexity.mean_duration_accent",
+        "loading": 0.9284,
+        "abs_loading": 0.9284
       }
     ],
     "F2": [
       {
         "rank": 1,
-        "feature": "absolute_pitch.pitch_standard_deviation",
-        "loading": 0.8544,
-        "abs_loading": 0.8544
+        "feature": "timing.npvi",
+        "loading": 0.9335,
+        "abs_loading": 0.9335
       },
       {
         "rank": 2,
-        "feature": "contour.step_contour_global_variation",
-        "loading": 0.8099,
-        "abs_loading": 0.8099
+        "feature": "inter_onset_interval.ioi_contour_standard_deviation",
+        "loading": 0.9155,
+        "abs_loading": 0.9155
       },
       {
         "rank": 3,
-        "feature": "pitch_interval.standard_deviation_absolute_interval",
-        "loading": 0.7648,
-        "abs_loading": 0.7648
+        "feature": "timing.equal_duration_transitions",
+        "loading": -0.905,
+        "abs_loading": 0.905
       },
       {
         "rank": 4,
-        "feature": "pitch_interval.mean_absolute_interval",
-        "loading": 0.7179,
-        "abs_loading": 0.7179
+        "feature": "complexity.duration_entropy",
+        "loading": 0.8794,
+        "abs_loading": 0.8794
       },
       {
         "rank": 5,
-        "feature": "absolute_pitch.pitch_range",
-        "loading": 0.6874,
-        "abs_loading": 0.6874
+        "feature": "timing.prevalence_of_most_common_rhythmic_value",
+        "loading": -0.8793,
+        "abs_loading": 0.8793
       },
       {
         "rank": 6,
-        "feature": "complexity.pitch_entropy",
-        "loading": 0.6808,
-        "abs_loading": 0.6808
+        "feature": "complexity.d1_entropy",
+        "loading": 0.875,
+        "abs_loading": 0.875
       },
       {
         "rank": 7,
-        "feature": "complexity.interval_entropy",
-        "loading": 0.6466,
-        "abs_loading": 0.6466
+        "feature": "complexity.d2_entropy",
+        "loading": 0.7979,
+        "abs_loading": 0.7979
       },
       {
         "rank": 8,
-        "feature": "pitch_interval.average_interval_span_by_melodic_arcs",
-        "loading": 0.6335,
-        "abs_loading": 0.6335
+        "feature": "inter_onset_interval.ioi_ratio_mean",
+        "loading": 0.7257,
+        "abs_loading": 0.7257
       },
       {
         "rank": 9,
-        "feature": "pitch_interval.absolute_interval_range",
-        "loading": 0.6289,
-        "abs_loading": 0.6289
+        "feature": "timing.variability_in_rhythmic_value_run_lengths",
+        "loading": -0.6722,
+        "abs_loading": 0.6722
       },
       {
         "rank": 10,
-        "feature": "absolute_pitch.number_of_unique_pitches",
-        "loading": 0.5962,
-        "abs_loading": 0.5962
+        "feature": "complexity.rhythm_abruptness",
+        "loading": 0.6498,
+        "abs_loading": 0.6498
       }
     ],
     "F3": [
       {
         "rank": 1,
-        "feature": "inter_onset_interval.ioi_contour_standard_deviation",
-        "loading": 0.9364,
-        "abs_loading": 0.9364
+        "feature": "pitch_class.number_of_unique_pitch_classes",
+        "loading": 0.6804,
+        "abs_loading": 0.6804
       },
       {
         "rank": 2,
-        "feature": "timing.npvi",
-        "loading": 0.9305,
-        "abs_loading": 0.9305
+        "feature": "absolute_pitch.first_pitch",
+        "loading": -0.6541,
+        "abs_loading": 0.6541
       },
       {
         "rank": 3,
-        "feature": "timing.equal_duration_transitions",
-        "loading": -0.9218,
-        "abs_loading": 0.9218
+        "feature": "pitch_interval.chromatic_motion",
+        "loading": 0.614,
+        "abs_loading": 0.614
       },
       {
         "rank": 4,
-        "feature": "timing.prevalence_of_most_common_rhythmic_value",
-        "loading": -0.8807,
-        "abs_loading": 0.8807
+        "feature": "tonality.longest_monotonic_conjunct_scalar_passage",
+        "loading": 0.5431,
+        "abs_loading": 0.5431
       },
       {
         "rank": 5,
-        "feature": "complexity.duration_entropy",
-        "loading": 0.8566,
-        "abs_loading": 0.8566
+        "feature": "timing.onset_autocorr_peak",
+        "loading": 0.5398,
+        "abs_loading": 0.5398
       },
       {
         "rank": 6,
-        "feature": "inter_onset_interval.ioi_ratio_mean",
-        "loading": 0.7128,
-        "abs_loading": 0.7128
+        "feature": "contour.step_contour_global_direction",
+        "loading": 0.5322,
+        "abs_loading": 0.5322
       },
       {
         "rank": 7,
-        "feature": "timing.variability_in_rhythmic_value_run_lengths",
-        "loading": -0.679,
-        "abs_loading": 0.679
+        "feature": "complexity.event_heterogeneity",
+        "loading": -0.5242,
+        "abs_loading": 0.5242
       },
       {
         "rank": 8,
-        "feature": "timing.relative_prevalence_of_most_common_rhythmic_values",
-        "loading": 0.6237,
-        "abs_loading": 0.6237
+        "feature": "timing.range_of_rhythmic_values",
+        "loading": -0.4899,
+        "abs_loading": 0.4899
       },
       {
         "rank": 9,
-        "feature": "timing.prevalence_of_dotted_notes",
-        "loading": 0.6165,
-        "abs_loading": 0.6165
+        "feature": "absolute_pitch.importance_of_high_register",
+        "loading": -0.4885,
+        "abs_loading": 0.4885
       },
       {
         "rank": 10,
-        "feature": "inter_onset_interval.ioi_ratio_standard_deviation",
-        "loading": 0.5841,
-        "abs_loading": 0.5841
+        "feature": "complexity.p2_entropy",
+        "loading": 0.483,
+        "abs_loading": 0.483
       }
     ],
     "F4": [
       {
         "rank": 1,
-        "feature": "complexity.gradus",
-        "loading": 0.9199,
-        "abs_loading": 0.9199
+        "feature": "complexity.p3_entropy",
+        "loading": 0.8943,
+        "abs_loading": 0.8943
       },
       {
         "rank": 2,
-        "feature": "absolute_pitch.repeated_notes",
-        "loading": -0.823,
-        "abs_loading": 0.823
+        "feature": "lexical_diversity.mean_entropy",
+        "loading": 0.8097,
+        "abs_loading": 0.8097
       },
       {
         "rank": 3,
-        "feature": "pitch_interval.interval_direction_std",
-        "loading": 0.7971,
-        "abs_loading": 0.7971
+        "feature": "timing.length",
+        "loading": 0.7523,
+        "abs_loading": 0.7523
       },
       {
         "rank": 4,
-        "feature": "absolute_pitch.stepwise_motion",
-        "loading": 0.7761,
-        "abs_loading": 0.7761
+        "feature": "complexity.i2_entropy",
+        "loading": 0.7362,
+        "abs_loading": 0.7362
       },
       {
         "rank": 5,
-        "feature": "pitch_interval.amount_of_arpeggiation",
-        "loading": -0.7621,
-        "abs_loading": 0.7621
+        "feature": "complexity.p2_entropy",
+        "loading": 0.7195,
+        "abs_loading": 0.7195
       },
       {
         "rank": 6,
-        "feature": "expectation.melodic_accent_std",
-        "loading": -0.7297,
-        "abs_loading": 0.7297
+        "feature": "contour.step_contour_local_variation",
+        "loading": 0.6424,
+        "abs_loading": 0.6424
       },
       {
         "rank": 7,
-        "feature": "pitch_class.prevalence_of_most_common_pitch_class",
-        "loading": -0.6008,
-        "abs_loading": 0.6008
+        "feature": "tonality.proportion_scalar",
+        "loading": -0.5899,
+        "abs_loading": 0.5899
       },
       {
         "rank": 8,
-        "feature": "absolute_pitch.prevalence_of_most_common_pitch",
-        "loading": -0.5628,
-        "abs_loading": 0.5628
+        "feature": "corpus.mean_log_df",
+        "loading": -0.5584,
+        "abs_loading": 0.5584
       },
       {
         "rank": 9,
-        "feature": "expectation.melodic_attraction_std",
-        "loading": 0.5525,
-        "abs_loading": 0.5525
+        "feature": "complexity.d3_entropy",
+        "loading": 0.5489,
+        "abs_loading": 0.5489
       },
       {
         "rank": 10,
-        "feature": "absolute_pitch.melodic_pitch_variety",
-        "loading": 0.4862,
-        "abs_loading": 0.4862
+        "feature": "lexical_diversity.simpsons_d",
+        "loading": -0.5224,
+        "abs_loading": 0.5224
       }
     ],
     "F5": [
       {
         "rank": 1,
-        "feature": "timing.range_of_rhythmic_values",
-        "loading": 0.7479,
-        "abs_loading": 0.7479
+        "feature": "pitch_interval.mean_absolute_interval",
+        "loading": 0.8319,
+        "abs_loading": 0.8319
       },
       {
         "rank": 2,
-        "feature": "timing.number_of_unique_durations",
-        "loading": 0.6386,
-        "abs_loading": 0.6386
+        "feature": "pitch_interval.standard_deviation_absolute_interval",
+        "loading": 0.7689,
+        "abs_loading": 0.7689
       },
       {
         "rank": 3,
-        "feature": "timing.number_of_different_rhythmic_values_present",
-        "loading": 0.6318,
-        "abs_loading": 0.6318
+        "feature": "absolute_pitch.pitch_standard_deviation",
+        "loading": 0.6769,
+        "abs_loading": 0.6769
       },
       {
         "rank": 4,
-        "feature": "timing.duration_range",
-        "loading": 0.6135,
-        "abs_loading": 0.6135
+        "feature": "complexity.i1_entropy",
+        "loading": 0.6551,
+        "abs_loading": 0.6551
       },
       {
         "rank": 5,
-        "feature": "timing.longest_rhythmic_value",
-        "loading": 0.5169,
-        "abs_loading": 0.5169
+        "feature": "complexity.interval_entropy",
+        "loading": 0.6551,
+        "abs_loading": 0.6551
       },
       {
         "rank": 6,
-        "feature": "timing.maximum_note_duration",
-        "loading": 0.5099,
-        "abs_loading": 0.5099
+        "feature": "complexity.av_abs_interval",
+        "loading": 0.6535,
+        "abs_loading": 0.6535
       },
       {
         "rank": 7,
-        "feature": "inter_onset_interval.ioi_range",
-        "loading": 0.5054,
-        "abs_loading": 0.5054
+        "feature": "contour.step_contour_global_variation",
+        "loading": 0.6406,
+        "abs_loading": 0.6406
       },
       {
         "rank": 8,
-        "feature": "timing.onset_autocorr_peak",
-        "loading": -0.4793,
-        "abs_loading": 0.4793
+        "feature": "pitch_interval.average_interval_span_by_melodic_arcs",
+        "loading": 0.5631,
+        "abs_loading": 0.5631
       },
       {
         "rank": 9,
-        "feature": "complexity.duration_accent_std",
-        "loading": 0.4363,
-        "abs_loading": 0.4363
+        "feature": "pitch_interval.prevalence_of_most_common_melodic_interval",
+        "loading": -0.5517,
+        "abs_loading": 0.5517
       },
       {
         "rank": 10,
-        "feature": "timing.variability_of_note_durations",
-        "loading": 0.4332,
-        "abs_loading": 0.4332
+        "feature": "absolute_pitch.stepwise_motion",
+        "loading": -0.5412,
+        "abs_loading": 0.5412
       }
     ],
     "F6": [
       {
         "rank": 1,
-        "feature": "timing.strength_of_second_strongest_rhythmic_pulse",
-        "loading": -0.8067,
-        "abs_loading": 0.8067
+        "feature": "timing.strength_of_second_strongest_rhythmic_pulse_tempo_standardized",
+        "loading": -0.8713,
+        "abs_loading": 0.8713
       },
       {
         "rank": 2,
-        "feature": "timing.strength_of_second_strongest_rhythmic_pulse_tempo_standardized",
-        "loading": -0.8067,
-        "abs_loading": 0.8067
+        "feature": "timing.strength_of_second_strongest_rhythmic_pulse",
+        "loading": -0.8713,
+        "abs_loading": 0.8713
       },
       {
         "rank": 3,
         "feature": "timing.prevalence_of_medium_rhythmic_values",
-        "loading": -0.7126,
-        "abs_loading": 0.7126
+        "loading": -0.8086,
+        "abs_loading": 0.8086
       },
       {
         "rank": 4,
-        "feature": "timing.harmonicity_of_two_strongest_rhythmic_pulses_tempo_standardized",
-        "loading": 0.6495,
-        "abs_loading": 0.6495
+        "feature": "timing.prevalence_of_very_short_rhythmic_values",
+        "loading": 0.6519,
+        "abs_loading": 0.6519
       },
       {
         "rank": 5,
-        "feature": "timing.harmonicity_of_two_strongest_rhythmic_pulses",
-        "loading": 0.6495,
-        "abs_loading": 0.6495
+        "feature": "complexity.duration_accent_std",
+        "loading": -0.5819,
+        "abs_loading": 0.5819
       },
       {
         "rank": 6,
-        "feature": "complexity.duration_accent_std",
-        "loading": -0.5314,
-        "abs_loading": 0.5314
+        "feature": "complexity.event_density",
+        "loading": 0.5676,
+        "abs_loading": 0.5676
       },
       {
         "rank": 7,
-        "feature": "corpus.min_log_df",
-        "loading": 0.5164,
-        "abs_loading": 0.5164
+        "feature": "timing.note_density_per_quarter_note",
+        "loading": 0.5618,
+        "abs_loading": 0.5618
       },
       {
         "rank": 8,
-        "feature": "timing.prevalence_of_very_short_rhythmic_values",
-        "loading": 0.5041,
-        "abs_loading": 0.5041
+        "feature": "timing.note_density",
+        "loading": 0.5618,
+        "abs_loading": 0.5618
       },
       {
         "rank": 9,
-        "feature": "timing.strength_ratio_of_two_strongest_rhythmic_pulses",
-        "loading": 0.4748,
-        "abs_loading": 0.4748
+        "feature": "timing.harmonicity_of_two_strongest_rhythmic_pulses",
+        "loading": 0.534,
+        "abs_loading": 0.534
       },
       {
         "rank": 10,
-        "feature": "timing.strength_ratio_of_two_strongest_rhythmic_pulses_tempo_standardized",
-        "loading": 0.4748,
-        "abs_loading": 0.4748
+        "feature": "timing.harmonicity_of_two_strongest_rhythmic_pulses_tempo_standardized",
+        "loading": 0.534,
+        "abs_loading": 0.534
       }
     ],
     "F7": [
       {
         "rank": 1,
-        "feature": "lexical_diversity.mean_productivity",
-        "loading": -0.8919,
-        "abs_loading": 0.8919
+        "feature": "complexity.gradus",
+        "loading": 0.958,
+        "abs_loading": 0.958
       },
       {
         "rank": 2,
-        "feature": "corpus.mean_global_local_weight",
-        "loading": 0.8757,
-        "abs_loading": 0.8757
+        "feature": "absolute_pitch.repeated_notes",
+        "loading": -0.9083,
+        "abs_loading": 0.9083
       },
       {
         "rank": 3,
-        "feature": "corpus.std_global_local_weight",
-        "loading": 0.8614,
-        "abs_loading": 0.8614
+        "feature": "pitch_interval.interval_direction_std",
+        "loading": 0.8606,
+        "abs_loading": 0.8606
       },
       {
         "rank": 4,
-        "feature": "timing.length",
-        "loading": 0.738,
-        "abs_loading": 0.738
+        "feature": "pitch_interval.amount_of_arpeggiation",
+        "loading": -0.7968,
+        "abs_loading": 0.7968
       },
       {
         "rank": 5,
-        "feature": "lexical_diversity.honores_h",
-        "loading": -0.7003,
-        "abs_loading": 0.7003
+        "feature": "absolute_pitch.stepwise_motion",
+        "loading": 0.7771,
+        "abs_loading": 0.7771
       },
       {
         "rank": 6,
-        "feature": "corpus.std_global_weight",
-        "loading": 0.6866,
-        "abs_loading": 0.6866
+        "feature": "expectation.melodic_accent_std",
+        "loading": -0.7762,
+        "abs_loading": 0.7762
       },
       {
         "rank": 7,
-        "feature": "corpus.mean_global_weight",
-        "loading": 0.6607,
-        "abs_loading": 0.6607
+        "feature": "expectation.melodic_attraction_std",
+        "loading": 0.5496,
+        "abs_loading": 0.5496
       },
       {
         "rank": 8,
-        "feature": "contour.step_contour_local_variation",
-        "loading": 0.66,
-        "abs_loading": 0.66
+        "feature": "complexity.av_abs_interval",
+        "loading": 0.5142,
+        "abs_loading": 0.5142
       },
       {
         "rank": 9,
-        "feature": "tonality.proportion_scalar",
-        "loading": -0.6248,
-        "abs_loading": 0.6248
+        "feature": "absolute_pitch.melodic_pitch_variety",
+        "loading": 0.5104,
+        "abs_loading": 0.5104
       },
       {
         "rank": 10,
-        "feature": "lexical_diversity.sichels_s",
-        "loading": 0.6017,
-        "abs_loading": 0.6017
+        "feature": "pitch_class.prevalence_of_most_common_pitch_class",
+        "loading": -0.4967,
+        "abs_loading": 0.4967
       }
     ],
     "F8": [
       {
         "rank": 1,
-        "feature": "absolute_pitch.mean_pitch",
-        "loading": -0.7374,
-        "abs_loading": 0.7374
+        "feature": "corpus.mean_global_local_weight",
+        "loading": 0.815,
+        "abs_loading": 0.815
       },
       {
         "rank": 2,
-        "feature": "absolute_pitch.most_common_pitch",
-        "loading": -0.6784,
-        "abs_loading": 0.6784
+        "feature": "lexical_diversity.mean_productivity",
+        "loading": -0.8058,
+        "abs_loading": 0.8058
       },
       {
         "rank": 3,
-        "feature": "absolute_pitch.first_pitch",
-        "loading": -0.6758,
-        "abs_loading": 0.6758
+        "feature": "corpus.std_global_local_weight",
+        "loading": 0.7119,
+        "abs_loading": 0.7119
       },
       {
         "rank": 4,
-        "feature": "absolute_pitch.importance_of_high_register",
-        "loading": -0.6509,
-        "abs_loading": 0.6509
+        "feature": "lexical_diversity.honores_h",
+        "loading": -0.6789,
+        "abs_loading": 0.6789
       },
       {
         "rank": 5,
-        "feature": "absolute_pitch.importance_of_middle_register",
-        "loading": 0.6123,
-        "abs_loading": 0.6123
+        "feature": "corpus.mean_global_weight",
+        "loading": 0.6653,
+        "abs_loading": 0.6653
       },
       {
         "rank": 6,
-        "feature": "pitch_class.number_of_unique_pitch_classes",
-        "loading": 0.4954,
-        "abs_loading": 0.4954
+        "feature": "corpus.std_global_weight",
+        "loading": 0.6439,
+        "abs_loading": 0.6439
       },
       {
         "rank": 7,
-        "feature": "absolute_pitch.last_pitch",
-        "loading": -0.4929,
-        "abs_loading": 0.4929
+        "feature": "lexical_diversity.sichels_s",
+        "loading": 0.6003,
+        "abs_loading": 0.6003
       },
       {
         "rank": 8,
-        "feature": "tonality.longest_monotonic_conjunct_scalar_passage",
-        "loading": 0.4464,
-        "abs_loading": 0.4464
+        "feature": "corpus.tfdf_kendall",
+        "loading": -0.5031,
+        "abs_loading": 0.5031
       },
       {
         "rank": 9,
-        "feature": "absolute_pitch.number_of_unique_pitches",
-        "loading": 0.4283,
-        "abs_loading": 0.4283
+        "feature": "timing.length",
+        "loading": 0.4999,
+        "abs_loading": 0.4999
       },
       {
         "rank": 10,
-        "feature": "complexity.pitch_entropy",
-        "loading": 0.4208,
-        "abs_loading": 0.4208
+        "feature": "contour.step_contour_local_variation",
+        "loading": 0.4938,
+        "abs_loading": 0.4938
       }
     ]
   }

@@ -128,14 +128,14 @@ cat(
 
 # Interpreted using docs/index.html (3D network) and factor_top_loadings.csv
 factor_names <- c(
-  "1. Long Pulses",
-  "2. Metric Strength",
-  "3. Scalic Ascent & Narrow Rhythm",
-  "4. Interval Variability",
-  "5. Busy Stepwise Melody",
-  "6. Corpus Familiar & Long",
-  "7. Dual-Pulse Rhythm",
-  "8. High Pitch Height"
+  "1. Long Rhythms",
+  "2. Irregular Rhythms",
+  "3. Pitch-Class Variety",
+  "4. Overall Complexity",
+  "5. Wide Intervals",
+  "6. Dense Rhythms",
+  "7. Stepwise Complexity",
+  "8. Corpus Familiarity"
 )
 if (length(factor_names) < N_FACTORS) {
   factor_names <- c(factor_names, paste0("Factor ", seq(length(factor_names) + 1, N_FACTORS)))

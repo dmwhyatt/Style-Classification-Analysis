@@ -31,6 +31,7 @@ SOURCES = [
     "partitura",
     "simile",
     "midi_toolbox",
+    "MUST",
     "novel",
 ]
 
@@ -42,7 +43,12 @@ SOURCES_FOR_MAPPING = [
     "partitura",
     "simile",
     "midi_toolbox",
+    "must",
 ]
+
+SOURCE_MAPPING_KEYS = {
+    "MUST": "must",
+}
 
 COEFFICIENTS_DIR = "coefficients"
 FEATURES_CSV = "essen_china_europe_features.csv"
@@ -120,6 +126,32 @@ def _map_functions_to_csv_columns(
             if _best_matching_function_name(function_names, feature_part) is not None:
                 source_to_csv_columns[source].append(csv_col)
     return source_to_csv_columns
+
+
+def _source_mapping_key(source: str) -> str:
+    """Return the melody_features source key for a benchmark display source."""
+    return SOURCE_MAPPING_KEYS.get(source, source)
+
+
+def _supplement_missing_source_mappings(
+    mapping: Dict[str, List[str]],
+    csv_columns: List[str],
+) -> Dict[str, List[str]]:
+    """Add mappings for sources absent from an older hand-maintained JSON."""
+    missing_sources = [s for s in SOURCES_FOR_MAPPING if s not in mapping]
+    if not missing_sources:
+        return mapping
+
+    fn_map = _introspect_source_to_function_names()
+    missing_fn_map = {s: fn_map.get(s, []) for s in missing_sources}
+    supplemental = _map_functions_to_csv_columns(missing_fn_map, csv_columns)
+    for source in missing_sources:
+        mapping[source] = supplemental.get(source, [])
+        print(
+            f"Added missing source mapping for '{source}' "
+            f"({len(mapping[source])} columns)."
+        )
+    return mapping
 
 
 def _strip_idyom_autogen_false_positives(columns: List[str]) -> tuple[List[str], List[str]]:
@@ -214,6 +246,7 @@ def load_or_build_source_mapping(
     if os.path.isfile(json_path):
         with open(json_path, encoding="utf-8") as f:
             mapping = json.load(f)
+        mapping = _supplement_missing_source_mappings(mapping, csv_columns)
         offenders = _idyom_mapping_offenders(mapping.get("idyom", []))
         if offenders:
             print(
@@ -344,7 +377,8 @@ for source in SOURCES:
     print(f"{'='*80}")
     
     try:
-        if source == "idyom":
+        mapping_key = _source_mapping_key(source)
+        if mapping_key == "idyom":
             # Decorator JSON mapping omits idyom.* STM/LTM information-content columns
             base = [f for f in SOURCE_FEATURES.get("idyom", []) if f in all_feature_cols]
             stm_ltm = [
@@ -355,7 +389,7 @@ for source in SOURCES:
             ]
             valid_features = sorted(set(base) | set(stm_ltm))
         else:
-            source_feature_cols = SOURCE_FEATURES.get(source, [])
+            source_feature_cols = SOURCE_FEATURES.get(mapping_key, [])
             valid_features = [f for f in source_feature_cols if f in all_feature_cols]
 
         if not valid_features:
@@ -479,36 +513,86 @@ results_df.to_csv("source_comparison_results.csv", index=False)
 print("\nSaved results to 'source_comparison_results.csv'")
 
 
+SOURCE_DISPLAY_NAMES = {
+    "ALL": r"\textit{\textbf{melody-features}}",
+    "jsymbolic": "jSymbolic",
+    "fantastic": "FANTASTIC",
+    "MUST": "MUST",
+    "novel": "Novel",
+    "midi_toolbox": "MIDI Toolbox",
+    "partitura": "Partitura",
+    "idyom": "IDyOM",
+    "simile": "SIMILE",
+}
+
+
 def _latex_fmt(x: float, decimals: int = 4) -> str:
     if pd.isna(x):
         return "---"
     return f"{float(x):.{decimals}f}"
 
 
+def _latex_maybe_bold(text: str, bold: bool) -> str:
+    return rf"\textbf{{{text}}}" if bold else text
+
+
+def _best_mask(series: pd.Series, *, higher_is_better: bool) -> pd.Series:
+    """True where ``series`` equals the best finite value (ties allowed)."""
+    vals = pd.to_numeric(series, errors="coerce")
+    finite = vals.dropna()
+    if finite.empty:
+        return pd.Series(False, index=series.index)
+    best = finite.max() if higher_is_better else finite.min()
+    return vals.eq(best)
+
+
 def save_results_latex_table(df: pd.DataFrame, path: str) -> None:
-    """Table of feature sources with counts and accuracies."""
+    """Pretty table of feature sources with best-in-column values bolded."""
+    bold_n = _best_mask(df["num_features"], higher_is_better=True)
+    bold_cv = _best_mask(df["cv_accuracy_mean"], higher_is_better=True)
+    bold_sd = _best_mask(df["cv_accuracy_std"], higher_is_better=False)
+    bold_tr = _best_mask(df["train_accuracy"], higher_is_better=True)
+    bold_te = _best_mask(df["test_accuracy"], higher_is_better=True)
+
     lines = [
-        r"\begin{table}[t]",
+        r"\newpage",
+        r"\begin{table}[h]",
         r"  \centering",
         r"  \label{tab:source-comparison}",
         r"  \begin{tabular}{@{}lccccc@{}}",
         r"    Source & No. features & CV acc.\ & CV SD & Train acc.\ & Test acc.\ \\",
         r"    \midrule",
     ]
-    for _, row in df.iterrows():
-        src = str(row["source"]).replace("_", r"\_")
+    for i, row in df.iterrows():
+        src_key = str(row["source"])
+        src = SOURCE_DISPLAY_NAMES.get(src_key, src_key.replace("_", r"\_"))
         nf = int(row["num_features"]) if pd.notna(row["num_features"]) else 0
         lines.append(
-            f"    {src} & {nf} & {_latex_fmt(row['cv_accuracy_mean'])} & "
-            f"{_latex_fmt(row['cv_accuracy_std'])} & {_latex_fmt(row['train_accuracy'])} & "
-            f"{_latex_fmt(row['test_accuracy'])} \\\\"
+            "    "
+            + " & ".join(
+                [
+                    src,
+                    _latex_maybe_bold(str(nf), bool(bold_n.loc[i])),
+                    _latex_maybe_bold(
+                        _latex_fmt(row["cv_accuracy_mean"]), bool(bold_cv.loc[i])
+                    ),
+                    _latex_maybe_bold(
+                        _latex_fmt(row["cv_accuracy_std"]), bool(bold_sd.loc[i])
+                    ),
+                    _latex_maybe_bold(
+                        _latex_fmt(row["train_accuracy"]), bool(bold_tr.loc[i])
+                    ),
+                    _latex_maybe_bold(
+                        _latex_fmt(row["test_accuracy"]), bool(bold_te.loc[i])
+                    ),
+                ]
+            )
+            + r" \\"
         )
     lines.extend(
         [
-            r"    \bottomrule",
             r"  \end{tabular}",
-            r"  \caption{Logistic regression by feature extraction source.}"
-            r"\end{table}",
+            r"  \caption{Logistic regression by feature extraction source.}\end{table}",
         ]
     )
     with open(path, "w", encoding="utf-8") as f:

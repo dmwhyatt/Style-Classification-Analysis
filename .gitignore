@@ -233,4 +233,4 @@ shap*
 !docs/network_data.json
 !docs/melody_examples/manifest.json
 factor_eigenvalues_elbow_interactive_files/
-factor_network_full_files/
+factor_network_full_files/*.bak
