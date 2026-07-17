@@ -8,21 +8,18 @@ idyom deny rules; see ``_map_functions_to_csv_columns``), then trains models.
 import inspect
 import json
 import os
+from typing import Dict, List
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report
-from sklearn.model_selection import StratifiedKFold, train_test_split
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import LabelEncoder, StandardScaler
-from typing import Dict, List
 
 import melody_features.features as features_module
 
-from feature_selection import numeric_model_feature_columns, prepare_numeric_feature_matrix
-from pearce_exclusion import filter_features_df_pearce, pearce_default_idyom_basename_set
+from helpers import dataset
+from helpers import output_paths as OP
+from helpers.pearce_exclusion import filter_features_df_pearce, pearce_default_idyom_basename_set
 
 SOURCES = [
     "idyom",
@@ -50,9 +47,9 @@ SOURCE_MAPPING_KEYS = {
     "MUST": "must",
 }
 
-COEFFICIENTS_DIR = "coefficients"
-FEATURES_CSV = "essen_china_europe_features.csv"
-SOURCE_MAPPING_JSON = "source_to_csv_columns_with_novel.json"
+COEFFICIENTS_DIR = OP.COEFFICIENTS_DIR
+FEATURES_CSV = OP.FEATURES_CSV
+SOURCE_MAPPING_JSON = OP.data_path("source_to_csv_columns_with_novel.json")
 
 # CSV columns that must not appear under "idyom" when the mapping is auto-built from
 # melody_features names (short decorator names like "ioi" used to match ioi_contour_*).
@@ -197,7 +194,7 @@ def write_feature_source_mapping_csvs(source_to_features: Dict[str, List[str]]) 
             }
         )
     df = pd.DataFrame(records).sort_values(["category", "feature"])
-    df.to_csv("feature_source_mapping_complete.csv", index=False)
+    df.to_csv(OP.data_path("feature_source_mapping_complete.csv"), index=False)
 
     expanded_records = []
     for source, feats in source_to_features.items():
@@ -217,18 +214,18 @@ def write_feature_source_mapping_csvs(source_to_features: Dict[str, List[str]]) 
     expanded_df = pd.DataFrame(expanded_records).sort_values(
         ["source", "category", "feature"]
     )
-    expanded_df.to_csv("feature_source_mapping_expanded.csv", index=False)
+    expanded_df.to_csv(OP.data_path("feature_source_mapping_expanded.csv"), index=False)
 
     pivot = expanded_df.groupby(["source", "category"]).size().reset_index(name="count")
     pivot_table = pivot.pivot(
         index="category", columns="source", values="count"
     ).fillna(0).astype(int)
-    pivot_table.to_csv("feature_source_category_summary_complete.csv")
+    pivot_table.to_csv(OP.data_path("feature_source_category_summary_complete.csv"))
 
     print(
         "Wrote feature_source_mapping_complete.csv, "
         "feature_source_mapping_expanded.csv, "
-        "feature_source_category_summary_complete.csv"
+        "feature_source_category_summary_complete.csv to outputs/data/"
     )
 
 
@@ -307,42 +304,10 @@ if len(features_df) < _n0:
 print(f"Dataset size: {len(features_df)}")
 print(features_df["continent"].value_counts())
 
-# Prepare data: same feature columns as logistic.py / factor_logistic.R / xgbclassifer
-all_feature_cols = numeric_model_feature_columns(features_df)
-X_all, all_feature_cols = prepare_numeric_feature_matrix(features_df, all_feature_cols)
-print(f"Numeric features used for modeling: {len(all_feature_cols)}")
-
-y = features_df["continent"].astype(str)
-
-le = LabelEncoder()
-y_enc = le.fit_transform(y)
-
-# Same split as logistic.py (random_state=42, test_size=0.2)
-X_train_all, X_test_all, y_train, y_test = train_test_split(
-    X_all, y_enc, test_size=0.2, random_state=42, stratify=y_enc
-)
-print(f"Train set size: {len(X_train_all)}, Test set size: {len(X_test_all)}")
-
-# 5-fold stratified CV on training set only (same setup as logistic.py)
-skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-
-
-def build_logreg_pipeline(random_state: int = 42) -> Pipeline:
-    """Same pipeline as logistic.py"""
-    return Pipeline(
-        steps=[
-            ("scaler", StandardScaler(with_mean=True, with_std=True)),
-            (
-                "logreg",
-                LogisticRegression(
-                    C=1.0,
-                    max_iter=2000,
-                    solver="lbfgs",
-                    random_state=random_state,
-                ),
-            ),
-        ]
-    )
+# Same feature columns / split as logistic.py / factor_logistic.R / xgbclassifier.py
+X_all, all_feature_cols, y_enc, le = dataset.prepare_xy(features_df)
+X_train_all, X_test_all, y_train, y_test = dataset.make_train_test_split(X_all, y_enc)
+skf = dataset.make_cv()
 
 
 def cross_val_accuracy(
@@ -358,7 +323,7 @@ def cross_val_accuracy(
         X_tr = X_train.iloc[train_idx][columns]
         X_va = X_train.iloc[valid_idx][columns]
         y_tr, y_va = y_train[train_idx], y_train[valid_idx]
-        clf = build_logreg_pipeline(random_state=42)
+        clf = dataset.build_logreg_pipeline(random_state=42)
         clf.fit(X_tr, y_tr)
         fold_accs.append(accuracy_score(y_va, clf.predict(X_va)))
     return float(np.mean(fold_accs)), float(np.std(fold_accs, ddof=0))
@@ -415,7 +380,7 @@ for source in SOURCES:
         X_train = X_train_all[valid_features]
         X_test = X_test_all[valid_features]
 
-        clf = build_logreg_pipeline(random_state=42)
+        clf = dataset.build_logreg_pipeline(random_state=42)
         clf.fit(X_train, y_train)
 
         trained_models[source] = clf
@@ -469,7 +434,7 @@ print(f"Number of features: {len(all_feature_cols)}")
 cv_mean_all, cv_std_all = cross_val_accuracy(X_train_all, y_train, all_feature_cols)
 print(f"CV accuracy (train, 5-fold): {cv_mean_all:.4f} ± {cv_std_all:.4f}")
 
-clf_all = build_logreg_pipeline(random_state=42)
+clf_all = dataset.build_logreg_pipeline(random_state=42)
 clf_all.fit(X_train_all, y_train)
 
 trained_models["ALL"] = clf_all
@@ -509,8 +474,9 @@ print("="*80)
 print(results_df.to_string(index=False))
 print("="*80)
 
-results_df.to_csv("source_comparison_results.csv", index=False)
-print("\nSaved results to 'source_comparison_results.csv'")
+table3_csv_path = OP.table_path("table3", "source_comparison", "csv")
+results_df.to_csv(table3_csv_path, index=False)
+print(f"\nSaved results to '{table3_csv_path}' (Table 3)")
 
 
 SOURCE_DISPLAY_NAMES = {
@@ -599,8 +565,9 @@ def save_results_latex_table(df: pd.DataFrame, path: str) -> None:
         f.write("\n".join(lines) + "\n")
 
 
-save_results_latex_table(results_df, "source_comparison_results.tex")
-print("Saved LaTeX table to 'source_comparison_results.tex'")
+table3_tex_path = OP.table_path("table3", "source_comparison", "tex")
+save_results_latex_table(results_df, table3_tex_path)
+print(f"Saved LaTeX table to '{table3_tex_path}' (Table 3)")
 
 # Extract and save coefficients for each model
 print("\n" + "="*80)

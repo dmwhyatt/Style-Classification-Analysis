@@ -2,27 +2,23 @@ import os
 import random
 from typing import Dict, List
 
-import matplotlib.pyplot as plt
-from matplotlib.patches import Patch
 import numpy as np
 import pandas as pd
-import seaborn as sns
 from melody_features import get_all_features
 from melody_features.corpus import get_corpus_files
 from sklearn.inspection import permutation_importance
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-from sklearn.model_selection import StratifiedKFold, train_test_split
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.metrics import accuracy_score, classification_report
 
-from feature_selection import numeric_model_feature_columns, prepare_numeric_feature_matrix
-from pearce_exclusion import (
+from helpers import dataset
+from helpers import output_paths as OP
+from helpers.pearce_exclusion import (
+    basename_no_ext,
     filter_features_df_pearce,
     filter_paths_and_labels_pearce,
     pearce_default_idyom_basename_set,
     write_pearce_basename_sidecar,
 )
+from helpers.plotting import confusion_heatmap, prettify_feature_name, signed_permutation_importance_bar
 
 
 def _append_taxonomy_summaries_to_coef_df(coef_df: pd.DataFrame) -> None:
@@ -75,42 +71,8 @@ def _append_taxonomy_summaries_to_coef_df(coef_df: pd.DataFrame) -> None:
     print(top3.to_string(index=False))
 
 
-def _save_confusion_heatmap(
-    y_true,
-    y_pred,
-    class_names: List[str],
-    *,
-    out_path: str,
-) -> None:
-    cm = confusion_matrix(y_true, y_pred, labels=class_names)
-    pct = cm.astype(float) / cm.sum(axis=1)[:, np.newaxis] * 100
-    annot = np.empty_like(cm, dtype=object)
-    n = len(class_names)
-    for i in range(n):
-        for j in range(n):
-            annot[i, j] = f"{cm[i, j]}\n({pct[i, j]:.1f}%)"
-    plt.figure(figsize=(5, 4))
-    sns.heatmap(
-        cm,
-        annot=annot,
-        fmt="",
-        cmap="Blues",
-        xticklabels=class_names,
-        yticklabels=class_names,
-    )
-    plt.xlabel("Predicted")
-    plt.ylabel("True")
-    plt.tight_layout()
-    plt.savefig(out_path, dpi=150)
-    plt.close()
-
-
 USABLE_CHINA_TXT = "usable_china.txt"
 USABLE_EUROPA_TXT = "usable_europa.txt"
-
-
-def basename_no_ext(path: str) -> str:
-    return os.path.splitext(os.path.basename(path))[0].lower()
 
 
 def _read_usable_basenames_txt(path: str) -> set[str]:
@@ -185,7 +147,7 @@ if len(selected_files) == 0:
         "Basenames must exist in the melody-features Essen corpus (check package install/version)."
     )
 
-FEATURES_CSV = "essen_china_europe_features.csv"
+FEATURES_CSV = OP.FEATURES_CSV
 
 if os.path.isfile(FEATURES_CSV):
     print(f"Loading cached features from {FEATURES_CSV} ...")
@@ -240,51 +202,21 @@ else:
 
 print(features_df["continent"].value_counts())
 
-# prepare data: use consistent feature columns across factor_logistic.R / comparison.py / xgbclassifer.py
-feature_cols = numeric_model_feature_columns(features_df)
-X, feature_cols = prepare_numeric_feature_matrix(features_df, feature_cols)
-print(f"Numeric features used for modeling: {len(feature_cols)}")
-y = features_df["continent"].astype(str)
+# prepare data: use consistent feature columns across factor_logistic.R / comparison.py / xgbclassifier.py
+X, feature_cols, y_enc, le = dataset.prepare_xy(features_df)
 
-le = LabelEncoder()
-y_enc = le.fit_transform(y)
-
-
-X_train_full, X_test, y_train_full, y_test = train_test_split(
-    X, y_enc, test_size=0.2, random_state=42, stratify=y_enc
-)
-print(f"Train set size: {len(X_train_full)}, Test set size: {len(X_test)}")
-
-# run 5-fold cross-validation on training set only
-skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+X_train_full, X_test, y_train_full, y_test = dataset.make_train_test_split(X, y_enc)
+skf = dataset.make_cv()
 
 fold_metrics: List[Dict[str, float]] = []
 all_true_labels: List[str] = []
 all_pred_labels: List[str] = []
 
-
-def build_logreg_pipeline(random_state: int = 42) -> Pipeline:
-    return Pipeline(
-        steps=[
-            ("scaler", StandardScaler(with_mean=True, with_std=True)),
-            (
-                "logreg",
-                LogisticRegression(
-                    C=1.0,
-                    max_iter=2000,
-                    solver="lbfgs",
-                    random_state=random_state,
-                ),
-            ),
-        ]
-    )
-
 for fold_idx, (train_idx, valid_idx) in enumerate(skf.split(X_train_full, y_train_full), start=1):
     X_train, X_valid = X_train_full.iloc[train_idx], X_train_full.iloc[valid_idx]
     y_train, y_valid = y_train_full[train_idx], y_train_full[valid_idx]
 
-    clf = build_logreg_pipeline(random_state=42)
-
+    clf = dataset.build_logreg_pipeline(random_state=42)
     clf.fit(X_train, y_train)
 
     y_pred = clf.predict(X_valid)
@@ -311,20 +243,21 @@ print(
         all_true_labels, all_pred_labels, target_names=list(le.classes_), digits=4
     )
 )
-_save_confusion_heatmap(
+cv_cm_path = OP.supp_fig_path("logreg_confusion_matrix_cv", ext="png")
+confusion_heatmap(
     all_true_labels,
     all_pred_labels,
     list(le.classes_),
-    out_path="confusion_matrix_cv.png",
+    cv_cm_path,
+    save_png_twin=False,
 )
 
-print("Saved plots: 'confusion_matrix_cv.png'")
+print(f"Saved plots: '{cv_cm_path}'")
 
 print("\nTraining final model on full training set...")
-final_model = build_logreg_pipeline(random_state=42)
+final_model = dataset.build_logreg_pipeline(random_state=42)
 final_model.fit(X_train_full, y_train_full)
 
-# Evaluate final model on held-out test set
 y_test_pred = final_model.predict(X_test)
 test_acc = accuracy_score(y_test, y_test_pred)
 print(f"\nTest set accuracy: {test_acc:.4f}")
@@ -337,13 +270,36 @@ print(
     )
 )
 
-_save_confusion_heatmap(
+fig01_path = OP.fig_path(OP.FIG_LOGREG_CONFUSION, "logreg_confusion_matrix")
+confusion_heatmap(
     y_test_labels,
     y_test_pred_labels,
     list(le.classes_),
-    out_path="confusion_matrix.pdf",
+    fig01_path,
+    save_png_twin=True,
 )
-print("Saved test set confusion matrix: 'confusion_matrix.pdf'")
+print(f"Saved test set confusion matrix (Figure 1): '{fig01_path}'")
+
+logreg_metrics_path = OP.data_path("logreg_metrics.csv")
+pd.DataFrame(
+    {
+        "metric": [
+            "cv_accuracy_mean",
+            "cv_accuracy_sd",
+            "cv_accuracy_overall",
+            "test_accuracy",
+            "n_features",
+        ],
+        "value": [
+            metrics_df["accuracy"].mean(),
+            metrics_df["accuracy"].std(ddof=0),
+            overall_acc,
+            test_acc,
+            len(feature_cols),
+        ],
+    }
+).to_csv(logreg_metrics_path, index=False)
+print(f"Saved summary metrics: '{logreg_metrics_path}'")
 
 logreg = final_model.named_steps["logreg"]
 scaler = final_model.named_steps.get("scaler")
@@ -360,35 +316,20 @@ if scaler is not None:
 
 if coef.ndim == 2:
     if coef.shape[0] == 1:
-        def _prettify_feature_name(feature_name: str) -> str:
-            if not feature_name:
-                return feature_name
-            parts = feature_name.split(".")
-            category = parts[0] if parts else ""
-            remainder = " ".join(parts[1:]) if len(parts) > 1 else ""
-
-            def _clean(segment: str) -> str:
-                return segment.replace("_", " ").strip().title()
-
-            category_text = _clean(category)
-            if remainder:
-                return f"{category_text}: {_clean(remainder)}"
-            return category_text
-
         coef_df = (
             pd.DataFrame({"feature": feature_cols, "coefficient": coef[0]})
             .assign(
                 abs_coefficient=lambda df: df["coefficient"].abs(),
-                pretty_feature=lambda df: df["feature"].map(_prettify_feature_name),
+                pretty_feature=lambda df: df["feature"].map(prettify_feature_name),
             )
             .sort_values("abs_coefficient", ascending=False)
         )
         coef_df.insert(2, "intercept", intercept[0])
         _append_taxonomy_summaries_to_coef_df(coef_df)
-        coef_df.to_csv("logistic_coefficients.csv", index=False)
-        print("Saved logistic coefficients: 'logistic_coefficients.csv'")
+        coef_csv_path = OP.data_path("logistic_coefficients.csv")
+        coef_df.to_csv(coef_csv_path, index=False)
+        print(f"Saved logistic coefficients: '{coef_csv_path}'")
 
-        # Permutation importance on held-out test set
         print("\nComputing permutation importance on test set (n_repeats=10)...")
         perm = permutation_importance(
             final_model, X_test, y_test,
@@ -405,63 +346,30 @@ if coef.ndim == 2:
                 on="feature",
                 how="left",
             )
-            .assign(pretty_feature=lambda df: df["feature"].map(_prettify_feature_name))
+            .assign(pretty_feature=lambda df: df["feature"].map(prettify_feature_name))
             .sort_values("importance_mean", ascending=False)
         )
         perm_out = perm_df[
             ["feature", "coefficient", "importance_mean", "importance_std", "pretty_feature"]
         ]
-        perm_out.to_csv("logistic_permutation_importance.csv", index=False)
+        perm_csv_path = OP.data_path("logistic_permutation_importance.csv")
+        perm_out.to_csv(perm_csv_path, index=False)
 
         topk = perm_out.head(20).iloc[::-1].reset_index(drop=True)
-        coef_sign = np.sign(topk["coefficient"].to_numpy(dtype=float))
-        coef_sign = np.where(coef_sign == 0, 1.0, coef_sign)
-        signed_imp = topk["importance_mean"].to_numpy() * coef_sign
-        bar_colors = np.where(
-            topk["coefficient"].to_numpy() >= 0, "#2166ac", "#b2182b"
-        )
-        fig, ax = plt.subplots(figsize=(8, 6))
-        ax.barh(
-            topk["pretty_feature"],
-            signed_imp,
-            xerr=topk["importance_std"],
-            color=bar_colors,
-            edgecolor="white",
-        )
-        ax.axvline(0, color="0.35", linewidth=0.8, zorder=0)
         pos_class, neg_class = le.classes_[1], le.classes_[0]
-        ax.legend(
-            handles=[
-                Patch(
-                    facecolor="#2166ac",
-                    edgecolor="white",
-                    label=f"β > 0 (higher → {pos_class})",
-                ),
-                Patch(
-                    facecolor="#b2182b",
-                    edgecolor="white",
-                    label=f"β < 0 (higher → {neg_class})",
-                ),
-            ],
-            loc="lower right",
-            frameon=True,
-            fontsize=9,
+        fig02_path = OP.fig_path(OP.FIG_LOGREG_IMPORTANCE, "logreg_permutation_importance")
+        signed_permutation_importance_bar(
+            pretty_names=topk["pretty_feature"],
+            importance_mean=topk["importance_mean"],
+            importance_std=topk["importance_std"],
+            coefficients=topk["coefficient"],
+            pdf_path=fig02_path,
+            pos_class=pos_class,
+            neg_class=neg_class,
         )
-        ax.set_xlabel(
-            "Mean accuracy decrease\n(sign from logistic coefficient)",
-            fontsize=12,
+        print(
+            f"Saved permutation importance (Figure 2): '{perm_csv_path}', '{fig02_path}'"
         )
-        ax.set_ylabel("Feature", fontsize=12)
-        ax.tick_params(axis="both", labelsize=10)
-        fig.subplots_adjust(left=0.32, bottom=0.14, right=0.96, top=0.90)
-        plt.savefig(
-            "logistic_permutation_importance_bar.pdf",
-            dpi=150,
-            bbox_inches="tight",
-            pad_inches=0.12,
-        )
-        plt.close()
-        print("Saved permutation importance: 'logistic_permutation_importance.csv', 'logistic_permutation_importance_bar.pdf'")
         print("\nTop 20 features by permutation importance:")
         print(
             perm_out.head(20)[
@@ -472,5 +380,6 @@ if coef.ndim == 2:
         classes = le.inverse_transform(np.arange(coef.shape[0]))
         multi_df = pd.DataFrame(coef.T, index=feature_cols, columns=classes)
         multi_df.loc["intercept"] = intercept
-        multi_df.to_csv("logistic_coefficients.csv")
-        print("Saved multi-class logistic coefficients: 'logistic_coefficients.csv'")
+        multi_coef_path = OP.data_path("logistic_coefficients.csv")
+        multi_df.to_csv(multi_coef_path)
+        print(f"Saved multi-class logistic coefficients: '{multi_coef_path}'")

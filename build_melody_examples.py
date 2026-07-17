@@ -3,10 +3,10 @@ Build melody example manifest for the factor network webapp.
 
 Adapted from my old version of this at https://github.com/dmwhyatt/essen_new
 
-Inputs (project root):
-  - essen_china_europe_features.csv   (melody_id + numeric feature columns)
-  - factor_scores_for_logreg.csv      (melody_id + F1..FN scores, from factor_logistic.R)
-  - docs/network_data.json            (variable + factor nodes used in the webapp)
+Inputs:
+  - essen_china_europe_features.csv           (melody_id + numeric feature columns, project root)
+  - outputs/data/factor_scores_for_logreg.csv (melody_id + F1..FN scores, from factor_logistic.R)
+  - docs/network_data.json                    (variable + factor nodes used in the webapp)
 
 For each variable AND each factor in the network we pick the N_HIGH highest-scoring
 and N_LOW lowest-scoring melodies and copy each unique MIDI into docs/melody_examples/midi/.
@@ -32,12 +32,14 @@ from typing import Dict, Optional, Tuple
 
 import pandas as pd
 
+from helpers import output_paths as OP
+
 PROJECT_ROOT = Path(__file__).resolve().parent
 DOCS = PROJECT_ROOT / "docs"
 EXAMPLES_DIR = DOCS / "melody_examples"
 MIDI_DIR = EXAMPLES_DIR / "midi"
-CSV_PATH = PROJECT_ROOT / "essen_china_europe_features.csv"
-FACTOR_SCORES_CSV = PROJECT_ROOT / "factor_scores_for_logreg.csv"
+CSV_PATH = Path(OP.FEATURES_CSV)
+FACTOR_SCORES_CSV = PROJECT_ROOT / "outputs" / "data" / "factor_scores_for_logreg.csv"
 NETWORK_JSON = DOCS / "network_data.json"
 
 N_HIGH = 3

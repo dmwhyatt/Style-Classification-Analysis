@@ -5,8 +5,25 @@ library(jsonlite)
 set.seed(42)
 
 # Uses the same CSV and numeric column policy as logistic.py (includes corpus + LTM).
+# Path mirrors output_paths.FEATURES_CSV (repo-root cache).
 FEATURES_CSV <- "essen_china_europe_features.csv"
 TRAIN_FRAC <- 0.8
+
+# Canonical output locations, mirroring helpers/output_paths.py. Figure/table numbers
+# match the "List of figures" block and the three result tables in paper.tex.
+OUTPUTS_DIR <- "outputs"
+FIGURES_DIR <- file.path(OUTPUTS_DIR, "figures")
+TABLES_DIR <- file.path(OUTPUTS_DIR, "tables")
+DATA_DIR <- file.path(OUTPUTS_DIR, "data")
+dir.create(FIGURES_DIR, showWarnings = FALSE, recursive = TRUE)
+dir.create(TABLES_DIR, showWarnings = FALSE, recursive = TRUE)
+dir.create(DATA_DIR, showWarnings = FALSE, recursive = TRUE)
+
+FIG05_SCREE <- file.path(FIGURES_DIR, "fig05_factor_eigenvalues_elbow.pdf")
+TABLE2_EFA_VARIANCE_CSV <- file.path(TABLES_DIR, "table2_efa_variance.csv")
+TABLE2_EFA_VARIANCE_TEX <- file.path(TABLES_DIR, "table2_efa_variance.tex")
+TABLE_S1_LOADINGS_CSV <- file.path(TABLES_DIR, "table_s1_factor_loadings_top10.csv")
+TABLE_S1_LOADINGS_TEX <- file.path(TABLES_DIR, "table_s1_factor_loadings_top10.tex")
 
 if (!file.exists(FEATURES_CSV)) {
   stop(
@@ -25,7 +42,7 @@ pearce_txt <- "pearce_default_idyom_basenames.txt"
 if (!file.exists(pearce_txt)) {
   py <- if (file.exists("venv/bin/python3")) "venv/bin/python3" else Sys.which("python3")
   if (nzchar(py)) {
-    code <- "from pearce_exclusion import write_pearce_basename_sidecar; write_pearce_basename_sidecar()"
+    code <- "from helpers.pearce_exclusion import write_pearce_basename_sidecar; write_pearce_basename_sidecar()"
     suppressWarnings(
       system2(py, args = c("-c", code), stdout = TRUE, stderr = TRUE, wait = TRUE)
     )
@@ -102,8 +119,12 @@ p_scree <- ggplot(scree_df, aes(x = Factor)) +
   ) +
   theme_minimal(base_size = 12)
 
-ggsave("factor_eigenvalues_elbow.pdf", plot = p_scree, width = 8, height = 6)
-cat("Saved factor_eigenvalues_elbow.pdf\n")
+ggsave(FIG05_SCREE, plot = p_scree, width = 8, height = 6)
+ggsave(
+  sub("\\.pdf$", ".png", FIG05_SCREE),
+  plot = p_scree, width = 8, height = 6, dpi = 150
+)
+cat("Saved", FIG05_SCREE, "(Figure 5)\n")
 
 # inspect the scree/elbow outputs above to choose factor count
 N_FACTORS <- 8
@@ -165,12 +186,44 @@ for (j in seq_len(N_FACTORS)) {
   }
 }
 loadings_top10_supplementary <- bind_rows(loading_top_list)
-write_csv(loadings_top10_supplementary, "factor_loadings_top10_supplementary.csv")
+write_csv(loadings_top10_supplementary, TABLE_S1_LOADINGS_CSV)
 cat(
-  "Wrote factor_loadings_top10_supplementary.csv (top ",
+  "Wrote ", TABLE_S1_LOADINGS_CSV, " (Table S1: top ",
   TOP_LOADINGS_N, " |loadings| per factor for supplementary interpretation)\n",
   sep = ""
 )
+
+# Table S1 as a LaTeX longtable fragment matching paper.tex's supplementary format
+s1_tex_rows <- sprintf(
+  "    %s & %d & %s & %.3f \\\\",
+  loadings_top10_supplementary$factor_name,
+  loadings_top10_supplementary$rank,
+  loadings_top10_supplementary$variable,
+  loadings_top10_supplementary$loading
+)
+s1_tex_lines <- c(
+  "\\begingroup",
+  "\\footnotesize",
+  "\\setlength{\\tabcolsep}{3pt}",
+  "\\begin{longtable}{@{}lr p{0.55\\textwidth} r@{}}",
+  "\\toprule",
+  "\\textbf{Factor Label} & \\textbf{Rank} & \\textbf{Feature} & \\textbf{Loading} \\\\",
+  "\\midrule",
+  "\\endfirsthead",
+  "\\midrule",
+  "\\textbf{Factor Label} & \\textbf{Rank} & \\textbf{Feature} & \\textbf{Loading} \\\\",
+  "\\midrule",
+  "\\endhead",
+  "\\endfoot",
+  "\\bottomrule",
+  "\\caption{The ten highest loadings for each exploratory factor.}\\label{tab:supp-factor-loadings-top10}\\\\",
+  "\\endlastfoot",
+  s1_tex_rows,
+  "\\end{longtable}",
+  "\\endgroup"
+)
+writeLines(s1_tex_lines, TABLE_S1_LOADINGS_TEX)
+cat("Wrote ", TABLE_S1_LOADINGS_TEX, "\n", sep = "")
 
 # Top loadings per factor (CSV for tables / supplementary)
 TOP_LOADINGS_PER_FACTOR <- 10L
@@ -191,9 +244,10 @@ for (i in seq_len(N_FACTORS)) {
   )
 }
 top_loadings_df <- bind_rows(top_loading_parts)
-write_csv(top_loadings_df, "factor_top_loadings.csv")
+TOP_LOADINGS_CSV <- file.path(DATA_DIR, "factor_top_loadings.csv")
+write_csv(top_loadings_df, TOP_LOADINGS_CSV)
 cat(
-  "Wrote factor_top_loadings.csv (top ", TOP_LOADINGS_PER_FACTOR,
+  "Wrote ", TOP_LOADINGS_CSV, " (top ", TOP_LOADINGS_PER_FACTOR,
   " |loading| per factor)\n",
   sep = ""
 )
@@ -297,6 +351,27 @@ cat("Per-factor variance explained:\n")
 print(var_table, row.names = FALSE)
 cat("\n")
 
+# Table 2: EFA proportion/cumulative variance explained (paper.tex tab:efa-variance)
+write_csv(var_table, TABLE2_EFA_VARIANCE_CSV)
+t2_tex_rows <- sprintf(
+  "    %d & %s & %.2f & %.2f \\\\",
+  seq_len(N_FACTORS), factor_names, var_table$Prop_Var, var_table$Cum_Var
+)
+t2_tex_lines <- c(
+  "\\begin{table}[h]",
+  "  \\centering",
+  "  \\label{tab:efa-variance}",
+  "  \\begin{tabular}{@{}clcc@{}}",
+  "    Factor & Interpretation & Prop.\\ Var.\\ (\\%) & Cum.\\ Var.\\ (\\%) \\\\",
+  "    \\midrule",
+  t2_tex_rows,
+  "  \\end{tabular}",
+  "  \\caption{EFA: proportion and cumulative variance explained by each factor.}",
+  "\\end{table}"
+)
+writeLines(t2_tex_lines, TABLE2_EFA_VARIANCE_TEX)
+cat("Wrote ", TABLE2_EFA_VARIANCE_CSV, " and ", TABLE2_EFA_VARIANCE_TEX, " (Table 2)\n", sep = "")
+
 # create factor scores for logistic regression
 score_result <- factor.scores(x_scaled, fit, method = "regression")
 factor_scores <- as.data.frame(score_result$scores)
@@ -306,8 +381,9 @@ scores_df <- bind_cols(
   features_model %>% select(melody_id, melody_key),
   factor_scores
 )
-write_csv(scores_df, "factor_scores_for_logreg.csv")
-cat("Wrote factor_scores_for_logreg.csv\n")
+FACTOR_SCORES_CSV <- file.path(DATA_DIR, "factor_scores_for_logreg.csv")
+write_csv(scores_df, FACTOR_SCORES_CSV)
+cat("Wrote", FACTOR_SCORES_CSV, "\n")
 
 model_df <- scores_df %>%
   left_join(
@@ -370,34 +446,38 @@ test_acc <- mean(test_pred == test_df$target)
 
 coef_df <- as.data.frame(summary(final_model)$coefficients)
 coef_df$term <- rownames(coef_df)
-write_csv(coef_df, "logistic_factor_coefficients.csv")
+FACTOR_COEF_CSV <- file.path(DATA_DIR, "logistic_factor_coefficients.csv")
+write_csv(coef_df, FACTOR_COEF_CSV)
 
 metrics_df <- tibble(
   metric = c("cv_accuracy_mean", "cv_accuracy_sd", "test_accuracy"),
   value = c(mean(cv_acc), sd(cv_acc), test_acc)
 )
-write_csv(metrics_df, "logistic_factor_metrics.csv")
+FACTOR_METRICS_CSV <- file.path(DATA_DIR, "logistic_factor_metrics.csv")
+write_csv(metrics_df, FACTOR_METRICS_CSV)
 
 cat(sprintf("CV accuracy: %.4f +/- %.4f\n", mean(cv_acc), sd(cv_acc)))
 cat(sprintf("Test accuracy: %.4f\n", test_acc))
-cat("Wrote logistic_factor_metrics.csv and logistic_factor_coefficients.csv\n")
+cat("Wrote", FACTOR_METRICS_CSV, "and", FACTOR_COEF_CSV, "\n")
 
 classes <- c(negative_class, positive_class)
 
-# predictions for Python plots
+# predictions for Python plots (Figures 6 and 7)
+TEST_PRED_CSV <- file.path(DATA_DIR, "factor_logistic_predictions_test.csv")
+CV_PRED_CSV <- file.path(DATA_DIR, "factor_logistic_predictions_cv.csv")
+CLASS_ORDER_CSV <- file.path(DATA_DIR, "factor_logistic_class_order.csv")
 write_csv(
   tibble(true_label = test_df$target, predicted = test_pred),
-  "factor_logistic_predictions_test.csv"
+  TEST_PRED_CSV
 )
 write_csv(
   tibble(true_label = cv_true_all, predicted = cv_pred_all),
-  "factor_logistic_predictions_cv.csv"
+  CV_PRED_CSV
 )
-write_csv(tibble(class_label = classes), "factor_logistic_class_order.csv")
+write_csv(tibble(class_label = classes), CLASS_ORDER_CSV)
 cat(
-  "Wrote factor_logistic_predictions_*.csv and factor_logistic_class_order.csv\n",
-  "Run: python factor_logistic_plot_confusion.py\n",
-  "     python factor_logistic_plot_importance.py\n"
+  "Wrote", TEST_PRED_CSV, ",", CV_PRED_CSV, "and", CLASS_ORDER_CSV, "\n",
+  "Run: python factor_logistic_plots.py\n"
 )
 
 # factor importance table: variance explained + logistic coefficient + significance
