@@ -1,3 +1,9 @@
+"""Archived XGBoost China/Europe classifier.
+
+Kept for reference only: not part of ``run_analysis.py`` or
+``outputs/report.html`` anymore. Run this script manually if you want the old
+outputs (written as ``supp_xgb_*`` figures, not numbered paper figs).
+"""
 from typing import Dict, List
 
 import numpy as np
@@ -88,16 +94,16 @@ y_test_pred_labels = le.inverse_transform(y_test_pred)
 print("Test set classification report:")
 print(classification_report(y_test_labels, y_test_pred_labels, target_names=list(le.classes_), digits=4))
 
-fig03_path = OP.fig_path(OP.FIG_XGB_CONFUSION, "xgb_confusion_matrix")
+fig_cm_path = OP.supp_fig_path("xgb_confusion_matrix")
 confusion_heatmap(
     y_test_labels,
     y_test_pred_labels,
     list(le.classes_),
-    fig03_path,
+    fig_cm_path,
     save_png_twin=True,
 )
 
-print(f"Saved confusion matrices: '{cv_cm_path}', '{fig03_path}' (Figure 3)")
+print(f"Saved confusion matrices: '{cv_cm_path}', '{fig_cm_path}' (archive)")
 
 xgb_metrics_path = OP.data_path("xgb_metrics.csv")
 pd.DataFrame(
@@ -153,13 +159,13 @@ perm_out.to_csv(perm_csv_path, index=False)
 
 topk = perm_out.head(20).iloc[::-1].reset_index(drop=True)
 pos_class, neg_class = le.classes_[1], le.classes_[0]
-fig04_path = OP.fig_path(OP.FIG_XGB_IMPORTANCE, "xgb_permutation_importance")
+fig_imp_path = OP.supp_fig_path("xgb_permutation_importance")
 signed_permutation_importance_bar(
     pretty_names=topk["pretty_feature"],
     importance_mean=topk["importance_mean"],
     importance_std=topk["importance_std"],
     coefficients=topk["coefficient"],
-    pdf_path=fig04_path,
+    pdf_path=fig_imp_path,
     pos_class=pos_class,
     neg_class=neg_class,
     xlabel="Mean accuracy decrease\n(sign from mean SHAP contribution)",
@@ -167,7 +173,7 @@ signed_permutation_importance_bar(
     neg_legend=f"SHAP < 0 (higher → {neg_class})",
 )
 
-print(f"Saved permutation importance (Figure 4): '{perm_csv_path}', '{fig04_path}'")
+print(f"Saved permutation importance (archive): '{perm_csv_path}', '{fig_imp_path}'")
 print(
     f"Note: coefficient = mean SHAP contribution on test set; "
     f"positive values push toward encoded class 1 ({_positive}).\n"

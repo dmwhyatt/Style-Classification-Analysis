@@ -1,6 +1,6 @@
 """Confusion matrices and permutation-importance plots for the factor logistic model.
 
-Run after ``factor_logistic.R``. Writes Figures 6 and 7.
+Run after ``factor_logistic.R``. Writes Figures 4 and 5.
 """
 
 from __future__ import annotations

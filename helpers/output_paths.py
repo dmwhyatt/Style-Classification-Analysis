@@ -9,7 +9,7 @@ script always agree on paths.
 Layout::
 
     outputs/
-      figures/   fig01_...pdf .. fig07_...pdf   (paper figures, PDF + PNG twin)
+      figures/   fig01_...pdf .. fig05_...pdf   (paper figures, PDF + PNG twin)
                   supp_...                       (CV/diagnostic plots, not in paper)
       tables/     table2_..., table3_..., table_s1_...  (.csv + .tex fragments)
       data/       intermediate CSVs/JSON consumed by later stages or the report
@@ -80,11 +80,9 @@ def save_current_matplotlib_fig(pdf_path: str, *, dpi: int = 150, **savefig_kwar
     return png_path
 
 
-# Figure numbers match the "List of figures" block at the end of paper.tex.
+# Figure numbers match the manuscript figure order (XGBoost archive is unnumbered).
 FIG_LOGREG_CONFUSION = 1
 FIG_LOGREG_IMPORTANCE = 2
-FIG_XGB_CONFUSION = 3
-FIG_XGB_IMPORTANCE = 4
-FIG_FACTOR_SCREE = 5
-FIG_FACTOR_LOGREG_CONFUSION = 6
-FIG_FACTOR_LOGREG_IMPORTANCE = 7
+FIG_FACTOR_SCREE = 3
+FIG_FACTOR_LOGREG_CONFUSION = 4
+FIG_FACTOR_LOGREG_IMPORTANCE = 5

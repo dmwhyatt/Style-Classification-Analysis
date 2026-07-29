@@ -71,16 +71,17 @@ python run_analysis.py
 This runs every stage below in order, skips any stage whose declared outputs already exist
 (pass `--force` to re-run everything regardless), then builds a consolidated standalone HTML
 report at `outputs/report.html` embedding every figure/table produced. Use `--list` to see
-stage names, `--only logistic,xgboost` to run a subset, and `--no-report` to skip the report
+stage names, `--only logistic,efa` to run a subset, and `--no-report` to skip the report
 build.
 
 | Stage | Equivalent manual command | What it does |
 |------|---------|----------------|
 | Logistic Classifier | `python logistic.py` | Builds `essen_china_europe_features.csv` on first run (this can take a long time due to IDyOM runs). Same stratified train/test and CV as other stages. Writes Figure 1 & 2. |
-| XGBoost Classifier | `python xgbclassifier.py` | Needs the features CSV. Same split/features as `logistic`. Writes Figures 3 & 4. |
-| EFA | `Rscript factor_logistic.R` | EFA on the same numeric features (8 factors, promax, parallel analysis). Writes Figure 5, Table 2, Table S1, and the factor GLM output/predictions consumed by the next stage. |
-| EFA Plotting | `python factor_logistic_plots.py` | Reads the `efa` stage's prediction CSVs and factor scores. Writes Figures 6 & 7. |
+| EFA | `Rscript factor_logistic.R` | EFA on the same numeric features (8 factors, promax, parallel analysis). Writes Figure 3, Table 2, Table S1, and the factor GLM output/predictions consumed by the next stage. |
+| EFA Plotting | `python factor_logistic_plots.py` | Reads the `efa` stage's prediction CSVs and factor scores. Writes Figures 4 & 5. |
 | Comparison | `python comparison.py` | Needs the features CSV from `logistic`. Builds or loads the source-to-column mapping, trains one logistic model per implementation source plus an all-features baseline. Writes Table 3 and `outputs/data/coefficients/*.csv`. |
+
+**Archived:** `xgbclassifier.py` is kept in the repository as an archive of earlier work. It is no longer run by `run_analysis.py` and is not included in `outputs/report.html`. Run it manually only if you need those old outputs (written as `supp_xgb_*` figures).
 
 First run of `logistic.py` can take a long time if feature extraction has not already run. After features have been extracted, later runs load the cached `essen_china_europe_features.csv` and skip re-extraction unless you delete that file.
 
@@ -98,8 +99,8 @@ Every generated artefact lives under `outputs/`, named after the figure/table it
 
 ```
 outputs/
-  figures/   fig01_logreg_confusion_matrix.{pdf,png}   ... fig07_factor_logreg_permutation_importance.{pdf,png}
-             supp_*.{pdf,png}                            (CV/diagnostic plots, not referenced by the paper)
+  figures/   fig01_logreg_confusion_matrix.{pdf,png}   ... fig05_factor_logreg_permutation_importance.{pdf,png}
+             supp_*.{pdf,png}                            (CV/diagnostic plots, archived XGBoost, not paper figs)
   tables/    table2_efa_variance.{csv,tex}
              table3_source_comparison.{csv,tex}
              table_s1_factor_loadings_top10.{csv,tex}
@@ -122,7 +123,7 @@ outputs/
 
 ## Reproducibility
 
-- **Random seeds:** `42` is fixed in the Python scripts (`train_test_split`, CV folds, Europe subsample, XGBoost, etc.) and in `factor_logistic.R` (`set.seed(42)`). Re-running `python run_analysis.py --force` from a clean `outputs/` directory reproduces the same numbers reported in the paper (modulo upstream library version drift).
-- **Same train/test rows** across `logistic.py`, `comparison.py`, and `xgbclassifier.py` — Keep `test_size=0.2` and seeds unchanged.
+- **Random seeds:** `42` is fixed in the Python scripts (`train_test_split`, CV folds, Europe subsample, etc.) and in `factor_logistic.R` (`set.seed(42)`). Re-running `python run_analysis.py --force` from a clean `outputs/` directory reproduces the same numbers reported in the paper (modulo upstream library version drift).
+- **Same train/test rows** across `logistic.py` and `comparison.py` — Keep `test_size=0.2` and seeds unchanged.
 - **Invalidate the feature cache** — Delete `essen_china_europe_features.csv` to force re-extraction (e.g. after changing `usable_*.txt` or upgrading **`melody-features`** in a way that affects columns). `run_analysis.py` doesn't track this cache's staleness itself — delete the CSV and pass `--force` when you do.
 - **Stale outputs** — `run_analysis.py` skips a stage if its declared output files already exist, so if you edit a script's logic without changing its output filenames, run with `--force` (or delete `outputs/` entirely) to make sure results are regenerated.

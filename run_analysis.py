@@ -11,7 +11,7 @@ Usage
     python run_analysis.py                  # run everything, skipping stages
                                               # whose declared outputs already exist
     python run_analysis.py --force           # re-run every stage regardless
-    python run_analysis.py --only logistic,xgboost   # run a subset of stages
+    python run_analysis.py --only logistic,efa       # run a subset of stages
     python run_analysis.py --list            # list stage names and exit
 
 Determinism
@@ -81,19 +81,9 @@ def build_stages() -> list[Stage]:
             ],
         ),
         Stage(
-            name="xgboost",
-            description="XGBoost benchmark (Figures 3-4)",
-            cmd=_py("xgbclassifier.py"),
-            outputs=[
-                _fig(OP.FIG_XGB_CONFUSION, "xgb_confusion_matrix"),
-                _fig(OP.FIG_XGB_IMPORTANCE, "xgb_permutation_importance"),
-                _dat("xgb_metrics.csv"),
-            ],
-        ),
-        Stage(
             name="efa",
             description="Exploratory factor analysis + factor logistic regression in R "
-            "(Figure 5, Table 2, Table S1)",
+            "(Figure 3, Table 2, Table S1)",
             cmd=[rscript, "factor_logistic.R"],
             outputs=[
                 _fig(OP.FIG_FACTOR_SCREE, "factor_eigenvalues_elbow"),
@@ -104,7 +94,7 @@ def build_stages() -> list[Stage]:
         ),
         Stage(
             name="factor_plots",
-            description="Factor logistic confusion matrix + permutation importance (Figures 6-7)",
+            description="Factor logistic confusion matrix + permutation importance (Figures 4-5)",
             cmd=_py("factor_logistic_plots.py"),
             outputs=[
                 _fig(OP.FIG_FACTOR_LOGREG_CONFUSION, "factor_logreg_confusion_matrix"),
@@ -117,6 +107,7 @@ def build_stages() -> list[Stage]:
             cmd=_py("comparison.py"),
             outputs=[_tbl("table3", "source_comparison", "csv")],
         ),
+        # xgbclassifier.py is kept in the repo but is no longer part of the paper
     ]
 
 

@@ -7,7 +7,7 @@ import pandas as pd
 from melody_features import get_all_features
 from melody_features.corpus import get_corpus_files
 from sklearn.inspection import permutation_importance
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, get_scorer
 
 from helpers import dataset
 from helpers import output_paths as OP
@@ -20,16 +20,15 @@ from helpers.pearce_exclusion import (
 )
 from helpers.plotting import confusion_heatmap, prettify_feature_name, signed_permutation_importance_bar
 
+GROUP_DISPLAY_NAMES = {
+    "pitch": "Pitch",
+    "rhythm": "Rhythm",
+    "pitch_and_rhythm": "Pitch&Rhythm",
+}
 
-def _append_taxonomy_summaries_to_coef_df(coef_df: pd.DataFrame) -> None:
-    """Scale coefficients, assign Pitch/Rhythm groups, print summaries."""
-    c = coef_df["coefficient"].astype(float)
-    std = float(c.std(ddof=1))
-    if std == 0.0 or np.isnan(std):
-        coef_df["coefficient_scaled"] = np.nan
-    else:
-        coef_df["coefficient_scaled"] = (c - c.mean()) / std
 
+def _assign_feature_groups(coef_df: pd.DataFrame) -> None:
+    """Assign Pitch / Rhythm / Pitch&Rhythm taxonomy labels on ``coef_df``."""
     feat = coef_df["feature"].astype(str)
     pretty = coef_df["pretty_feature"].astype(str)
     groups = pd.Series("pitch", index=coef_df.index)
@@ -46,30 +45,62 @@ def _append_taxonomy_summaries_to_coef_df(coef_df: pd.DataFrame) -> None:
     )
     coef_df["feature_group"] = groups
 
+
+def _append_taxonomy_summaries_to_coef_df(coef_df: pd.DataFrame) -> None:
+    """Scale coefficients, assign Pitch/Rhythm groups, print top-|β| features."""
+    c = coef_df["coefficient"].astype(float)
+    std = float(c.std(ddof=1))
+    if std == 0.0 or np.isnan(std):
+        coef_df["coefficient_scaled"] = np.nan
+    else:
+        coef_df["coefficient_scaled"] = (c - c.mean()) / std
+
+    _assign_feature_groups(coef_df)
+
     abs_scaled = coef_df["coefficient_scaled"].abs()
-    group_importance = (
-        coef_df.assign(abs_beta=abs_scaled)
-        .groupby("feature_group", as_index=False)["abs_beta"]
-        .sum()
-        .rename(columns={"abs_beta": "sum_abs_beta"})
-    )
-    denom = group_importance["sum_abs_beta"].sum()
-    group_importance["prop_importance"] = (
-        group_importance["sum_abs_beta"] / denom if denom else 0.0
-    )
-    group_importance = group_importance.sort_values(
-        "prop_importance", ascending=False
-    )
-
-    print("\nFeature group importance (|scaled coefficient| mass):")
-    print(group_importance.to_string(index=False))
-
     top3 = coef_df.assign(_abs_scaled=abs_scaled).nlargest(3, "_abs_scaled").drop(
         columns=["_abs_scaled"]
     )
     print("\nTop 3 features by |scaled coefficient|:")
     print(top3.to_string(index=False))
 
+
+def _group_permutation_importance(
+    model,
+    X: pd.DataFrame,
+    y,
+    feature_to_group: pd.Series,
+    *,
+    n_repeats: int = 10,
+    random_state: int = 42,
+    scoring: str = "accuracy",
+) -> pd.DataFrame:
+    """Permutation importance for feature groups (shared row shuffle within group)."""
+    scorer = get_scorer(scoring)
+    baseline = float(scorer(model, X, y))
+    rng = np.random.RandomState(random_state)
+
+    rows = []
+    for group_key in ("pitch", "rhythm", "pitch_and_rhythm"):
+        cols = feature_to_group.index[feature_to_group == group_key].tolist()
+        cols = [c for c in cols if c in X.columns]
+        if not cols:
+            continue
+        drops = np.empty(n_repeats, dtype=float)
+        for i in range(n_repeats):
+            X_perm = X.copy()
+            perm_idx = rng.permutation(len(X_perm))
+            X_perm.loc[:, cols] = X.iloc[perm_idx][cols].to_numpy()
+            drops[i] = baseline - float(scorer(model, X_perm, y))
+        rows.append(
+            {
+                "feature_group": GROUP_DISPLAY_NAMES[group_key],
+                "n_features": len(cols),
+                "importance_mean": float(drops.mean()),
+                "importance_std": float(drops.std(ddof=0)),
+            }
+        )
+    return pd.DataFrame(rows).sort_values("importance_mean", ascending=False)
 
 USABLE_CHINA_TXT = "usable_china.txt"
 USABLE_EUROPA_TXT = "usable_europa.txt"
@@ -376,6 +407,26 @@ if coef.ndim == 2:
                 ["feature", "coefficient", "importance_mean", "importance_std"]
             ].to_string(index=False)
         )
+
+        print(
+            "\nComputing group permutation importance on test set "
+            "(Pitch / Rhythm / Pitch&Rhythm, n_repeats=10)..."
+        )
+        feature_to_group = coef_df.set_index("feature")["feature_group"]
+        group_perm_df = _group_permutation_importance(
+            final_model,
+            X_test,
+            y_test,
+            feature_to_group,
+            n_repeats=10,
+            random_state=42,
+            scoring="accuracy",
+        )
+        group_perm_csv_path = OP.data_path("logistic_group_permutation_importance.csv")
+        group_perm_df.to_csv(group_perm_csv_path, index=False)
+        print(f"Saved group permutation importance: '{group_perm_csv_path}'")
+        print("\nFeature group permutation importance:")
+        print(group_perm_df.to_string(index=False))
     else:
         classes = le.inverse_transform(np.arange(coef.shape[0]))
         multi_df = pd.DataFrame(coef.T, index=feature_cols, columns=classes)

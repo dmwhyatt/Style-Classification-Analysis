@@ -19,7 +19,7 @@ dir.create(FIGURES_DIR, showWarnings = FALSE, recursive = TRUE)
 dir.create(TABLES_DIR, showWarnings = FALSE, recursive = TRUE)
 dir.create(DATA_DIR, showWarnings = FALSE, recursive = TRUE)
 
-FIG05_SCREE <- file.path(FIGURES_DIR, "fig05_factor_eigenvalues_elbow.pdf")
+FIG03_SCREE <- file.path(FIGURES_DIR, "fig03_factor_eigenvalues_elbow.pdf")
 TABLE2_EFA_VARIANCE_CSV <- file.path(TABLES_DIR, "table2_efa_variance.csv")
 TABLE2_EFA_VARIANCE_TEX <- file.path(TABLES_DIR, "table2_efa_variance.tex")
 TABLE_S1_LOADINGS_CSV <- file.path(TABLES_DIR, "table_s1_factor_loadings_top10.csv")
@@ -119,12 +119,12 @@ p_scree <- ggplot(scree_df, aes(x = Factor)) +
   ) +
   theme_minimal(base_size = 12)
 
-ggsave(FIG05_SCREE, plot = p_scree, width = 8, height = 6)
+ggsave(FIG03_SCREE, plot = p_scree, width = 8, height = 6)
 ggsave(
-  sub("\\.pdf$", ".png", FIG05_SCREE),
+  sub("\\.pdf$", ".png", FIG03_SCREE),
   plot = p_scree, width = 8, height = 6, dpi = 150
 )
-cat("Saved", FIG05_SCREE, "(Figure 5)\n")
+cat("Saved", FIG03_SCREE, "(Figure 3)\n")
 
 # inspect the scree/elbow outputs above to choose factor count
 N_FACTORS <- 8
@@ -462,7 +462,7 @@ cat("Wrote", FACTOR_METRICS_CSV, "and", FACTOR_COEF_CSV, "\n")
 
 classes <- c(negative_class, positive_class)
 
-# predictions for Python plots (Figures 6 and 7)
+# predictions for Python plots (Figures 4 and 5)
 TEST_PRED_CSV <- file.path(DATA_DIR, "factor_logistic_predictions_test.csv")
 CV_PRED_CSV <- file.path(DATA_DIR, "factor_logistic_predictions_cv.csv")
 CLASS_ORDER_CSV <- file.path(DATA_DIR, "factor_logistic_class_order.csv")

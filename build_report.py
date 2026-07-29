@@ -348,31 +348,12 @@ def main() -> None:
             ),
         ),
         (
-            "xgb",
-            "XGBoost",
-            table_html(OP.data_path("xgb_metrics.csv"))
-            + fig_html(
-                OP.FIG_XGB_CONFUSION,
-                "xgb_confusion_matrix",
-                caption="Figure 3. Confusion matrix for XGBoost classifier model.",
-            )
-            + fig_html(
-                OP.FIG_XGB_IMPORTANCE,
-                "xgb_permutation_importance",
-                caption=(
-                    "Figure 4. Permuted feature importance for XGBoost classifier "
-                    "model. SHAP values used to determine direction of feature "
-                    "contribution."
-                ),
-            ),
-        ),
-        (
             "efa",
             "Factor analysis",
             fig_html(
                 OP.FIG_FACTOR_SCREE,
                 "factor_eigenvalues_elbow",
-                caption="Figure 5. Scree plot of eigenvalues for 235 factors.",
+                caption="Figure 3. Scree plot of eigenvalues for 235 factors.",
             )
             + table_html(
                 OP.table_path("table2", "efa_variance", "csv"),
@@ -386,13 +367,13 @@ def main() -> None:
             + fig_html(
                 OP.FIG_FACTOR_LOGREG_CONFUSION,
                 "factor_logreg_confusion_matrix",
-                caption="Figure 6. Confusion matrix for EFA logistic regression model.",
+                caption="Figure 4. Confusion matrix for EFA logistic regression model.",
             )
             + fig_html(
                 OP.FIG_FACTOR_LOGREG_IMPORTANCE,
                 "factor_logreg_permutation_importance",
                 caption=(
-                    "Figure 7. Permuted feature importance for factor logistic "
+                    "Figure 5. Permuted feature importance for factor logistic "
                     "regression model."
                 ),
             ),
@@ -406,6 +387,16 @@ def main() -> None:
             "table-s1",
             "Top loadings",
             build_table_s1_block(),
+        ),
+        (
+            "archive",
+            "Archived code",
+            (
+                "<p>An XGBoost classifier script (<code>xgbclassifier.py</code>) remains "
+                "in the repository as an archive of earlier exploratory work. It is "
+                "no longer part of the analysis pipeline or this report; run it "
+                "manually only if you need those historical outputs.</p>"
+            ),
         ),
     ]
 
@@ -430,7 +421,7 @@ def main() -> None:
 <header>
 <h1>Style classification</h1>
 <p class="lede">China vs Europe melody classification on Essen features —
-logistic, XGBoost, and a factor-score model.</p>
+logistic regression and a factor-score model.</p>
 </header>
 <nav class="toc"><h2>Contents</h2><ol>{toc}</ol></nav>
 {body}

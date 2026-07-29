@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score, classification_report
+from sklearn.pipeline import Pipeline
 
 import melody_features.features as features_module
 
