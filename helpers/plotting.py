@@ -84,6 +84,8 @@ def signed_permutation_importance_bar(
     neg_legend: str | None = None,
     figsize: tuple[float, float] = (8, 6),
     left: float = 0.32,
+    bbox_inches: str | None = "tight",
+    pad_inches: float = 0.12,
 ) -> None:
     """Horizontal bar chart of permutation importance, signed by coefficient direction."""
     coef = np.asarray(coefficients, dtype=float)
@@ -121,5 +123,8 @@ def signed_permutation_importance_bar(
     ax.set_ylabel(ylabel, fontsize=12)
     ax.tick_params(axis="both", labelsize=10)
     fig.subplots_adjust(left=left, bottom=0.14, right=0.96, top=0.90)
-    OP.save_current_matplotlib_fig(pdf_path, dpi=150, bbox_inches="tight", pad_inches=0.12)
+    save_kwargs: dict = {"dpi": 150, "pad_inches": pad_inches}
+    if bbox_inches is not None:
+        save_kwargs["bbox_inches"] = bbox_inches
+    OP.save_current_matplotlib_fig(pdf_path, **save_kwargs)
     plt.close()

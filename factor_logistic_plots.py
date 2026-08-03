@@ -145,8 +145,10 @@ def plot_permutation_importance() -> None:
         pos_class=pos_class,
         neg_class=neg_class,
         ylabel="Factor",
-        figsize=(8, 5),
-        left=0.36,
+        # Match Figure 2's final PDF footprint (so width=\textwidth scales identically).
+        figsize=(782.8575 / 72, 395.4203125 / 72),
+        left=0.32,
+        bbox_inches=None,
     )
 
     print(f"Saved {OUT_CSV}")
