@@ -12,6 +12,7 @@ figures/tables/data under outputs/ already exist.
 
 from __future__ import annotations
 
+import argparse
 import base64
 import html
 import platform
@@ -56,14 +57,16 @@ def fig_html(
     slug: str | None = None,
     *,
     supp_slug: str | None = None,
+    preprint_slug: str | None = None,
     caption: str | None = None,
     width: int = 640,
 ) -> str:
-    path = (
-        Path(OP.supp_fig_path(supp_slug, ext="png"))
-        if supp_slug is not None
-        else Path(OP.fig_path(fig_number, slug, ext="png"))
-    )
+    if preprint_slug is not None:
+        path = Path(OP.preprint_fig_path(preprint_slug, ext="png"))
+    elif supp_slug is not None:
+        path = Path(OP.supp_fig_path(supp_slug, ext="png"))
+    else:
+        path = Path(OP.fig_path(fig_number, slug, ext="png"))
     uri = _img_data_uri(path)
     if uri is None:
         return _missing_note(path)
@@ -173,6 +176,10 @@ body {
   max-width: 42rem;
   margin: 0 auto;
   padding: 3rem 1.25rem 4rem;
+}
+
+body.preprint .wrap {
+  max-width: 56rem;
 }
 
 header {
@@ -327,7 +334,59 @@ footer {
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--preprint",
+        action="store_true",
+        help=(
+            "Embed combined two-panel figures (confusion matrix + permutation "
+            "importance) instead of the separate paper figures."
+        ),
+    )
+    args = parser.parse_args()
     OP.ensure_output_dirs()
+
+    if args.preprint:
+        logreg_figs = fig_html(
+            preprint_slug=OP.PREPRINT_LOGREG,
+            caption=(
+                "Figure 1. Logistic regression: (a) confusion matrix and "
+                "(b) permuted feature importance."
+            ),
+            width=900,
+        )
+        factor_figs = fig_html(
+            preprint_slug=OP.PREPRINT_FACTOR_LOGREG,
+            caption=(
+                "Figure 3. Factor logistic regression: (a) confusion matrix and "
+                "(b) permuted feature importance."
+            ),
+            width=900,
+        )
+        scree_caption = "Figure 2. Scree plot of eigenvalues for 235 factors."
+    else:
+        logreg_figs = fig_html(
+            OP.FIG_LOGREG_CONFUSION,
+            "logreg_confusion_matrix",
+            caption="Figure 1. Confusion matrix for logistic regression model.",
+        ) + fig_html(
+            OP.FIG_LOGREG_IMPORTANCE,
+            "logreg_permutation_importance",
+            caption="Figure 2. Permuted feature importance for logistic regression model.",
+        )
+        factor_figs = fig_html(
+            OP.FIG_FACTOR_LOGREG_CONFUSION,
+            "factor_logreg_confusion_matrix",
+            caption="Figure 4. Confusion matrix for EFA logistic regression model.",
+        ) + fig_html(
+            OP.FIG_FACTOR_LOGREG_IMPORTANCE,
+            "factor_logreg_permutation_importance",
+            caption=(
+                "Figure 5. Permuted feature importance for factor logistic "
+                "regression model."
+            ),
+        )
+        scree_caption = "Figure 3. Scree plot of eigenvalues for 235 factors."
 
     sections = [
         ("run-info", "Run", build_metadata_block()),
@@ -336,16 +395,7 @@ def main() -> None:
             "logreg",
             "Logistic regression",
             table_html(OP.data_path("logreg_metrics.csv"))
-            + fig_html(
-                OP.FIG_LOGREG_CONFUSION,
-                "logreg_confusion_matrix",
-                caption="Figure 1. Confusion matrix for logistic regression model.",
-            )
-            + fig_html(
-                OP.FIG_LOGREG_IMPORTANCE,
-                "logreg_permutation_importance",
-                caption="Figure 2. Permuted feature importance for logistic regression model.",
-            ),
+            + logreg_figs,
         ),
         (
             "efa",
@@ -353,7 +403,7 @@ def main() -> None:
             fig_html(
                 OP.FIG_FACTOR_SCREE,
                 "factor_eigenvalues_elbow",
-                caption="Figure 3. Scree plot of eigenvalues for 235 factors.",
+                caption=scree_caption,
             )
             + table_html(
                 OP.table_path("table2", "efa_variance", "csv"),
@@ -364,19 +414,7 @@ def main() -> None:
             "factor-logreg",
             "Factor logistic model",
             table_html(OP.data_path("logistic_factor_metrics.csv"))
-            + fig_html(
-                OP.FIG_FACTOR_LOGREG_CONFUSION,
-                "factor_logreg_confusion_matrix",
-                caption="Figure 4. Confusion matrix for EFA logistic regression model.",
-            )
-            + fig_html(
-                OP.FIG_FACTOR_LOGREG_IMPORTANCE,
-                "factor_logreg_permutation_importance",
-                caption=(
-                    "Figure 5. Permuted feature importance for factor logistic "
-                    "regression model."
-                ),
-            ),
+            + factor_figs,
         ),
         (
             "table3",
@@ -408,6 +446,13 @@ def main() -> None:
         section(title, content, anchor=anchor) for anchor, title, content in sections
     )
 
+    body_class = ' class="preprint"' if args.preprint else ""
+    lede = (
+        "China vs Europe melody classification on Essen features — "
+        "logistic regression and a factor-score model."
+        + (" Preprint figure layout (combined panels)." if args.preprint else "")
+    )
+
     doc = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -416,12 +461,11 @@ def main() -> None:
 <title>Style classification — results</title>
 <style>{CSS}</style>
 </head>
-<body>
+<body{body_class}>
 <div class="wrap">
 <header>
 <h1>Style classification</h1>
-<p class="lede">China vs Europe melody classification on Essen features —
-logistic regression and a factor-score model.</p>
+<p class="lede">{html.escape(lede)}</p>
 </header>
 <nav class="toc"><h2>Contents</h2><ol>{toc}</ol></nav>
 {body}

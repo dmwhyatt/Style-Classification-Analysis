@@ -91,6 +91,11 @@ test_acc = accuracy_score(y_test, y_test_pred)
 print(f"\nTest set accuracy: {test_acc:.4f}")
 y_test_labels = le.inverse_transform(y_test)
 y_test_pred_labels = le.inverse_transform(y_test_pred)
+pred_csv_path = OP.data_path("xgb_predictions_test.csv")
+pd.DataFrame(
+    {"true_label": y_test_labels, "predicted": y_test_pred_labels}
+).to_csv(pred_csv_path, index=False)
+print(f"Saved test set predictions: '{pred_csv_path}'")
 print("Test set classification report:")
 print(classification_report(y_test_labels, y_test_pred_labels, target_names=list(le.classes_), digits=4))
 

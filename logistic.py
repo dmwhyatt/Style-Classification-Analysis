@@ -1,5 +1,6 @@
 import os
 import random
+import argparse
 from typing import Dict, List
 
 import numpy as np
@@ -18,13 +19,36 @@ from helpers.pearce_exclusion import (
     pearce_default_idyom_basename_set,
     write_pearce_basename_sidecar,
 )
-from helpers.plotting import confusion_heatmap, prettify_feature_name, signed_permutation_importance_bar
+from helpers.plotting import (
+    confusion_heatmap,
+    confusion_importance_multipanel,
+    prettify_feature_name,
+    signed_permutation_importance_bar,
+)
 
 GROUP_DISPLAY_NAMES = {
     "pitch": "Pitch",
     "rhythm": "Rhythm",
     "pitch_and_rhythm": "Pitch&Rhythm",
 }
+
+
+def _parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Full-feature logistic regression (Figures 1-2)."
+    )
+    parser.add_argument(
+        "--preprint",
+        action="store_true",
+        help=(
+            "Also write a two-panel preprint figure combining the confusion "
+            "matrix and permutation importance. Does not replace Figures 1-2."
+        ),
+    )
+    return parser.parse_args() if __name__ == "__main__" else argparse.Namespace(preprint=False)
+
+
+CLI_ARGS = _parse_args()
 
 
 def _assign_feature_groups(coef_df: pd.DataFrame) -> None:
@@ -294,6 +318,11 @@ test_acc = accuracy_score(y_test, y_test_pred)
 print(f"\nTest set accuracy: {test_acc:.4f}")
 y_test_labels = le.inverse_transform(y_test)
 y_test_pred_labels = le.inverse_transform(y_test_pred)
+pred_csv_path = OP.data_path("logreg_predictions_test.csv")
+pd.DataFrame(
+    {"true_label": y_test_labels, "predicted": y_test_pred_labels}
+).to_csv(pred_csv_path, index=False)
+print(f"Saved test set predictions: '{pred_csv_path}'")
 print("Test set classification report:")
 print(
     classification_report(
@@ -401,6 +430,21 @@ if coef.ndim == 2:
         print(
             f"Saved permutation importance (Figure 2): '{perm_csv_path}', '{fig02_path}'"
         )
+        if CLI_ARGS.preprint:
+            preprint_path = OP.preprint_fig_path(OP.PREPRINT_LOGREG)
+            confusion_importance_multipanel(
+                y_true=y_test_labels,
+                y_pred=y_test_pred_labels,
+                class_names=list(le.classes_),
+                pretty_names=topk["pretty_feature"],
+                importance_mean=topk["importance_mean"],
+                importance_std=topk["importance_std"],
+                coefficients=topk["coefficient"],
+                pdf_path=preprint_path,
+                pos_class=pos_class,
+                neg_class=neg_class,
+            )
+            print(f"Saved preprint panel: '{preprint_path}'")
         print("\nTop 20 features by permutation importance:")
         print(
             perm_out.head(20)[

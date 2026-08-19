@@ -1,10 +1,12 @@
 """Confusion matrices and permutation-importance plots for the factor logistic model.
 
 Run after ``factor_logistic.R``. Writes Figures 4 and 5.
+Pass ``--preprint`` to also write a combined two-panel figure for the preprint.
 """
 
 from __future__ import annotations
 
+import argparse
 import os
 import sys
 
@@ -16,7 +18,11 @@ from sklearn.model_selection import train_test_split
 
 from helpers import output_paths as OP
 from helpers.pearce_exclusion import basename_no_ext
-from helpers.plotting import confusion_heatmap, signed_permutation_importance_bar
+from helpers.plotting import (
+    confusion_heatmap,
+    confusion_importance_multipanel,
+    signed_permutation_importance_bar,
+)
 
 CLASS_ORDER_CSV = OP.data_path("factor_logistic_class_order.csv")
 TEST_PRED_CSV = OP.data_path("factor_logistic_predictions_test.csv")
@@ -158,13 +164,45 @@ def plot_permutation_importance() -> None:
             index=False
         )
     )
+    return perm_out, plot_df, neg_class, pos_class
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--preprint",
+        action="store_true",
+        help=(
+            "Also write a two-panel preprint figure combining the confusion "
+            "matrix and permutation importance. Does not replace Figures 4-5."
+        ),
+    )
+    args = parser.parse_args()
     repo_root = os.path.dirname(os.path.abspath(__file__))
     os.chdir(repo_root)
     plot_confusion_matrices()
-    plot_permutation_importance()
+    _perm_out, plot_df, neg_class, pos_class = plot_permutation_importance()
+    if args.preprint:
+        if not os.path.isfile(TEST_PRED_CSV):
+            print(f"Skip preprint panel: missing {TEST_PRED_CSV}", file=sys.stderr)
+            return
+        pred = pd.read_csv(TEST_PRED_CSV)
+        classes = pd.read_csv(CLASS_ORDER_CSV)["class_label"].astype(str).tolist()
+        preprint_path = OP.preprint_fig_path(OP.PREPRINT_FACTOR_LOGREG)
+        confusion_importance_multipanel(
+            y_true=pred["true_label"].astype(str),
+            y_pred=pred["predicted"].astype(str),
+            class_names=classes,
+            pretty_names=plot_df["pretty_feature"],
+            importance_mean=plot_df["importance_mean"],
+            importance_std=plot_df["importance_std"],
+            coefficients=plot_df["coefficient"],
+            pdf_path=preprint_path,
+            pos_class=pos_class,
+            neg_class=neg_class,
+            importance_ylabel="Factor",
+        )
+        print(f"Saved preprint panel: '{preprint_path}'")
 
 
 if __name__ == "__main__":

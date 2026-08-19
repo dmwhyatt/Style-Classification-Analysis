@@ -74,6 +74,15 @@ report at `outputs/report.html` embedding every figure/table produced. Use `--li
 stage names, `--only logistic,efa` to run a subset, and `--no-report` to skip the report
 build.
 
+**Manuscript figures (deterministic paths):**
+
+| Consumer | Command | Files under `outputs/figures/` |
+|----------|---------|--------------------------------|
+| Journal / `paper.tex` / `anonymous.tex` / `tismir/` | `python run_analysis.py` | `fig01_*.pdf` … `fig05_*.pdf` (unchanged) |
+| Preprint / `preprint.tex` | `python run_analysis.py --preprint` (or `python build_preprint_figures.py` after analysis CSVs exist) | `preprint_logreg_confusion_importance.pdf`, `preprint_factor_logreg_confusion_importance.pdf` **plus** the numbered figs above (scree is shared as `fig03_*.pdf`) |
+
+`--preprint` only **adds** the combined two-panel PDFs; it never overwrites `fig01`–`fig05`. `preprint.tex` reads those panels via `\graphicspath{{outputs/figures/}}`. The HTML report with `--preprint` embeds the combined panels (Figure 1 = logistic, Figure 2 = scree, Figure 3 = factor logistic).
+
 | Stage | Equivalent manual command | What it does |
 |------|---------|----------------|
 | Logistic Classifier | `python logistic.py` | Builds `essen_china_europe_features.csv` on first run (this can take a long time due to IDyOM runs). Same stratified train/test and CV as other stages. Writes Figure 1 & 2. |
@@ -100,6 +109,8 @@ Every generated artefact lives under `outputs/`, named after the figure/table it
 ```
 outputs/
   figures/   fig01_logreg_confusion_matrix.{pdf,png}   ... fig05_factor_logreg_permutation_importance.{pdf,png}
+             preprint_logreg_confusion_importance.{pdf,png}   (only with --preprint)
+             preprint_factor_logreg_confusion_importance.{pdf,png}
              supp_*.{pdf,png}                            (CV/diagnostic plots, archived XGBoost, not paper figs)
   tables/    table2_efa_variance.{csv,tex}
              table3_source_comparison.{csv,tex}
@@ -127,3 +138,5 @@ outputs/
 - **Same train/test rows** across `logistic.py` and `comparison.py` — Keep `test_size=0.2` and seeds unchanged.
 - **Invalidate the feature cache** — Delete `essen_china_europe_features.csv` to force re-extraction (e.g. after changing `usable_*.txt` or upgrading **`melody-features`** in a way that affects columns). `run_analysis.py` doesn't track this cache's staleness itself — delete the CSV and pass `--force` when you do.
 - **Stale outputs** — `run_analysis.py` skips a stage if its declared output files already exist, so if you edit a script's logic without changing its output filenames, run with `--force` (or delete `outputs/` entirely) to make sure results are regenerated.
+
+**AI assistance:** Parts of the analysis and plotting scripts in this repository were written with AI assistance in [Cursor](https://cursor.com). All code was reviewed and validated by the authors.

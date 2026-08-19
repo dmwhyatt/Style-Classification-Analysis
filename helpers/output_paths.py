@@ -10,6 +10,7 @@ Layout::
 
     outputs/
       figures/   fig01_...pdf .. fig05_...pdf   (paper figures, PDF + PNG twin)
+                  preprint_...                   (combined panels; ``--preprint`` only)
                   supp_...                       (CV/diagnostic plots, not in paper)
       tables/     table2_..., table3_..., table_s1_...  (.csv + .tex fragments)
       data/       intermediate CSVs/JSON consumed by later stages or the report
@@ -54,6 +55,15 @@ def supp_fig_path(slug: str, ext: str = "pdf") -> str:
     return os.path.join(FIGURES_DIR, f"supp_{slug}.{ext}")
 
 
+def preprint_fig_path(slug: str, ext: str = "pdf") -> str:
+    """Path for a preprint-only figure, e.g. ``preprint_logreg_confusion_importance.pdf``.
+
+    These combined panels are written only when the pipeline is run with
+    ``--preprint``; they are not the numbered ``paper.tex`` figures.
+    """
+    return os.path.join(FIGURES_DIR, f"preprint_{slug}.{ext}")
+
+
 def table_path(table_id: str, slug: str, ext: str = "tex") -> str:
     """Path for a table fragment, e.g. ``table3_source_comparison.tex``."""
     return os.path.join(TABLES_DIR, f"{table_id}_{slug}.{ext}")
@@ -86,3 +96,8 @@ FIG_LOGREG_IMPORTANCE = 2
 FIG_FACTOR_SCREE = 3
 FIG_FACTOR_LOGREG_CONFUSION = 4
 FIG_FACTOR_LOGREG_IMPORTANCE = 5
+
+# Combined confusion + importance panels (preprint only; not used by paper.tex).
+PREPRINT_LOGREG = "logreg_confusion_importance"
+PREPRINT_FACTOR_LOGREG = "factor_logreg_confusion_importance"
+PREPRINT_XGB = "xgb_confusion_importance"

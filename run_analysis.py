@@ -11,6 +11,8 @@ Usage
     python run_analysis.py                  # run everything, skipping stages
                                               # whose declared outputs already exist
     python run_analysis.py --force           # re-run every stage regardless
+    python run_analysis.py --preprint        # also write combined two-panel figures
+                                              # for the preprint
     python run_analysis.py --only logistic,efa       # run a subset of stages
     python run_analysis.py --list            # list stage names and exit
 
@@ -67,6 +69,10 @@ def _dat(name: str) -> Path:
     return Path(OP.data_path(name))
 
 
+def _preprint(slug: str) -> Path:
+    return Path(OP.preprint_fig_path(slug))
+
+
 def build_stages() -> list[Stage]:
     rscript = shutil.which("Rscript") or "Rscript"
     return [
@@ -111,15 +117,30 @@ def build_stages() -> list[Stage]:
     ]
 
 
-def build_report(force: bool) -> tuple[bool, float]:
+def preprint_stage() -> Stage:
+    return Stage(
+        name="preprint_panels",
+        description="Combined confusion + importance panels (preprint only)",
+        cmd=_py("build_preprint_figures.py"),
+        outputs=[
+            _preprint(OP.PREPRINT_LOGREG),
+            _preprint(OP.PREPRINT_FACTOR_LOGREG),
+        ],
+    )
+
+
+def build_report(force: bool, preprint: bool) -> tuple[bool, float]:
     report_path = Path(OP.OUTPUTS_DIR) / "report.html"
-    if not force and report_path.exists():
+    cmd = _py("build_report.py")
+    if preprint:
+        cmd.append("--preprint")
+    if not force and not preprint and report_path.exists():
         build_script_mtime = (REPO_ROOT / "build_report.py").stat().st_mtime
         if report_path.stat().st_mtime > build_script_mtime:
             print("  report.html is newer than build_report.py; skipping rebuild (--force to redo)")
             return True, 0.0
     start = time.time()
-    result = subprocess.run(_py("build_report.py"), cwd=REPO_ROOT, check=False)
+    result = subprocess.run(cmd, cwd=REPO_ROOT, check=False)
     return result.returncode == 0, time.time() - start
 
 
@@ -140,6 +161,14 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--force", action="store_true", help="Re-run every stage, ignoring cached outputs.")
     parser.add_argument(
+        "--preprint",
+        action="store_true",
+        help=(
+            "Also write combined two-panel figures (confusion matrix + permutation "
+            "importance per model) for the preprint. Numbered paper figures are unchanged."
+        ),
+    )
+    parser.add_argument(
         "--only",
         type=str,
         default=None,
@@ -150,6 +179,7 @@ def main() -> None:
     args = parser.parse_args()
 
     stages = build_stages()
+    stages.append(preprint_stage())
 
     if args.list:
         for s in stages:
@@ -162,6 +192,8 @@ def main() -> None:
         if unknown:
             parser.error(f"Unknown stage name(s): {', '.join(sorted(unknown))}")
         stages = [s for s in stages if s.name in wanted]
+    elif not args.preprint:
+        stages = [s for s in stages if s.name != "preprint_panels"]
 
     OP.ensure_output_dirs()
 
@@ -180,7 +212,7 @@ def main() -> None:
 
     if not args.no_report:
         print("\n--- [report] Building outputs/report.html ---")
-        ok, elapsed = build_report(args.force)
+        ok, elapsed = build_report(args.force, args.preprint)
         summary.append(("report", "ran" if ok else "FAILED", elapsed))
         if not ok:
             raise RuntimeError("Report build failed; see output above.")
