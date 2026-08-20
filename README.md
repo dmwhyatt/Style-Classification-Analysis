@@ -74,14 +74,7 @@ report at `outputs/report.html` embedding every figure/table produced. Use `--li
 stage names, `--only logistic,efa` to run a subset, and `--no-report` to skip the report
 build.
 
-**Manuscript figures (deterministic paths):**
-
-| Consumer | Command | Files under `outputs/figures/` |
-|----------|---------|--------------------------------|
-| Journal / `paper.tex` / `anonymous.tex` / `tismir/` | `python run_analysis.py` | `fig01_*.pdf` … `fig05_*.pdf` (unchanged) |
-| Preprint / `preprint.tex` | `python run_analysis.py --preprint` (or `python build_preprint_figures.py` after analysis CSVs exist) | `preprint_logreg_confusion_importance.pdf`, `preprint_factor_logreg_confusion_importance.pdf` **plus** the numbered figs above (scree is shared as `fig03_*.pdf`) |
-
-`--preprint` only **adds** the combined two-panel PDFs; it never overwrites `fig01`–`fig05`. `preprint.tex` reads those panels via `\graphicspath{{outputs/figures/}}`. The HTML report with `--preprint` embeds the combined panels (Figure 1 = logistic, Figure 2 = scree, Figure 3 = factor logistic).
+**Figures:** `python run_analysis.py` writes the paper figures (`fig01_*.pdf` … `fig05_*.pdf`). Add `--preprint` (or run `python build_preprint_figures.py` once the analysis CSVs exist) to also write the combined preprint panels (`preprint_logreg_confusion_importance.pdf`, `preprint_factor_logreg_confusion_importance.pdf`). `--preprint` only adds those panels; it never overwrites `fig01`–`fig05`.
 
 | Stage | Equivalent manual command | What it does |
 |------|---------|----------------|
